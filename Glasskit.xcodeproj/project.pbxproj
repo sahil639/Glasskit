@@ -24,9 +24,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C99C85802F434B8900728FB1 /* Liqglass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Liqglass.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C99C858D2F434B8B00728FB1 /* LiqglassTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiqglassTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C99C85972F434B8B00728FB1 /* LiqglassUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiqglassUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C99C85802F434B8900728FB1 /* Glasskit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Glasskit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C99C858D2F434B8B00728FB1 /* GlasskitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GlasskitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C99C85972F434B8B00728FB1 /* GlasskitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GlasskitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -85,9 +85,9 @@
 		C99C85812F434B8900728FB1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C99C85802F434B8900728FB1 /* Liqglass.app */,
-				C99C858D2F434B8B00728FB1 /* LiqglassTests.xctest */,
-				C99C85972F434B8B00728FB1 /* LiqglassUITests.xctest */,
+				C99C85802F434B8900728FB1 /* Glasskit.app */,
+				C99C858D2F434B8B00728FB1 /* GlasskitTests.xctest */,
+				C99C85972F434B8B00728FB1 /* GlasskitUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C99C857F2F434B8900728FB1 /* Liqglass */ = {
+		C99C857F2F434B8900728FB1 /* Glasskit */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C99C85A12F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "Liqglass" */;
+			buildConfigurationList = C99C85A12F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "Glasskit" */;
 			buildPhases = (
 				C99C857C2F434B8900728FB1 /* Sources */,
 				C99C857D2F434B8900728FB1 /* Frameworks */,
@@ -110,16 +110,16 @@
 			fileSystemSynchronizedGroups = (
 				C99C85822F434B8900728FB1 /* Liqglass */,
 			);
-			name = Liqglass;
+			name = Glasskit;
 			packageProductDependencies = (
 			);
 			productName = Liqglass;
-			productReference = C99C85802F434B8900728FB1 /* Liqglass.app */;
+			productReference = C99C85802F434B8900728FB1 /* Glasskit.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C99C858C2F434B8B00728FB1 /* LiqglassTests */ = {
+		C99C858C2F434B8B00728FB1 /* GlasskitTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C99C85A42F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "LiqglassTests" */;
+			buildConfigurationList = C99C85A42F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "GlasskitTests" */;
 			buildPhases = (
 				C99C85892F434B8B00728FB1 /* Sources */,
 				C99C858A2F434B8B00728FB1 /* Frameworks */,
@@ -133,16 +133,16 @@
 			fileSystemSynchronizedGroups = (
 				C99C85902F434B8B00728FB1 /* LiqglassTests */,
 			);
-			name = LiqglassTests;
+			name = GlasskitTests;
 			packageProductDependencies = (
 			);
 			productName = LiqglassTests;
-			productReference = C99C858D2F434B8B00728FB1 /* LiqglassTests.xctest */;
+			productReference = C99C858D2F434B8B00728FB1 /* GlasskitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		C99C85962F434B8B00728FB1 /* LiqglassUITests */ = {
+		C99C85962F434B8B00728FB1 /* GlasskitUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C99C85A72F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "LiqglassUITests" */;
+			buildConfigurationList = C99C85A72F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "GlasskitUITests" */;
 			buildPhases = (
 				C99C85932F434B8B00728FB1 /* Sources */,
 				C99C85942F434B8B00728FB1 /* Frameworks */,
@@ -156,11 +156,11 @@
 			fileSystemSynchronizedGroups = (
 				C99C859A2F434B8B00728FB1 /* LiqglassUITests */,
 			);
-			name = LiqglassUITests;
+			name = GlasskitUITests;
 			packageProductDependencies = (
 			);
 			productName = LiqglassUITests;
-			productReference = C99C85972F434B8B00728FB1 /* LiqglassUITests.xctest */;
+			productReference = C99C85972F434B8B00728FB1 /* GlasskitUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C99C857B2F434B8900728FB1 /* Build configuration list for PBXProject "Liqglass" */;
+			buildConfigurationList = C99C857B2F434B8900728FB1 /* Build configuration list for PBXProject "Glasskit" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C99C857F2F434B8900728FB1 /* Liqglass */,
-				C99C858C2F434B8B00728FB1 /* LiqglassTests */,
-				C99C85962F434B8B00728FB1 /* LiqglassUITests */,
+				C99C857F2F434B8900728FB1 /* Glasskit */,
+				C99C858C2F434B8B00728FB1 /* GlasskitTests */,
+				C99C85962F434B8B00728FB1 /* GlasskitUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		C99C858F2F434B8B00728FB1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C99C857F2F434B8900728FB1 /* Liqglass */;
+			target = C99C857F2F434B8900728FB1 /* Glasskit */;
 			targetProxy = C99C858E2F434B8B00728FB1 /* PBXContainerItemProxy */;
 		};
 		C99C85992F434B8B00728FB1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C99C857F2F434B8900728FB1 /* Liqglass */;
+			target = C99C857F2F434B8900728FB1 /* Glasskit */;
 			targetProxy = C99C85982F434B8B00728FB1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -487,7 +487,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Liqglass.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Liqglass";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Glasskit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Glasskit";
 				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Debug;
@@ -512,7 +512,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Liqglass.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Liqglass";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Glasskit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Glasskit";
 				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Release;
@@ -568,7 +568,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C99C857B2F434B8900728FB1 /* Build configuration list for PBXProject "Liqglass" */ = {
+		C99C857B2F434B8900728FB1 /* Build configuration list for PBXProject "Glasskit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C99C859F2F434B8B00728FB1 /* Debug */,
@@ -577,7 +577,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C99C85A12F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "Liqglass" */ = {
+		C99C85A12F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "Glasskit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C99C85A22F434B8B00728FB1 /* Debug */,
@@ -586,7 +586,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C99C85A42F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "LiqglassTests" */ = {
+		C99C85A42F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "GlasskitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C99C85A52F434B8B00728FB1 /* Debug */,
@@ -595,7 +595,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C99C85A72F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "LiqglassUITests" */ = {
+		C99C85A72F434B8B00728FB1 /* Build configuration list for PBXNativeTarget "GlasskitUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C99C85A82F434B8B00728FB1 /* Debug */,

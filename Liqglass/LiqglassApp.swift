@@ -1,6 +1,6 @@
 //
 //  LiqglassApp.swift
-//  Liqglass
+//  GlassKit
 //
 //  Created by quminsoda on 16/02/26.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct LiqglassApp: App {
+struct GlassKitApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
