@@ -159,18 +159,66 @@ struct FolderCard: View {
     }
 }
 
+// MARK: - Container Shape
+
+struct ContainerShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let scaleX = rect.width / 421
+        let scaleY = rect.height / 309
+
+        var path = Path()
+        path.move(to: CGPoint(x: 157.818 * scaleX, y: 0))
+        path.addLine(to: CGPoint(x: 30.0018 * scaleX, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 0.0919 * scaleX, y: 32.3231 * scaleY),
+            control1: CGPoint(x: 12.5177 * scaleX, y: 0),
+            control2: CGPoint(x: -1.262 * scaleX, y: 14.8915 * scaleY)
+        )
+        path.addLine(to: CGPoint(x: 19.4317 * scaleX, y: 281.323 * scaleY))
+        path.addCurve(
+            to: CGPoint(x: 49.3416 * scaleX, y: 309 * scaleY),
+            control1: CGPoint(x: 20.6449 * scaleX, y: 296.944 * scaleY),
+            control2: CGPoint(x: 33.6741 * scaleX, y: 309 * scaleY)
+        )
+        path.addLine(to: CGPoint(x: 370.371 * scaleX, y: 309 * scaleY))
+        path.addCurve(
+            to: CGPoint(x: 400.228 * scaleX, y: 281.919 * scaleY),
+            control1: CGPoint(x: 385.809 * scaleX, y: 309 * scaleY),
+            control2: CGPoint(x: 398.727 * scaleX, y: 297.284 * scaleY)
+        )
+        path.addLine(to: CGPoint(x: 420.364 * scaleX, y: 75.9186 * scaleY))
+        path.addCurve(
+            to: CGPoint(x: 390.506 * scaleX, y: 43.0002 * scaleY),
+            control1: CGPoint(x: 422.088 * scaleX, y: 58.2807 * scaleY),
+            control2: CGPoint(x: 408.228 * scaleX, y: 43.0002 * scaleY)
+        )
+        path.addLine(to: CGPoint(x: 222.345 * scaleX, y: 43.0002 * scaleY))
+        path.addCurve(
+            to: CGPoint(x: 199.604 * scaleX, y: 32.5674 * scaleY),
+            control1: CGPoint(x: 213.607 * scaleX, y: 43.0002 * scaleY),
+            control2: CGPoint(x: 205.303 * scaleX, y: 39.1907 * scaleY)
+        )
+        path.addLine(to: CGPoint(x: 180.558 * scaleX, y: 10.4329 * scaleY))
+        path.addCurve(
+            to: CGPoint(x: 157.818 * scaleX, y: 0),
+            control1: CGPoint(x: 174.859 * scaleX, y: 3.80964 * scaleY),
+            control2: CGPoint(x: 166.556 * scaleX, y: 0)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Folder Example Page
 
 struct FolderExample: View {
     @State private var animate = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 32) {
-            VStack(alignment: .leading, spacing: 0) {
-                Text("Glass")
-                Text("Folders")
-            }
-            .font(.system(size: 36, weight: .heavy, design: .rounded))
+        VStack(spacing: 32) {
+            Text("Glass Containers")
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .frame(maxWidth: .infinity, alignment: .center)
 
             HStack(spacing: 12) {
                 FolderCard(
@@ -193,9 +241,22 @@ struct FolderExample: View {
                     animate: $animate
                 )
             }
+
+            ContainerShape()
+                .fill(LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color.white.opacity(0.8), location: 0.0),
+                        .init(color: Color.white.opacity(0.08), location: 1.0)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+                .frame(width: 340, height: 250)
+                .glassEffect(.clear, in: ContainerShape())
+                .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
         }
         .padding(.horizontal, 20)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
             withAnimation(
                 .easeInOut(duration: 3)
