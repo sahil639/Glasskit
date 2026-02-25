@@ -65,6 +65,7 @@ struct FolderCard: View {
     let title: String
     let images: [String]
     let backgroundGradient: [Color]
+    var stickerImage: String? = nil
     @Binding var animate: Bool
 
     var body: some View {
@@ -147,6 +148,18 @@ struct FolderCard: View {
                             .offset(x: 2, y: -2)
                     }
                     .glassEffect(.clear, in: FolderShape())
+                    .overlay {
+                        if let stickerImage {
+                            Image(stickerImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 55)
+                                .rotationEffect(.degrees(-8))
+                                .offset(x: 10, y: 5)
+                                .shadow(color: .black.opacity(0.2), radius: 2)
+                                .shadow(color: .black.opacity(0.2), radius: 6)
+                        }
+                    }
             }
             .scaleEffect(0.84)
             .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
@@ -242,18 +255,81 @@ struct FolderExample: View {
                 )
             }
 
-            ContainerShape()
-                .fill(LinearGradient(
-                    gradient: Gradient(stops: [
-                        .init(color: Color.white.opacity(0.8), location: 0.0),
-                        .init(color: Color.white.opacity(0.08), location: 1.0)
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                ))
-                .frame(width: 340, height: 250)
-                .glassEffect(.clear, in: ContainerShape())
-                .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
+            ZStack {
+                // Background rectangle behind the container shape
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.gray.opacity(0.15)) // light grey fill
+                    .stroke(Color.gray.opacity(0.4), lineWidth: 1) // grey stroke
+                    .frame(width: 155, height: 105) // slightly less than front layer
+                    .offset(y: -18) // offset down on y axis
+
+                // Front container shape with glass effect
+                ContainerShape()
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            // Adjust these opacity values to tweak the fill gradient:
+                            // - top: white at 45% opacity
+                            // - bottom: white at 100% opacity
+                            .init(color: Color.white.opacity(0.45), location: 0.0),
+                            .init(color: Color.white.opacity(1.0), location: 1.0)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .overlay(
+                        // Inner white stroke: gradient from 100% opacity top to 0% bottom
+                        ContainerShape()
+                            .stroke(LinearGradient(
+                                gradient: Gradient(stops: [
+                                    // Adjust these to tweak the inner white stroke gradient:
+                                    .init(color: Color.white.opacity(1.0), location: 0.0),
+                                    .init(color: Color.white.opacity(0.0), location: 1.0)
+                                ]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ), lineWidth: 2)
+                    )
+                    .overlay(
+                        // Outer black stroke at 50% opacity
+                        ContainerShape()
+                            .stroke(Color.black.opacity(0.25), lineWidth: 1)
+                    )
+                    .overlay(alignment: .bottom) {
+                        // Two decorative lines at the bottom
+                        VStack(spacing: 6) {
+                            Capsule()
+                                .fill(Color.gray.opacity(0.25))
+                                .frame(width: 130, height: 1.5)
+                            Capsule()
+                                .fill(Color.gray.opacity(0.18))
+                                .frame(width: 110, height: 1.5)
+                        }
+                        .padding(.bottom, 16)
+                    }
+                    .overlay {
+                        HStack(spacing: 8) {
+                            Image("catSticker")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 45)
+                                .rotationEffect(.degrees(-6))
+                                .shadow(color: .black.opacity(0.2), radius: 2)
+                                .shadow(color: .black.opacity(0.2), radius: 6)
+
+                            Image("japaneseSticker")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 50)
+                                .rotationEffect(.degrees(5))
+                                .shadow(color: .black.opacity(0.2), radius: 2)
+                                .shadow(color: .black.opacity(0.2), radius: 6)
+                        }
+                        .offset(y: -5)
+                    }
+                    .frame(width: 170, height: 125)
+                    .glassEffect(.regular, in: ContainerShape())
+                    .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
+            }
         }
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
