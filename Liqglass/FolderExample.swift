@@ -263,6 +263,48 @@ struct FolderExample: View {
                     .frame(width: 155, height: 105) // slightly less than front layer
                     .offset(y: -18) // offset down on y axis
 
+                // Card 3 (left)
+                Image("card3")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 72)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
+                    .padding(8) // Stroke 3: white border thickness (change this value)
+                    .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
+                    .rotationEffect(.degrees(-15))
+                    .offset(x: -64, y: -12)
+
+                // Card 1 (center)
+                Image("card1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 72)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
+                    .padding(8) // Stroke 3: white border thickness (change this value)
+                    .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
+                    .rotationEffect(.degrees(3))
+                    .offset(x: 0, y: -49)
+
+                // Card 2 (right)
+                Image("card2")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 72)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
+                    .padding(8) // Stroke 3: white border thickness (change this value)
+                    .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
+                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
+                    .rotationEffect(.degrees(12))
+                    .offset(x: 58, y: -16)
+
                 // Front container shape with glass effect
                 ContainerShape()
                     .fill(LinearGradient(
@@ -270,8 +312,8 @@ struct FolderExample: View {
                             // Adjust these opacity values to tweak the fill gradient:
                             // - top: white at 45% opacity
                             // - bottom: white at 100% opacity
-                            .init(color: Color.white.opacity(0.45), location: 0.0),
-                            .init(color: Color.white.opacity(1.0), location: 1.0)
+                            .init(color: Color.white.opacity(0.65), location: 0.55),
+                            .init(color: Color.white.opacity(0.75), location: 1.0)
                         ]),
                         startPoint: .top,
                         endPoint: .bottom
@@ -298,36 +340,39 @@ struct FolderExample: View {
                         // Two decorative lines at the bottom
                         VStack(spacing: 6) {
                             Capsule()
-                                .fill(Color.gray.opacity(0.25))
-                                .frame(width: 130, height: 1.5)
+                                .fill(Color.gray.opacity(0.2)) // Line 1 color opacity
+                                .frame(width: 120, height: 1.5) // Line 1 width & height
+                                .shadow(color: .black.opacity(0.08), radius: 2, y: 1) // Line 1 shadow
                             Capsule()
-                                .fill(Color.gray.opacity(0.18))
-                                .frame(width: 110, height: 1.5)
+                                .fill(Color.gray.opacity(0.2)) // Line 2 color opacity
+                                .frame(width: 120, height: 1.5) // Line 2 width & height
+                                .shadow(color: .black.opacity(0.08), radius: 2, y: 1) // Line 2 shadow
                         }
                         .padding(.bottom, 16)
                     }
                     .overlay {
-                        HStack(spacing: 8) {
-                            Image("catSticker")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 45)
-                                .rotationEffect(.degrees(-6))
-                                .shadow(color: .black.opacity(0.2), radius: 2)
-                                .shadow(color: .black.opacity(0.2), radius: 6)
+                        // --- Cat Sticker ---
+                        Image("catSticker")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 60) // Cat: change size here
+                            .rotationEffect(.degrees(-12)) // Cat: change rotation here
+                            .offset(x: -35, y: -5) // Cat: change position here (x: left/right, y: up/down)
+                            .shadow(color: .black.opacity(0.25), radius: 1)
+                            .shadow(color: .black.opacity(0.2), radius: 8)
 
-                            Image("japaneseSticker")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 50)
-                                .rotationEffect(.degrees(5))
-                                .shadow(color: .black.opacity(0.2), radius: 2)
-                                .shadow(color: .black.opacity(0.2), radius: 6)
-                        }
-                        .offset(y: -5)
+                        // --- Japanese Sticker ---
+                        Image("japaneseSticker")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 64) // Japanese: change size here
+                            .rotationEffect(.degrees(24)) // Japanese: change rotation here
+                            .offset(x: 30, y: 12) // Japanese: change position here (x: left/right, y: up/down)
+                            .shadow(color: .black.opacity(0.25), radius: 1)
+                            .shadow(color: .black.opacity(0.2), radius: 8)
                     }
                     .frame(width: 170, height: 125)
-                    .glassEffect(.regular, in: ContainerShape())
+                    .glassEffect(.clear, in: ContainerShape())
                     .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
             }
         }
