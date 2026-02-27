@@ -409,11 +409,21 @@ struct FolderExample: View {
             .padding(.top, 16)
         }
         .onAppear {
-            withAnimation(
-                .easeInOut(duration: 3)
-                .repeatForever(autoreverses: true)
-            ) {
-                animate = true
+            if animationEnabled {
+                withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
+                    animate = true
+                }
+            }
+        }
+        .onChange(of: animationEnabled) { _, enabled in
+            if enabled {
+                withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
+                    animate = true
+                }
+            } else {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    animate = false
+                }
             }
         }
     }
