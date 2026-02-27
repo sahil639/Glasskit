@@ -229,6 +229,7 @@ struct ContainerShape: Shape {
 
 struct FolderExample: View {
     @State private var animate = false
+    @State private var animationEnabled = true
 
     var body: some View {
         ScrollView {
@@ -389,6 +390,19 @@ struct FolderExample: View {
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
+
+                // Animation Toggle
+                HStack {
+                    Text("Animation")
+                        .font(.system(.body, design: .rounded))
+                        .fontWeight(.medium)
+                    Spacer()
+                    Toggle("", isOn: $animationEnabled)
+                        .labelsHidden()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .glassEffect(.regular, in: .capsule)
 
             }
             .padding(.horizontal, 20)
