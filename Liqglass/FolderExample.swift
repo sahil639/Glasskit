@@ -162,7 +162,7 @@ struct FolderCard: View {
                         }
                     }
             }
-            .scaleEffect(1.04)
+            .scaleEffect(1.14)
             .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
 
             if showDate {
@@ -225,6 +225,127 @@ struct ContainerShape: Shape {
     }
 }
 
+// MARK: - Gach Folder Card
+
+struct GachFolderCard: View {
+    @Binding var animate: Bool
+
+    var body: some View {
+        ZStack {
+            // Background rectangle behind the container shape
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.15))
+                .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                .frame(width: 155, height: 105)
+                .offset(y: -18)
+
+            // Card 3 (left)
+            Image("card3")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 60, height: 72)
+                .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
+                .padding(8)
+                .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
+                .rotationEffect(.degrees(-15))
+                .offset(x: -64 + (animate ? 1 : -1), y: -12 + (animate ? -0.5 : 0.5))
+
+            // Card 1 (center)
+            Image("card1")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 60, height: 72)
+                .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
+                .padding(8)
+                .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
+                .rotationEffect(.degrees(3))
+                .offset(x: 0 + (animate ? -0.5 : 0.5), y: -49 + (animate ? 1 : -1))
+
+            // Card 2 (right)
+            Image("card2")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 60, height: 72)
+                .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
+                .padding(8)
+                .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
+                .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
+                .rotationEffect(.degrees(12))
+                .offset(x: 58 + (animate ? 0.5 : -0.5), y: -16 + (animate ? -1 : 1))
+
+            // Front container shape with glass effect
+            ContainerShape()
+                .fill(LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color.white.opacity(0.65), location: 0.55),
+                        .init(color: Color.white.opacity(0.75), location: 1.0)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+                .overlay(
+                    ContainerShape()
+                        .stroke(LinearGradient(
+                            gradient: Gradient(stops: [
+                                .init(color: Color.white.opacity(1.0), location: 0.0),
+                                .init(color: Color.white.opacity(0.0), location: 1.0)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ), lineWidth: 2)
+                )
+                .overlay(
+                    ContainerShape()
+                        .stroke(Color.black.opacity(0.25), lineWidth: 1)
+                )
+                .overlay(alignment: .bottom) {
+                    VStack(spacing: 6) {
+                        Capsule()
+                            .fill(Color.white.opacity(1))
+                            .frame(width: 130, height: 2.8)
+                            .shadow(color: .black.opacity(0.35), radius: 10, y: 0)
+                        Capsule()
+                            .fill(Color.white.opacity(0.8))
+                            .frame(width: 130, height: 2.8)
+                            .shadow(color: .black.opacity(0.35), radius: 10, y: 0)
+                    }
+                    .padding(.bottom, 16)
+                }
+                .overlay {
+                    Image("catSticker")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 60)
+                        .rotationEffect(.degrees(-12))
+                        .offset(x: -35, y: -5)
+                        .shadow(color: .black.opacity(0.25), radius: 1)
+                        .shadow(color: .black.opacity(0.2), radius: 8)
+
+                    Image("japaneseSticker")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 64)
+                        .rotationEffect(.degrees(24))
+                        .offset(x: 30, y: 12)
+                        .shadow(color: .black.opacity(0.25), radius: 1)
+                        .shadow(color: .black.opacity(0.2), radius: 8)
+                }
+                .frame(width: 170, height: 125)
+                .glassEffect(.clear, in: ContainerShape())
+                .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
+        }
+        .scaleEffect(1.10)
+    }
+}
+
 // MARK: - Folder Example Page
 
 struct FolderExample: View {
@@ -234,152 +355,33 @@ struct FolderExample: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 48) {
-                // Folder 1 - Simple glass folder
-                VStack(spacing: 8) {
-                    FolderCard(
-                        title: "Japan 2027",
-                        images: ["card1", "card2", "card3"],
-                        backgroundGradient: [
-                            Color(red: 0x48/255, green: 0x43/255, blue: 0x4E/255),
-                            Color(red: 0x35/255, green: 0x30/255, blue: 0x39/255)
-                        ],
-                        showDate: false,
-                        animate: $animate
-                    )
-                    Text("simple glass folder")
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(.secondary)
-                }
-
-                // ============================
-                // FOLDER 2 - Gach folder
-                // Design: ContainerShape with 3 photo cards, stickers, decorative lines
-                // Structure: ZStack [ grey bg rect → 3 cards → front ContainerShape with glass ]
-                // ============================
-                VStack(spacing: 8) {
-                    ZStack {
-                // Background rectangle behind the container shape
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.gray.opacity(0.15)) // light grey fill
-                    .stroke(Color.gray.opacity(0.4), lineWidth: 1) // grey stroke
-                    .frame(width: 155, height: 105) // slightly less than front layer
-                    .offset(y: -18) // offset down on y axis
-
-                // Card 3 (left)
-                Image("card3")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 72)
-                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
-                    .padding(8) // Stroke 3: white border thickness (change this value)
-                    .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
-                    .rotationEffect(.degrees(-15))
-                    .offset(x: -64 + (animate ? 1 : -1), y: -12 + (animate ? -0.5 : 0.5))
-
-                // Card 1 (center)
-                Image("card1")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 72)
-                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
-                    .padding(8) // Stroke 3: white border thickness (change this value)
-                    .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
-                    .rotationEffect(.degrees(3))
-                    .offset(x: 0 + (animate ? -0.5 : 0.5), y: -49 + (animate ? 1 : -1))
-
-                // Card 2 (right)
-                Image("card2")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 72)
-                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.white.opacity(0.15), lineWidth: 1))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12, bottomTrailing: 12, topTrailing: 12), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1).padding(-1))
-                    .padding(8) // Stroke 3: white border thickness (change this value)
-                    .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
-                    .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
-                    .rotationEffect(.degrees(12))
-                    .offset(x: 58 + (animate ? 0.5 : -0.5), y: -16 + (animate ? -1 : 1))
-
-                // Front container shape with glass effect
-                ContainerShape()
-                    .fill(LinearGradient(
-                        gradient: Gradient(stops: [
-                            // Adjust these opacity values to tweak the fill gradient:
-                            // - top: white at 45% opacity
-                            // - bottom: white at 100% opacity
-                            .init(color: Color.white.opacity(0.65), location: 0.55),
-                            .init(color: Color.white.opacity(0.75), location: 1.0)
-                        ]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ))
-                    .overlay(
-                        // Inner white stroke: gradient from 100% opacity top to 0% bottom
-                        ContainerShape()
-                            .stroke(LinearGradient(
-                                gradient: Gradient(stops: [
-                                    // Adjust these to tweak the inner white stroke gradient:
-                                    .init(color: Color.white.opacity(1.0), location: 0.0),
-                                    .init(color: Color.white.opacity(0.0), location: 1.0)
-                                ]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ), lineWidth: 2)
-                    )
-                    .overlay(
-                        // Outer black stroke at 50% opacity
-                        ContainerShape()
-                            .stroke(Color.black.opacity(0.25), lineWidth: 1)
-                    )
-                    .overlay(alignment: .bottom) {
-                        // Two decorative lines at the bottom
-                        VStack(spacing: 6) {
-                            Capsule()
-                                .fill(Color.white.opacity(1)) // Line 1 color opacity
-                                .frame(width: 130, height: 2.8) // Line 1 width & height
-                                .shadow(color: .black.opacity(0.35), radius: 10, y: 0) // Line 1 shadow
-                            Capsule()
-                                .fill(Color.white.opacity(0.8)) // Line 2 color opacity
-                                .frame(width: 130, height: 2.8) // Line 2 width & height
-                                .shadow(color: .black.opacity(0.35), radius: 10, y: 0) // Line 2 shadow
-                        }
-                        .padding(.bottom, 16)
+                ForEach(0..<4, id: \.self) { _ in
+                    // Folder 1 - Simple glass folder
+                    VStack(spacing: 8) {
+                        FolderCard(
+                            title: "Japan 2027",
+                            images: ["card1", "card2", "card3"],
+                            backgroundGradient: [
+                                Color(red: 0x48/255, green: 0x43/255, blue: 0x4E/255),
+                                Color(red: 0x35/255, green: 0x30/255, blue: 0x39/255)
+                            ],
+                            showDate: false,
+                            animate: $animate
+                        )
+                        Text("simple glass folder")
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(.secondary)
                     }
-                    .overlay {
-                        // --- Cat Sticker ---
-                        Image("catSticker")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 60) // Cat: change size here
-                            .rotationEffect(.degrees(-12)) // Cat: change rotation here
-                            .offset(x: -35, y: -5) // Cat: change position here (x: left/right, y: up/down)
-                            .shadow(color: .black.opacity(0.25), radius: 1)
-                            .shadow(color: .black.opacity(0.2), radius: 8)
 
-                        // --- Japanese Sticker ---
-                        Image("japaneseSticker")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 64) // Japanese: change size here
-                            .rotationEffect(.degrees(24)) // Japanese: change rotation here
-                            .offset(x: 30, y: 12) // Japanese: change position here (x: left/right, y: up/down)
-                            .shadow(color: .black.opacity(0.25), radius: 1)
-                            .shadow(color: .black.opacity(0.2), radius: 8)
+                    // ============================
+                    // FOLDER 2 - Gach folder
+                    // ============================
+                    VStack(spacing: 8) {
+                        GachFolderCard(animate: $animate)
+                        Text("gach folder")
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(.secondary)
                     }
-                    .frame(width: 170, height: 125)
-                    .glassEffect(.clear, in: ContainerShape())
-                    .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
-                }
-                    Text("gach folder")
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(.secondary)
                 }
 
             }
