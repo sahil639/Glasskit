@@ -162,7 +162,6 @@ struct FolderCard: View {
                         }
                     }
             }
-            .scaleEffect(0.84)
             .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
 
             if showDate {
@@ -233,10 +232,14 @@ struct FolderExample: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 32) {
-                Text("XYZ")
+                HStack(spacing: 8) {
+                    Image(systemName: "folder.fill")
+                        .foregroundStyle(.gray)
+                    Text("Glass Folders")
+                }
                     .font(.system(size: 32, weight: .bold, design: .rounded))
                     .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .center)
 
                 // Folder 1 - Simple glass folder
                 VStack(spacing: 6) {
