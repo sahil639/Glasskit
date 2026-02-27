@@ -382,22 +382,25 @@ struct FolderExample: View {
                         .foregroundStyle(.secondary)
                 }
 
-                // Animation Toggle
-                HStack {
-                    Text("Animation")
-                        .font(.system(.body, design: .rounded))
-                        .fontWeight(.medium)
-                    Spacer()
-                    Toggle("", isOn: $animationEnabled)
-                        .labelsHidden()
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .glassEffect(.regular, in: .capsule)
-
             }
             .padding(.horizontal, 20)
             .padding(.top, 16)
+        }
+        .safeAreaInset(edge: .bottom) {
+            // Animation Toggle - pinned above tab bar
+            HStack {
+                Text("Animation")
+                    .font(.system(.body, design: .rounded))
+                    .fontWeight(.medium)
+                Spacer()
+                Toggle("", isOn: $animationEnabled)
+                    .labelsHidden()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .glassEffect(.regular, in: .capsule)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 8)
         }
         .onAppear {
             if animationEnabled {
