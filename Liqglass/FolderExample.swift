@@ -162,6 +162,7 @@ struct FolderCard: View {
                         }
                     }
             }
+            .scaleEffect(0.80)
             .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
 
             if showDate {
@@ -237,7 +238,7 @@ struct FolderExample: View {
                         .foregroundStyle(.gray)
                     Text("Glass Folders")
                 }
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .center)
 
