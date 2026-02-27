@@ -232,7 +232,7 @@ struct FolderExample: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 32) {
+            VStack(spacing: 48) {
                 HStack(spacing: 8) {
                     Image(systemName: "folder.fill")
                         .foregroundStyle(.gray)
@@ -259,7 +259,11 @@ struct FolderExample: View {
                         .foregroundStyle(.secondary)
                 }
 
-                // Folder 2 - Gach folder
+                // ============================
+                // FOLDER 2 - Gach folder
+                // Design: ContainerShape with 3 photo cards, stickers, decorative lines
+                // Structure: ZStack [ grey bg rect → 3 cards → front ContainerShape with glass ]
+                // ============================
                 VStack(spacing: 8) {
                     ZStack {
                 // Background rectangle behind the container shape
