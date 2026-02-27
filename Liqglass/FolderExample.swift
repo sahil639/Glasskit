@@ -66,6 +66,7 @@ struct FolderCard: View {
     let images: [String]
     let backgroundGradient: [Color]
     var stickerImage: String? = nil
+    var showDate: Bool = true
     @Binding var animate: Bool
 
     var body: some View {
@@ -164,10 +165,12 @@ struct FolderCard: View {
             .scaleEffect(0.84)
             .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
 
-            Text("Created on: \(Date.now, format: .dateTime.day().month(.wide).year())")
-                .font(.system(.caption2, design: .rounded))
-                .tracking(-0.3)
-                .foregroundStyle(.secondary)
+            if showDate {
+                Text("Created on: \(Date.now, format: .dateTime.day().month(.wide).year())")
+                    .font(.system(.caption2, design: .rounded))
+                    .tracking(-0.3)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }
@@ -228,34 +231,33 @@ struct FolderExample: View {
     @State private var animate = false
 
     var body: some View {
-        VStack(spacing: 32) {
-            Text("Glass Containers")
-                .font(.system(size: 20, weight: .bold, design: .rounded))
-                .frame(maxWidth: .infinity, alignment: .center)
+        ScrollView {
+            VStack(spacing: 32) {
+                Text("XYZ")
+                    .font(.system(size: 32, weight: .bold, design: .rounded))
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-            HStack(spacing: 12) {
-                FolderCard(
-                    title: "Japan 2027",
-                    images: ["card1", "card2", "card3"],
-                    backgroundGradient: [
-                        Color(red: 0x48/255, green: 0x43/255, blue: 0x4E/255),
-                        Color(red: 0x35/255, green: 0x30/255, blue: 0x39/255)
-                    ],
-                    animate: $animate
-                )
+                // Folder 1 - Simple glass folder
+                VStack(spacing: 6) {
+                    FolderCard(
+                        title: "Japan 2027",
+                        images: ["card1", "card2", "card3"],
+                        backgroundGradient: [
+                            Color(red: 0x48/255, green: 0x43/255, blue: 0x4E/255),
+                            Color(red: 0x35/255, green: 0x30/255, blue: 0x39/255)
+                        ],
+                        showDate: false,
+                        animate: $animate
+                    )
+                    Text("simple glass folder")
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(.secondary)
+                }
 
-                FolderCard(
-                    title: "Japan 2027",
-                    images: ["card1", "card2", "card3"],
-                    backgroundGradient: [
-                        Color(red: 0x48/255, green: 0x43/255, blue: 0x4E/255),
-                        Color(red: 0x35/255, green: 0x30/255, blue: 0x39/255)
-                    ],
-                    animate: $animate
-                )
-            }
-
-            ZStack {
+                // Folder 2 - Gach folder
+                VStack(spacing: 6) {
+                    ZStack {
                 // Background rectangle behind the container shape
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color.gray.opacity(0.15)) // light grey fill
@@ -275,7 +277,7 @@ struct FolderExample: View {
                     .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
                     .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
                     .rotationEffect(.degrees(-15))
-                    .offset(x: -64, y: -12)
+                    .offset(x: -64 + (animate ? 1 : -1), y: -12 + (animate ? -0.5 : 0.5))
 
                 // Card 1 (center)
                 Image("card1")
@@ -289,7 +291,7 @@ struct FolderExample: View {
                     .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
                     .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
                     .rotationEffect(.degrees(3))
-                    .offset(x: 0, y: -49)
+                    .offset(x: 0 + (animate ? -0.5 : 0.5), y: -49 + (animate ? 1 : -1))
 
                 // Card 2 (right)
                 Image("card2")
@@ -303,7 +305,7 @@ struct FolderExample: View {
                     .background(Color.white, in: .rect(cornerRadius: 14, style: .continuous))
                     .overlay(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 14, bottomLeading: 14, bottomTrailing: 14, topTrailing: 14), style: .continuous).stroke(Color.black.opacity(0.2), lineWidth: 1))
                     .rotationEffect(.degrees(12))
-                    .offset(x: 58, y: -16)
+                    .offset(x: 58 + (animate ? 0.5 : -0.5), y: -16 + (animate ? -1 : 1))
 
                 // Front container shape with glass effect
                 ContainerShape()
@@ -374,10 +376,16 @@ struct FolderExample: View {
                     .frame(width: 170, height: 125)
                     .glassEffect(.clear, in: ContainerShape())
                     .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
+                }
+                    Text("gach folder")
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(.secondary)
+                }
+
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
         }
-        .padding(.horizontal, 20)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
             withAnimation(
                 .easeInOut(duration: 3)
