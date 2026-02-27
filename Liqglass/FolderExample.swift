@@ -162,7 +162,7 @@ struct FolderCard: View {
                         }
                     }
             }
-            .scaleEffect(0.80)
+            .scaleEffect(1.04)
             .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
 
             if showDate {
@@ -243,7 +243,7 @@ struct FolderExample: View {
                     .frame(maxWidth: .infinity, alignment: .center)
 
                 // Folder 1 - Simple glass folder
-                VStack(spacing: 6) {
+                VStack(spacing: 8) {
                     FolderCard(
                         title: "Japan 2027",
                         images: ["card1", "card2", "card3"],
@@ -260,7 +260,7 @@ struct FolderExample: View {
                 }
 
                 // Folder 2 - Gach folder
-                VStack(spacing: 6) {
+                VStack(spacing: 8) {
                     ZStack {
                 // Background rectangle behind the container shape
                 RoundedRectangle(cornerRadius: 12)
