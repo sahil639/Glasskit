@@ -234,15 +234,6 @@ struct FolderExample: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 48) {
-                HStack(spacing: 8) {
-                    Image(systemName: "folder.fill")
-                        .foregroundStyle(.gray)
-                    Text("Glass Folders")
-                }
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity, alignment: .center)
-
                 // Folder 1 - Simple glass folder
                 VStack(spacing: 8) {
                     FolderCard(
