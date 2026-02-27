@@ -340,13 +340,13 @@ struct FolderExample: View {
                         // Two decorative lines at the bottom
                         VStack(spacing: 6) {
                             Capsule()
-                                .fill(Color.gray.opacity(0.2)) // Line 1 color opacity
-                                .frame(width: 120, height: 1.5) // Line 1 width & height
-                                .shadow(color: .black.opacity(0.08), radius: 2, y: 1) // Line 1 shadow
+                                .fill(Color.white.opacity(1)) // Line 1 color opacity
+                                .frame(width: 130, height: 2.8) // Line 1 width & height
+                                .shadow(color: .black.opacity(0.35), radius: 10, y: 0) // Line 1 shadow
                             Capsule()
-                                .fill(Color.gray.opacity(0.2)) // Line 2 color opacity
-                                .frame(width: 120, height: 1.5) // Line 2 width & height
-                                .shadow(color: .black.opacity(0.08), radius: 2, y: 1) // Line 2 shadow
+                                .fill(Color.white.opacity(0.8)) // Line 2 color opacity
+                                .frame(width: 130, height: 2.8) // Line 2 width & height
+                                .shadow(color: .black.opacity(0.35), radius: 10, y: 0) // Line 2 shadow
                         }
                         .padding(.bottom, 16)
                     }
