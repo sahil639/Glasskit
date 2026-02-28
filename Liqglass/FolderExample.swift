@@ -68,7 +68,9 @@ struct FolderCard: View {
     var stickerImage: String? = nil
     var showDate: Bool = true
     @Binding var animate: Bool
-
+                // ============================
+                // FOLDER 1 - simeple folder
+                // ============================
     var body: some View {
         VStack(spacing: 2) {
             ZStack(alignment: .bottom) {
@@ -128,14 +130,27 @@ struct FolderCard: View {
 
                 // Folder (in front)
                 FolderShape()
-                    .fill(LinearGradient(
+                     .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.6))
+                            .fill(LinearGradient(
                         gradient: Gradient(stops: [
-                            .init(color: Color.white.opacity(0.8), location: 0.0),
-                            .init(color: Color.white.opacity(0.08), location: 1.0)
+                            // Adjust these opacity values to tweak the fill gradient:
+                            // - top: white at 45% opacity
+                            // - bottom: white at 100% opacity
+                            .init(color: Color.white.opacity(0.05), location: 0.65),
+                            .init(color: Color.white.opacity(0.95), location: 0.95)
                         ]),
                         startPoint: .top,
                         endPoint: .bottom
                     ))
+                    .stroke(
+    LinearGradient(
+        stops: [
+            .init(color: .white.opacity(0.6), location: 0),
+            .init(color: .white.opacity(0.1), location: 1)
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    ), lineWidth: 2)
                     .frame(width: 181, height: 111.5)
                     .overlay(alignment: .bottomLeading) {
                         Text(title)
@@ -184,11 +199,31 @@ struct FolderShape2: Shape {
         let h = rect.height
         let sx = w / 199
         let sy = h / 152
+        let r: CGFloat = 12
+
+        // Inner notch corner: direction from (73, 23.5) toward (48, 0)
+        let ndx: CGFloat = 48 - 73  // -25
+        let ndy: CGFloat = 0 - 23.5 // -23.5
+        let nlen = sqrt(ndx * ndx + ndy * ndy)
+        let nux = ndx / nlen
+        let nuy = ndy / nlen
+        // Point on angled edge, r units from notch corner
+        let naX = 73 + r * nux  // ~64.26
+        let naY = 23.5 + r * nuy // ~15.28
 
         var path = Path()
-        path.move(to: CGPoint(x: 73 * sx, y: 23.5 * sy))
+        // Start at rounded notch corner (angled edge side)
+        path.move(to: CGPoint(x: naX * sx, y: naY * sy))
+        // Angled line up to tab top
         path.addLine(to: CGPoint(x: 48 * sx, y: 0))
-        path.addLine(to: CGPoint(x: 0, y: 0))
+        // Across tab top, stop r before top-left corner
+        path.addLine(to: CGPoint(x: r * sx, y: 0))
+        // Round the top-left corner (90°)
+        path.addQuadCurve(
+            to: CGPoint(x: 0, y: r * sy),
+            control: CGPoint(x: 0, y: 0)
+        )
+        // Down left side
         path.addLine(to: CGPoint(x: 0, y: 127.5 * sy))
         path.addCurve(
             to: CGPoint(x: 24 * sx, y: 151.5 * sy),
@@ -202,7 +237,112 @@ struct FolderShape2: Shape {
             control2: CGPoint(x: 198.5 * sx, y: 140.755 * sy)
         )
         path.addLine(to: CGPoint(x: 198.5 * sx, y: 23.5 * sy))
-        path.addLine(to: CGPoint(x: 73 * sx, y: 23.5 * sy))
+        // Horizontal to r before notch corner
+        path.addLine(to: CGPoint(x: (73 + r) * sx, y: 23.5 * sy))
+        // Round the inner notch corner
+        path.addQuadCurve(
+            to: CGPoint(x: naX * sx, y: naY * sy),
+            control: CGPoint(x: 73 * sx, y: 23.5 * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Shape 3
+
+struct FolderShape3: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 130
+        let sy = rect.height / 121
+
+        var path = Path()
+        path.move(to: CGPoint(x: 45.0692 * sx, y: 0))
+        path.addLine(to: CGPoint(x: 24 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 0, y: 24 * sy),
+            control1: CGPoint(x: 10.7452 * sx, y: 0),
+            control2: CGPoint(x: 0, y: 10.7452 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: 96.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 24 * sx, y: 120.5 * sy),
+            control1: CGPoint(x: 0, y: 109.755 * sy),
+            control2: CGPoint(x: 10.7452 * sx, y: 120.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 105.5 * sx, y: 120.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 129.5 * sx, y: 96.5 * sy),
+            control1: CGPoint(x: 118.755 * sx, y: 120.5 * sy),
+            control2: CGPoint(x: 129.5 * sx, y: 109.755 * sy)
+        )
+        path.addLine(to: CGPoint(x: 129.5 * sx, y: 36.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 105.5 * sx, y: 12.5 * sy),
+            control1: CGPoint(x: 129.5 * sx, y: 23.2452 * sy),
+            control2: CGPoint(x: 118.755 * sx, y: 12.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 79.5814 * sx, y: 12.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 67.5814 * sx, y: 9.28461 * sy),
+            control1: CGPoint(x: 75.3685 * sx, y: 12.5 * sy),
+            control2: CGPoint(x: 71.2299 * sx, y: 11.391 * sy)
+        )
+        path.addLine(to: CGPoint(x: 57.0692 * sx, y: 3.21539 * sy))
+        path.addCurve(
+            to: CGPoint(x: 45.0692 * sx, y: 0),
+            control1: CGPoint(x: 53.4208 * sx, y: 1.10895 * sy),
+            control2: CGPoint(x: 49.2821 * sx, y: 0)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Shape 4
+
+struct FolderShape4: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 191
+        let sy = rect.height / 104
+
+        var path = Path()
+        path.move(to: CGPoint(x: 39 * sx, y: 104 * sy))
+        path.addLine(to: CGPoint(x: 152 * sx, y: 104 * sy))
+        path.addCurve(
+            to: CGPoint(x: 191 * sx, y: 65 * sy),
+            control1: CGPoint(x: 173.539 * sx, y: 104 * sy),
+            control2: CGPoint(x: 191 * sx, y: 86.5391 * sy)
+        )
+        path.addLine(to: CGPoint(x: 191 * sx, y: 39.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 174 * sx, y: 22.5 * sy),
+            control1: CGPoint(x: 191 * sx, y: 30.1112 * sy),
+            control2: CGPoint(x: 183.389 * sx, y: 22.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 68.7384 * sx, y: 22.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 59.5 * sx, y: 13.2616 * sy),
+            control1: CGPoint(x: 63.6362 * sx, y: 22.5 * sy),
+            control2: CGPoint(x: 59.5 * sx, y: 18.3638 * sy)
+        )
+        path.addCurve(
+            to: CGPoint(x: 46.2384 * sx, y: 0),
+            control1: CGPoint(x: 59.5 * sx, y: 5.93742 * sy),
+            control2: CGPoint(x: 53.5626 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 9.54245 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 0, y: 9.54245 * sy),
+            control1: CGPoint(x: 4.2723 * sx, y: 0),
+            control2: CGPoint(x: 0, y: 4.2723 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: 65 * sy))
+        path.addCurve(
+            to: CGPoint(x: 39 * sx, y: 104 * sy),
+            control1: CGPoint(x: 0, y: 86.5391 * sy),
+            control2: CGPoint(x: 17.4609 * sx, y: 104 * sy)
+        )
         path.closeSubpath()
         return path
     }
@@ -435,13 +575,13 @@ struct FolderExample: View {
                 VStack(spacing: 32) {
                     ZStack(alignment: .bottom) {
                         RoundedRectangle(cornerRadius: 24)
-                            .fill(Color.gray.opacity(0.4))
+                            .fill(Color.gray.opacity(0.2))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 24)
-                                    .stroke(Color.black.opacity(0.4), lineWidth: 1.5)
+                                    .stroke(Color.black.opacity(0.2), lineWidth: 1.5)
                             )
                             .frame(width: 199, height: 180)
-                            .shadow(color: .black.opacity(0.15), radius: 12, y: 6)
+                            .shadow(color: .black.opacity(0.75), radius: 12, y: 4)
 
                         // Card 3 (back - most offset)
                         Image("card3")
@@ -477,27 +617,33 @@ struct FolderExample: View {
                             .offset(x: -36, y: -42)
 
                         FolderShape2()
+                         .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
                             .fill(LinearGradient(
-                                colors: [Color.white.opacity(1), Color.white.opacity(0.25), Color.white.opacity(1)],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ))
-                            .fill(Color.white.opacity(0.45))
-                            .stroke(Color.white.opacity(0.25), lineWidth: 3)
+                        gradient: Gradient(stops: [
+                            // Adjust these opacity values to tweak the fill gradient:
+                            // - top: white at 45% opacity
+                            // - bottom: white at 100% opacity
+                            .init(color: Color.white.opacity(0.25), location: 0.55),
+                            .init(color: Color.white.opacity(0.95), location: 0.75)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                            .stroke(Color.white.opacity(0.75), lineWidth: 4)
                             .frame(width: 199, height: 152)
                             .glassEffect(.clear, in: FolderShape2())
                             .overlay(alignment: .bottomLeading) {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Saigon")
-                                        .font(.system(size: 17, design: .rounded))
+                                        .font(.system(size: 20, design: .rounded))
                                         .fontWeight(.bold)
                                         .foregroundStyle(.black)
                                     Text("glasskit v0.0.1")
-                                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                                        .font(.system(size: 14, weight: .medium, design: .rounded))
                                         .foregroundStyle(.black.opacity(0.5))
                                 }
-                                .padding(.leading, 12)
-                                .padding(.bottom, 12)
+                                .padding(.leading, 20)
+                                .padding(.bottom, 20)
                             }
                     }
                     Text("Folder Design 3")
@@ -507,6 +653,180 @@ struct FolderExample: View {
                         .padding(.vertical, 6)
                         .background(Color(.black).opacity(0.06), in: .capsule)
                     
+                }
+                .padding(.top, 36)
+                .padding(.bottom, 36)
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+                .padding(.horizontal, 12)
+
+                // ============================
+                // FOLDER 4 - Signature folder
+                // ============================
+                VStack(spacing: 32) {
+                    ZStack(alignment: .bottom) {
+                        // Card 3 (back - most offset)
+                        Image("card3")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 135, height: 210)
+                            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 6))
+                            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                            .rotationEffect(.degrees(8))
+                            .offset(x: 12, y: -15)
+
+                        // Card 1 (middle)
+                        // Image("card1")
+                        //     .resizable()
+                        //     .scaledToFill()
+                        //     .frame(width: 90, height: 125)
+                        //     .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                        //     .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                        //     .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                        //     .rotationEffect(.degrees(3))
+                        //     .offset(x: -2, y: -88)
+
+                        // Card 2 (front - least offset)
+                        Image("card2")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 135, height: 210)
+                            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 6))
+                            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                            .rotationEffect(.degrees(3))
+                            .offset(x: -24, y: -15)
+
+                        // Front layer - FolderShape3
+                        FolderShape3()
+                            .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                            .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            // Adjust these opacity values to tweak the fill gradient:
+                            // - top: white at 45% opacity
+                            // - bottom: white at 100% opacity
+                            .init(color: Color.white.opacity(0.25), location: 0.55),
+                            .init(color: Color.white.opacity(0.95), location: 0.75)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                            .overlay(
+                                FolderShape3()
+                                    .stroke(
+                                        LinearGradient(
+                                            colors: [Color.white.opacity(0.8), Color.white.opacity(0.2)],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        ),
+                                        lineWidth: 3
+                                    )
+                            )
+                            .frame(width: 228, height: 200)
+                            .shadow(color: .black.opacity(0.15), radius: 12, y: 4)
+                            .glassEffect(.clear, in: FolderShape3())
+
+                        // Signature overlay on top of glass
+                        Image("signature")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 55)
+                            .frame(width: 228, height: 200, alignment: .bottomLeading)
+                            .opacity(0.7)
+                            .rotationEffect(.degrees(25))
+                            .offset(x: 54, y: 12)
+
+                        // Shiba sticker - bottom right
+                        Image("shibaSticker")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150)
+                            .shadow(color: .black.opacity(0.35), radius: 3, y: 2)
+                            .frame(width: 228, height: 200, alignment: .bottomTrailing)
+                            .offset(x: 12, y: -7)
+                    }
+                    Text("Signature Folder")
+                        .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.5))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(Color(.black).opacity(0.06), in: .capsule)
+                }
+                .padding(.top, 36)
+                .padding(.bottom, 36)
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+                .padding(.horizontal, 12)
+
+                // ============================
+                // FOLDER 5 - New folder design
+                // ============================
+                VStack(spacing: 32) {
+                    ZStack(alignment: .bottom) {
+                        // SVG 2 - Background rounded rectangle
+                        RoundedRectangle(cornerRadius: 39)
+                            .fill(color.gray.opacity(0.6))
+                            .frame(width: 191, height: 193)
+
+                        // Card 3 (back - most offset)
+                        Image("card3")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 125)
+                            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                            .rotationEffect(.degrees(0))
+                            .offset(x: 30, y: -30)
+
+                        // Card 1 (middle)
+                        Image("card1")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 125)
+                            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                            .rotationEffect(.degrees(3))
+                            .offset(x: -2, y: -36)
+
+                        // Card 2 (front - least offset)
+                        Image("card2")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 125)
+                            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                            .rotationEffect(.degrees(0))
+                            .offset(x: -36, y: -42)
+
+                        // SVG 1 - Front folder shape with glass effect
+                        FolderShape4()
+                             .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                            .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            // Adjust these opacity values to tweak the fill gradient:
+                            // - top: white at 45% opacity
+                            // - bottom: white at 100% opacity
+                            .init(color: Color.white.opacity(0.25), location: 0.55),
+                            .init(color: Color.white.opacity(0.95), location: 0.75)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                            .stroke(Color.white.opacity(0.45), lineWidth: 3)
+                            .frame(width: 191, height: 104)
+                            .glassEffect(.clear, in: FolderShape4())
+                    }
+                    .scaleEffect(1.25)
+                    Text("Folder Design 5")
+                        .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.5))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(Color(.black).opacity(0.06), in: .capsule)
                 }
                 .padding(.top, 36)
                 .padding(.bottom, 36)
