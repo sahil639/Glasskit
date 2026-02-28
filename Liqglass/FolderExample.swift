@@ -233,7 +233,6 @@ struct FolderExample: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 48) {
                 // Folder 1 - Simple glass folder
                 VStack(spacing: 8) {
                     FolderCard(
@@ -250,11 +249,13 @@ struct FolderExample: View {
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
+                .padding(.vertical, 24)
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+                .padding(.horizontal, 12)
 
                 // ============================
                 // FOLDER 2 - Gach folder
-                // Design: ContainerShape with 3 photo cards, stickers, decorative lines
-                // Structure: ZStack [ grey bg rect → 3 cards → front ContainerShape with glass ]
                 // ============================
                 VStack(spacing: 8) {
                     ZStack {
@@ -382,10 +383,10 @@ struct FolderExample: View {
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
-
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 16)
+                .padding(.vertical, 24)
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+                .padding(.horizontal, 12)
         }
         .safeAreaInset(edge: .bottom) {
             // Animation Toggle - pinned above tab bar
