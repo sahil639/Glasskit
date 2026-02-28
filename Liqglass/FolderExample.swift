@@ -234,7 +234,7 @@ struct FolderExample: View {
     var body: some View {
         ScrollView {
                 // Folder 1 - Simple glass folder
-                VStack(spacing: 8) {
+                VStack(spacing: 20) {
                     FolderCard(
                         title: "Japan 2027",
                         images: ["card1", "card2", "card3"],
@@ -246,11 +246,14 @@ struct FolderExample: View {
                         animate: $animate
                     )
                     Text("simple glass folder")
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(.secondary)
+                        .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.5))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(Color(.systemGray5), in: .capsule)
                 }
                 .padding(.top, 56)
-                .padding(.bottom, 24)
+                .padding(.bottom, 36)
                 .frame(maxWidth: .infinity)
                 .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
                 .padding(.horizontal, 12)
@@ -258,7 +261,7 @@ struct FolderExample: View {
                 // ============================
                 // FOLDER 2 - Gach folder
                 // ============================
-                VStack(spacing: 8) {
+                VStack(spacing: 20) {
                     ZStack {
                 // Background rectangle behind the container shape
                 RoundedRectangle(cornerRadius: 12)
@@ -381,11 +384,14 @@ struct FolderExample: View {
                 }
                 .scaleEffect(1.10)
                     Text("gach folder")
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(.secondary)
+                        .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.5))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(Color(.systemGray5), in: .capsule)
                 }
                 .padding(.top, 56)
-                .padding(.bottom, 24)
+                .padding(.bottom, 36)
                 .frame(maxWidth: .infinity)
                 .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
                 .padding(.horizontal, 12)
