@@ -766,14 +766,14 @@ struct FolderExample: View {
                     ZStack(alignment: .bottom) {
                         // SVG 2 - Background rounded rectangle
                         RoundedRectangle(cornerRadius: 39)
-                            .fill(color.gray.opacity(0.6))
+                            .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(1))
                             .frame(width: 191, height: 193)
 
                         // Card 3 (back - most offset)
                         Image("card3")
                             .resizable()
-                            .scaledToFill()
-                            .frame(width: 90, height: 125)
+                            .scaledToFill(1.1)
+                            .frame(width: 100, height: 100)
                             .clipShape(.rect(cornerRadius: 12, style: .continuous))
                             .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
                             .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
@@ -783,8 +783,8 @@ struct FolderExample: View {
                         // Card 1 (middle)
                         Image("card1")
                             .resizable()
-                            .scaledToFill()
-                            .frame(width: 90, height: 125)
+                            .scaledToFill(1.1)
+                            .frame(width: 100, height: 100)
                             .clipShape(.rect(cornerRadius: 12, style: .continuous))
                             .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
                             .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
@@ -794,8 +794,8 @@ struct FolderExample: View {
                         // Card 2 (front - least offset)
                         Image("card2")
                             .resizable()
-                            .scaledToFill()
-                            .frame(width: 90, height: 125)
+                            .scaledToFill(1.1)
+                            .frame(width: 100, height: 100)
                             .clipShape(.rect(cornerRadius: 12, style: .continuous))
                             .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
                             .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
@@ -810,8 +810,8 @@ struct FolderExample: View {
                             // Adjust these opacity values to tweak the fill gradient:
                             // - top: white at 45% opacity
                             // - bottom: white at 100% opacity
-                            .init(color: Color.white.opacity(0.25), location: 0.55),
-                            .init(color: Color.white.opacity(0.95), location: 0.75)
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
                         ]),
                         startPoint: .top,
                         endPoint: .bottom
