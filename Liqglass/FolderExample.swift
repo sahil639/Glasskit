@@ -89,7 +89,8 @@ struct FolderCard: View {
                     .scaledToFill()
                     .frame(width: 128, height: 92)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(.white, lineWidth: 2.5))
+                    .overlay(RoundedRectangle(cornerRadius: 16)
+                    .stroke(.white, lineWidth: 2.5))
                     .shadow(color: .black.opacity(0.15), radius: 10, y: 4)
                     .rotationEffect(.degrees(105))
                     .offset(
@@ -162,7 +163,7 @@ struct FolderCard: View {
                         }
                     }
             }
-            .scaleEffect(1.14)
+            .scaleEffect(1.2312)
             .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
 
             if showDate {
@@ -172,6 +173,38 @@ struct FolderCard: View {
                     .foregroundStyle(.secondary)
             }
         }
+    }
+}
+
+// MARK: - Folder Shape 2
+
+struct FolderShape2: Shape {
+    func path(in rect: CGRect) -> Path {
+        let w = rect.width
+        let h = rect.height
+        let sx = w / 199
+        let sy = h / 152
+
+        var path = Path()
+        path.move(to: CGPoint(x: 73 * sx, y: 23.5 * sy))
+        path.addLine(to: CGPoint(x: 48 * sx, y: 0))
+        path.addLine(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: 0, y: 127.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 24 * sx, y: 151.5 * sy),
+            control1: CGPoint(x: 0, y: 140.755 * sy),
+            control2: CGPoint(x: 10.7452 * sx, y: 151.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 174.5 * sx, y: 151.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 198.5 * sx, y: 127.5 * sy),
+            control1: CGPoint(x: 187.755 * sx, y: 151.5 * sy),
+            control2: CGPoint(x: 198.5 * sx, y: 140.755 * sy)
+        )
+        path.addLine(to: CGPoint(x: 198.5 * sx, y: 23.5 * sy))
+        path.addLine(to: CGPoint(x: 73 * sx, y: 23.5 * sy))
+        path.closeSubpath()
+        return path
     }
 }
 
@@ -234,7 +267,7 @@ struct FolderExample: View {
     var body: some View {
         ScrollView {
                 // Folder 1 - Simple glass folder
-                VStack(spacing: 20) {
+                VStack(spacing: 32) {
                     FolderCard(
                         title: "Japan 2027",
                         images: ["card1", "card2", "card3"],
@@ -245,12 +278,12 @@ struct FolderExample: View {
                         showDate: false,
                         animate: $animate
                     )
-                    Text("simple glass folder")
+                    Text("Glass Folder 1.0")
                         .font(.system(size: 13.5, weight: .semibold, design: .rounded))
                         .foregroundStyle(.black.opacity(0.5))
                         .padding(.horizontal, 14)
                         .padding(.vertical, 6)
-                        .background(Color(.systemGray5), in: .capsule)
+                        .background(Color(.black).opacity(0.06), in: .capsule)
                 }
                 .padding(.top, 56)
                 .padding(.bottom, 36)
@@ -261,7 +294,7 @@ struct FolderExample: View {
                 // ============================
                 // FOLDER 2 - Gach folder
                 // ============================
-                VStack(spacing: 20) {
+                VStack(spacing: 32) {
                     ZStack {
                 // Background rectangle behind the container shape
                 RoundedRectangle(cornerRadius: 12)
@@ -382,15 +415,100 @@ struct FolderExample: View {
                     .glassEffect(.clear, in: ContainerShape())
                     .shadow(color: .black.opacity(0.12), radius: 12, y: 6)
                 }
-                .scaleEffect(1.10)
-                    Text("gach folder")
+                .scaleEffect(1.265)
+                    Text("Sticker Folder")
                         .font(.system(size: 13.5, weight: .semibold, design: .rounded))
                         .foregroundStyle(.black.opacity(0.5))
                         .padding(.horizontal, 14)
                         .padding(.vertical, 6)
-                        .background(Color(.systemGray5), in: .capsule)
+                        .background(Color(.black).opacity(0.06), in: .capsule)
                 }
-                .padding(.top, 56)
+                .padding(.top, 90)
+                .padding(.bottom, 36)
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+                .padding(.horizontal, 12)
+
+                // ============================
+                // FOLDER 3 - FolderShape2
+                // ============================
+                VStack(spacing: 32) {
+                    ZStack(alignment: .bottom) {
+                        RoundedRectangle(cornerRadius: 24)
+                            .fill(Color.gray.opacity(0.4))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 24)
+                                    .stroke(Color.black.opacity(0.4), lineWidth: 1.5)
+                            )
+                            .frame(width: 199, height: 180)
+                            .shadow(color: .black.opacity(0.15), radius: 12, y: 6)
+
+                        // Card 3 (back - most offset)
+                        Image("card3")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 125)
+                            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                            .rotationEffect(.degrees(0))
+                            .offset(x: 30, y: -30)
+
+                        // Card 1 (middle)
+                        Image("card1")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 125)
+                            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                            .rotationEffect(.degrees(3))
+                            .offset(x: -2, y: -36)
+
+                        // Card 21 (front - least offset)
+                        Image("card2")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 125)
+                            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                            .rotationEffect(.degrees(0))
+                            .offset(x: -36, y: -42)
+
+                        FolderShape2()
+                            .fill(LinearGradient(
+                                colors: [Color.white.opacity(1), Color.white.opacity(0.25), Color.white.opacity(1)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ))
+                            .fill(Color.white.opacity(0.45))
+                            .stroke(Color.white.opacity(0.25), lineWidth: 3)
+                            .frame(width: 199, height: 152)
+                            .glassEffect(.clear, in: FolderShape2())
+                            .overlay(alignment: .bottomLeading) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Saigon")
+                                        .font(.system(size: 17, design: .rounded))
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.black)
+                                    Text("glasskit v0.0.1")
+                                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                                        .foregroundStyle(.black.opacity(0.5))
+                                }
+                                .padding(.leading, 12)
+                                .padding(.bottom, 12)
+                            }
+                    }
+                    Text("Folder Design 3")
+                        .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.5))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(Color(.black).opacity(0.06), in: .capsule)
+                    
+                }
+                .padding(.top, 36)
                 .padding(.bottom, 36)
                 .frame(maxWidth: .infinity)
                 .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
@@ -408,7 +526,7 @@ struct FolderExample: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            .glassEffect(.regular, in: .capsule)
+            .glassEffect(.clear, in: .capsule)
             .padding(.horizontal, 20)
             .padding(.bottom, 8)
         }
