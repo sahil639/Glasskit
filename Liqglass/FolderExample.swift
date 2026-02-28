@@ -249,7 +249,8 @@ struct FolderExample: View {
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
-                .padding(.vertical, 24)
+                .padding(.top, 56)
+                .padding(.bottom, 24)
                 .frame(maxWidth: .infinity)
                 .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
                 .padding(.horizontal, 12)
@@ -383,7 +384,8 @@ struct FolderExample: View {
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
-                .padding(.vertical, 24)
+                .padding(.top, 56)
+                .padding(.bottom, 24)
                 .frame(maxWidth: .infinity)
                 .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
                 .padding(.horizontal, 12)
