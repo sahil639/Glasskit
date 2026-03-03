@@ -348,6 +348,56 @@ struct FolderShape4: Shape {
     }
 }
 
+// MARK: - Folder Shape 5
+
+struct FolderShape5: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 202
+        let sy = rect.height / 202
+
+        var path = Path()
+        path.move(to: CGPoint(x: 90.463 * sx, y: 0))
+        path.addLine(to: CGPoint(x: 16 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 0, y: 16 * sy),
+            control1: CGPoint(x: 7.16344 * sx, y: 0),
+            control2: CGPoint(x: 0, y: 7.16345 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: 185.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 16 * sx, y: 201.5 * sy),
+            control1: CGPoint(x: 0, y: 194.337 * sy),
+            control2: CGPoint(x: 7.16345 * sx, y: 201.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 185.5 * sx, y: 201.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 201.5 * sx, y: 185.5 * sy),
+            control1: CGPoint(x: 194.337 * sx, y: 201.5 * sy),
+            control2: CGPoint(x: 201.5 * sx, y: 194.337 * sy)
+        )
+        path.addLine(to: CGPoint(x: 201.5 * sx, y: 110.927 * sy))
+        path.addCurve(
+            to: CGPoint(x: 189.675 * sx, y: 95.4818 * sy),
+            control1: CGPoint(x: 201.5 * sx, y: 103.699 * sy),
+            control2: CGPoint(x: 196.653 * sx, y: 97.368 * sy)
+        )
+        path.addLine(to: CGPoint(x: 133.7 * sx, y: 80.3517 * sy))
+        path.addCurve(
+            to: CGPoint(x: 122.502 * sx, y: 69.3406 * sy),
+            control1: CGPoint(x: 128.299 * sx, y: 78.8917 * sy),
+            control2: CGPoint(x: 124.053 * sx, y: 74.7164 * sy)
+        )
+        path.addLine(to: CGPoint(x: 105.836 * sx, y: 11.5654 * sy))
+        path.addCurve(
+            to: CGPoint(x: 90.463 * sx, y: 0),
+            control1: CGPoint(x: 103.86 * sx, y: 4.71607 * sy),
+            control2: CGPoint(x: 97.5916 * sx, y: 0)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Container Shape
 
 struct ContainerShape: Shape {
@@ -411,6 +461,7 @@ struct FolderExample: View {
                 // folder3Section
                 folder4Section
                 folder5Section
+                folder6Section
         }
         .safeAreaInset(edge: .bottom) {
             // Animation Toggle - pinned above tab bar
@@ -817,6 +868,87 @@ struct FolderExample: View {
             }
             .scaleEffect(1.20)
             Text("Folder Design 5")
+                .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(.black).opacity(0.06), in: .capsule)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Folder 6
+    private var folder6Section: some View {
+        VStack(spacing: 32) {
+            ZStack(alignment: .bottom) {
+                // Card 3 (back)
+                Image("card3")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 90, height: 125)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(0))
+                    .offset(x: 30 + (animate ? 1 : -1), y: -30 + (animate ? -0.5 : 0.5))
+
+                // Card 1 (middle)
+                Image("card1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 90, height: 125)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(3))
+                    .offset(x: -2 + (animate ? -0.5 : 0.5), y: -36 + (animate ? 1 : -1))
+
+                // Card 2 (front)
+                Image("card2")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 90, height: 125)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(0))
+                    .offset(x: -36 + (animate ? 0.5 : -0.5), y: -42 + (animate ? -1 : 1))
+
+                // Front folder shape
+                FolderShape5()
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 3)
+                    .frame(width: 202, height: 202)
+                    .glassEffect(.clear, in: FolderShape5())
+                    .overlay(alignment: .topLeading) {
+                        Text("Japan is generating\nelectricity with footsteps")
+                            .font(.system(size: 12, weight: .medium, design: .rounded))
+                            .foregroundStyle(.black)
+                            .padding(.leading, 12)
+                            .padding(.top, 12)
+                    }
+                    .overlay(alignment: .bottomLeading) {
+                        Text("2027")
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                            .foregroundStyle(.black)
+                            .padding(.leading, 12)
+                            .padding(.bottom, 12)
+                    }
+            }
+            .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
+            Text("Folder Design 6")
                 .font(.system(size: 13.5, weight: .semibold, design: .rounded))
                 .foregroundStyle(.black.opacity(0.5))
                 .padding(.horizontal, 14)
