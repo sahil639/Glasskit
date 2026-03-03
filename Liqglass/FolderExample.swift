@@ -348,6 +348,95 @@ struct FolderShape4: Shape {
     }
 }
 
+// MARK: - Folder Shape 6 (front - trapezoid, 197x151)
+
+struct FolderShape6: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 197
+        let sy = rect.height / 151
+
+        var path = Path()
+        path.move(to: CGPoint(x: 180.804 * sx, y: 0))
+        path.addLine(to: CGPoint(x: 16.0007 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 0.0359496 * sx, y: 17.0608 * sy),
+            control1: CGPoint(x: 6.74672 * sx, y: 0),
+            control2: CGPoint(x: -0.577583 * sx, y: 7.8271 * sy)
+        )
+        path.addLine(to: CGPoint(x: 7.90971 * sx, y: 135.561 * sy))
+        path.addCurve(
+            to: CGPoint(x: 23.8745 * sx, y: 150.5 * sy),
+            control1: CGPoint(x: 8.46826 * sx, y: 143.967 * sy),
+            control2: CGPoint(x: 15.4497 * sx, y: 150.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 172.93 * sx, y: 150.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 188.895 * sx, y: 135.561 * sy),
+            control1: CGPoint(x: 181.355 * sx, y: 150.5 * sy),
+            control2: CGPoint(x: 188.336 * sx, y: 143.967 * sy)
+        )
+        path.addLine(to: CGPoint(x: 196.769 * sx, y: 17.0608 * sy))
+        path.addCurve(
+            to: CGPoint(x: 180.804 * sx, y: 0),
+            control1: CGPoint(x: 197.382 * sx, y: 7.82712 * sy),
+            control2: CGPoint(x: 190.058 * sx, y: 0)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Shape 7 (back - trapezoid with tab, 203x201)
+
+struct FolderShape7: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 203
+        let sy = rect.height / 201
+
+        var path = Path()
+        path.move(to: CGPoint(x: 192.41 * sx, y: 186.055 * sy))
+        path.addLine(to: CGPoint(x: 202.294 * sx, y: 36.5555 * sy))
+        path.addCurve(
+            to: CGPoint(x: 186.329 * sx, y: 19.5 * sy),
+            control1: CGPoint(x: 202.905 * sx, y: 27.3238 * sy),
+            control2: CGPoint(x: 195.581 * sx, y: 19.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 104.931 * sx, y: 19.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 99.118 * sx, y: 18.4065 * sy),
+            control1: CGPoint(x: 102.943 * sx, y: 19.5 * sy),
+            control2: CGPoint(x: 100.971 * sx, y: 19.1292 * sy)
+        )
+        path.addLine(to: CGPoint(x: 54.7258 * sx, y: 1.09353 * sy))
+        path.addCurve(
+            to: CGPoint(x: 48.9123 * sx, y: 0),
+            control1: CGPoint(x: 52.8728 * sx, y: 0.370846 * sy),
+            control2: CGPoint(x: 50.9012 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 11.0004 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 0.0148677 * sx, y: 11.5634 * sy),
+            control1: CGPoint(x: 4.70401 * sx, y: 0),
+            control2: CGPoint(x: -0.307602 * sx, y: 5.2752 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0.421875 * sx, y: 19.5 * sy))
+        path.addLine(to: CGPoint(x: 11.4338 * sx, y: 186.056 * sy))
+        path.addCurve(
+            to: CGPoint(x: 27.399 * sx, y: 201 * sy),
+            control1: CGPoint(x: 11.9897 * sx, y: 194.464 * sy),
+            control2: CGPoint(x: 18.9722 * sx, y: 201 * sy)
+        )
+        path.addLine(to: CGPoint(x: 176.445 * sx, y: 201 * sy))
+        path.addCurve(
+            to: CGPoint(x: 192.41 * sx, y: 186.055 * sy),
+            control1: CGPoint(x: 184.872 * sx, y: 201 * sy),
+            control2: CGPoint(x: 191.854 * sx, y: 194.464 * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Folder Shape 5
 
 struct FolderShape5: Shape {
@@ -462,6 +551,7 @@ struct FolderExample: View {
                 folder4Section
                 folder5Section
                 folder6Section
+                folder7Section
         }
         .safeAreaInset(edge: .bottom) {
             // Animation Toggle - pinned above tab bar
@@ -949,6 +1039,34 @@ struct FolderExample: View {
             }
             .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
             Text("Folder Design 6")
+                .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(.black).opacity(0.06), in: .capsule)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Folder 7
+    private var folder7Section: some View {
+        VStack(spacing: 32) {
+            ZStack(alignment: .bottom) {
+                // SVG 2 - Back layer (trapezoid with tab)
+                FolderShape7()
+                    .fill(Color(red: 0xE5/255, green: 0x72/255, blue: 0x72/255))
+                    .frame(width: 203, height: 201)
+
+                // SVG 1 - Front layer (trapezoid)
+                FolderShape6()
+                    .fill(Color(red: 0xD4/255, green: 0x47/255, blue: 0x47/255))
+                    .frame(width: 197, height: 151)
+            }
+            Text("Folder Design 7")
                 .font(.system(size: 13.5, weight: .semibold, design: .rounded))
                 .foregroundStyle(.black.opacity(0.5))
                 .padding(.horizontal, 14)
