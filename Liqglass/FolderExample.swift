@@ -548,8 +548,8 @@ struct FolderExample: View {
                 // folder1Section
                 // folder2Section
                 // folder3Section
-                folder4Section
-                folder5Section
+                // folder4Section
+                // folder5Section
                 folder6Section
                 folder7Section
         }
