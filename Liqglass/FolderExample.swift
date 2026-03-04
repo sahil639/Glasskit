@@ -1056,9 +1056,16 @@ struct FolderExample: View {
     private var folder7Section: some View {
         VStack(spacing: 32) {
             ZStack(alignment: .bottom) {
-                // SVG 2 - Back layer (trapezoid with tab)
+                // SVG 2 - Back layer (trapezoid with tab) - grey gradient
                 FolderShape7()
-                    .fill(Color(red: 0xE5/255, green: 0x72/255, blue: 0x72/255))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.gray.opacity(0.4), location: 0),
+                            .init(color: Color.gray.opacity(0.7), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
                     .frame(width: 203, height: 201)
 
                 // Card 3 (back)
@@ -1070,7 +1077,7 @@ struct FolderExample: View {
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
                     .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
                     .rotationEffect(.degrees(0))
-                    .offset(x: 30, y: -30)
+                    .offset(x: 30 + (animate ? 1 : -1), y: -30 + (animate ? -0.5 : 0.5))
 
                 // Card 1 (middle)
                 Image("card1")
@@ -1081,7 +1088,7 @@ struct FolderExample: View {
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
                     .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
                     .rotationEffect(.degrees(3))
-                    .offset(x: -2, y: -36)
+                    .offset(x: -2 + (animate ? -0.5 : 0.5), y: -36 + (animate ? 1 : -1))
 
                 // Card 2 (front)
                 Image("card2")
@@ -1092,13 +1099,24 @@ struct FolderExample: View {
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
                     .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
                     .rotationEffect(.degrees(0))
-                    .offset(x: -36, y: -42)
+                    .offset(x: -36 + (animate ? 0.5 : -0.5), y: -42 + (animate ? -1 : 1))
 
                 // SVG 1 - Front layer (trapezoid)
                 FolderShape6()
-                    .fill(Color(red: 0xD4/255, green: 0x47/255, blue: 0x47/255))
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 3)
                     .frame(width: 197, height: 151)
+                    .glassEffect(.clear, in: FolderShape6())
             }
+            .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
             Text("Folder Design 7")
                 .font(.system(size: 13.5, weight: .semibold, design: .rounded))
                 .foregroundStyle(.black.opacity(0.5))
