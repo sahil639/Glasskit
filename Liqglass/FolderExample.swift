@@ -348,6 +348,114 @@ struct FolderShape4: Shape {
     }
 }
 
+// MARK: - Folder Tab Right Shape (tab notch top-right, width 203)
+
+struct FolderTabRightShape: Shape {
+    let viewBoxHeight: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 203
+        let sy = rect.height / viewBoxHeight
+        let bottomY = viewBoxHeight - 11.5
+        let edgeY = viewBoxHeight - 0.5
+
+        var path = Path()
+        path.move(to: CGPoint(x: 203 * sx, y: bottomY * sy))
+        path.addLine(to: CGPoint(x: 203 * sx, y: 11 * sy))
+        path.addCurve(
+            to: CGPoint(x: 192 * sx, y: 0),
+            control1: CGPoint(x: 203 * sx, y: 4.92487 * sy),
+            control2: CGPoint(x: 198.075 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 155.556 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 147.778 * sx, y: 3.22183 * sy),
+            control1: CGPoint(x: 152.639 * sx, y: 0),
+            control2: CGPoint(x: 149.841 * sx, y: 1.15893 * sy)
+        )
+        path.addLine(to: CGPoint(x: 140.722 * sx, y: 10.2782 * sy))
+        path.addCurve(
+            to: CGPoint(x: 132.944 * sx, y: 13.5 * sy),
+            control1: CGPoint(x: 138.659 * sx, y: 12.3411 * sy),
+            control2: CGPoint(x: 135.861 * sx, y: 13.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 11 * sx, y: 13.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 0, y: 24.5 * sy),
+            control1: CGPoint(x: 4.92487 * sx, y: 13.5 * sy),
+            control2: CGPoint(x: 0, y: 18.4249 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: bottomY * sy))
+        path.addCurve(
+            to: CGPoint(x: 11 * sx, y: edgeY * sy),
+            control1: CGPoint(x: 0, y: (bottomY + 6.075) * sy),
+            control2: CGPoint(x: 4.92487 * sx, y: edgeY * sy)
+        )
+        path.addLine(to: CGPoint(x: 192 * sx, y: edgeY * sy))
+        path.addCurve(
+            to: CGPoint(x: 203 * sx, y: bottomY * sy),
+            control1: CGPoint(x: 198.075 * sx, y: edgeY * sy),
+            control2: CGPoint(x: 203 * sx, y: (bottomY + 6.075) * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Tab Left Shape (tab notch top-left, width 203)
+
+struct FolderTabLeftShape: Shape {
+    let viewBoxHeight: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 203
+        let sy = rect.height / viewBoxHeight
+        let bottomY = viewBoxHeight - 11.5
+        let edgeY = viewBoxHeight - 0.5
+
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: bottomY * sy))
+        path.addLine(to: CGPoint(x: 0, y: 11 * sy))
+        path.addCurve(
+            to: CGPoint(x: 11 * sx, y: 0),
+            control1: CGPoint(x: 0, y: 4.92487 * sy),
+            control2: CGPoint(x: 4.92487 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 47.4436 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 55.2218 * sx, y: 3.22183 * sy),
+            control1: CGPoint(x: 50.361 * sx, y: 0),
+            control2: CGPoint(x: 53.1589 * sx, y: 1.15893 * sy)
+        )
+        path.addLine(to: CGPoint(x: 62.2782 * sx, y: 10.2782 * sy))
+        path.addCurve(
+            to: CGPoint(x: 70.0564 * sx, y: 13.5 * sy),
+            control1: CGPoint(x: 64.3411 * sx, y: 12.3411 * sy),
+            control2: CGPoint(x: 67.139 * sx, y: 13.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 192 * sx, y: 13.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 203 * sx, y: 24.5 * sy),
+            control1: CGPoint(x: 198.075 * sx, y: 13.5 * sy),
+            control2: CGPoint(x: 203 * sx, y: 18.4249 * sy)
+        )
+        path.addLine(to: CGPoint(x: 203 * sx, y: bottomY * sy))
+        path.addCurve(
+            to: CGPoint(x: 192 * sx, y: edgeY * sy),
+            control1: CGPoint(x: 203 * sx, y: (bottomY + 6.075) * sy),
+            control2: CGPoint(x: 198.075 * sx, y: edgeY * sy)
+        )
+        path.addLine(to: CGPoint(x: 11 * sx, y: edgeY * sy))
+        path.addCurve(
+            to: CGPoint(x: 0, y: bottomY * sy),
+            control1: CGPoint(x: 4.92487 * sx, y: edgeY * sy),
+            control2: CGPoint(x: 0, y: (bottomY + 6.075) * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Folder Shape 6 (front - trapezoid, 197x151)
 
 struct FolderShape6: Shape {
@@ -552,6 +660,7 @@ struct FolderExample: View {
                 // folder5Section
                 folder6Section
                 folder7Section
+                folder8Section
         }
         .safeAreaInset(edge: .bottom) {
             // Animation Toggle - pinned above tab bar
@@ -1118,6 +1227,67 @@ struct FolderExample: View {
             }
             .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
             Text("Folder Design 7")
+                .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(.black).opacity(0.06), in: .capsule)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Folder 8
+    private var folder8Section: some View {
+        VStack(spacing: 32) {
+            ZStack(alignment: .bottom) {
+                // SVG 5 (back) - right tab, 203x202, #D7D7DC
+                FolderTabRightShape(viewBoxHeight: 202)
+                    .fill(Color(red: 0xD7/255, green: 0xD7/255, blue: 0xDC/255))
+                    .frame(width: 203, height: 202)
+
+                // SVG 4 - left tab, 203x195, #C3C3C8
+                FolderTabLeftShape(viewBoxHeight: 195)
+                    .fill(Color(red: 0xC3/255, green: 0xC3/255, blue: 0xC8/255))
+                    .frame(width: 203, height: 195)
+
+                // SVG 3 - right tab, 203x188, #AFAFB4
+                FolderTabRightShape(viewBoxHeight: 188)
+                    .fill(Color(red: 0xAF/255, green: 0xAF/255, blue: 0xB4/255))
+                    .frame(width: 203, height: 188)
+
+                // SVG 2 - left tab, 203x181, #9B9BA0
+                FolderTabLeftShape(viewBoxHeight: 181)
+                    .fill(Color(red: 0x9B/255, green: 0x9B/255, blue: 0xA0/255))
+                    .frame(width: 203, height: 181)
+
+                // SVG 1 (front) - right tab, 203x174
+                FolderTabRightShape(viewBoxHeight: 174)
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 3)
+                    .frame(width: 203, height: 174)
+                    .glassEffect(.clear, in: FolderTabRightShape(viewBoxHeight: 174))
+                    .overlay(alignment: .bottomLeading) {
+                        Text("さっぽろ")
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .foregroundStyle(.black)
+                            .padding(.leading, 8)
+                            .padding(.bottom, 8)
+                    }
+            }
+            .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
+            Text("Folder Design 8")
                 .font(.system(size: 13.5, weight: .semibold, design: .rounded))
                 .foregroundStyle(.black.opacity(0.5))
                 .padding(.horizontal, 14)
