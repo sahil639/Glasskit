@@ -11,84 +11,153 @@ import SwiftUI
 
 struct ReminderCard: View {
     let title: String
-    let emoji: String
-    let time: String
-    let gradient: [Color]
+    let subtitle: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("\(title) \(emoji)")
-                .font(.system(.body, design: .rounded))
-                .fontWeight(.semibold)
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundStyle(.black.opacity(0.8))
 
             Spacer()
 
-            HStack {
-                Text(time)
-                    .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.5))
-                Spacer()
-                Image(systemName: "arrow.up.right")
-                    .font(.caption)
-                    .foregroundStyle(.black.opacity(0.4))
-                    .padding(6)
-                    .background(.black.opacity(0.08), in: .circle)
-            }
+            Text(subtitle)
+                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .foregroundStyle(.black.opacity(0.35))
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: 130)
         .background(
-            LinearGradient(
-                colors: gradient,
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            ),
-            in: .rect(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                .fill(LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color.white.opacity(0), location: 0),
+                        .init(color: Color.white.opacity(1), location: 1)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.gray.opacity(0.3), Color.gray.opacity(0.15)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ),
+                    lineWidth: 2
+                )
         )
+        .glassEffect(.clear, in: .rect(cornerRadius: 16, style: .continuous))
+    }
+}
+
+// MARK: - Update Card
+
+struct UpdateCard: View {
+    let imageName: String
+    let heading: String
+    let date: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Image(imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 180)
+                .clipped()
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(heading)
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .foregroundStyle(.black.opacity(0.85))
+
+                HStack(spacing: 5) {
+                    Image(systemName: "calendar")
+                        .font(.system(size: 13))
+                    Text(date)
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                }
+                .foregroundStyle(.black.opacity(0.35))
+            }
+            .padding(16)
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                .fill(LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color.white.opacity(0), location: 0),
+                        .init(color: Color.white.opacity(1), location: 1)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.gray.opacity(0.3), Color.gray.opacity(0.15)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ),
+                    lineWidth: 2
+                )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .glassEffect(.clear, in: .rect(cornerRadius: 16, style: .continuous))
     }
 }
 
 // MARK: - Home View
 
 struct HomeView: View {
-    let reminders: [(title: String, emoji: String, time: String, gradient: [Color])] = [
-        ("Don't forget math homework", "\u{1F4D6}", "2:30 PM", [Color(red: 0.85, green: 0.75, blue: 0.55), Color(red: 0.80, green: 0.65, blue: 0.50)]),
-        ("Buy Snacks before 6 PM", "\u{1F36A}", "5:45 PM", [Color(red: 0.78, green: 0.72, blue: 0.85), Color(red: 0.72, green: 0.65, blue: 0.80)]),
-        ("Call mom Every Weekend", "\u{1F495}", "8:00 PM", [Color(red: 0.88, green: 0.72, blue: 0.65), Color(red: 0.82, green: 0.62, blue: 0.55)]),
-        ("Water the plants", "\u{1F331}", "Morning", [Color(red: 0.65, green: 0.80, blue: 0.78), Color(red: 0.55, green: 0.75, blue: 0.72)])
+    let cards: [(title: String, subtitle: String)] = [
+        ("とうきょう", "こうべ"),
+        ("おおさか", "こうべ"),
+        ("なごや", "こうべ"),
+        ("さっぽろ", "こうべ")
+    ]
+
+    let updates: [(image: String, heading: String, date: String)] = [
+        ("card1", "Here is a list of major Japanese cities with their Kanji, Hiragana, and English names", "12 March 2026"),
+        ("card2", "Exploring the ancient temples of Kyoto during cherry blossom season", "8 March 2026"),
+        ("card3", "Traditional Japanese pottery and ceramics", "2 March 2026"),
+        ("card1", "A guide to navigating the Tokyo subway system for first-time visitors in Japan", "25 February 2026"),
+        ("card2", "Street food in Osaka", "19 February 2026")
     ]
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                // Hero text
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Let's be real...")
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
-                    Text("you forget stuff.")
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
-                    HStack(spacing: 6) {
-                        Text("We don't")
-                            .font(.system(size: 28, weight: .bold, design: .rounded))
-                        Text("\u{1F60E}")
-                            .font(.system(size: 26))
-                    }
-                }
-                .foregroundStyle(.black)
+            VStack(spacing: 24) {
+                // Title
+                Text("glasskit")
+                    .font(.system(size: 32, weight: .bold, design: .rounded))
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .center)
 
-                // Reminder cards grid
+                // Cards grid
                 LazyVGrid(columns: [
                     GridItem(.flexible(), spacing: 12),
                     GridItem(.flexible(), spacing: 12)
                 ], spacing: 12) {
-                    ForEach(0..<reminders.count, id: \.self) { i in
+                    ForEach(0..<cards.count, id: \.self) { i in
                         ReminderCard(
-                            title: reminders[i].title,
-                            emoji: reminders[i].emoji,
-                            time: reminders[i].time,
-                            gradient: reminders[i].gradient
+                            title: cards[i].title,
+                            subtitle: cards[i].subtitle
+                        )
+                    }
+                }
+
+                // Latest Updates
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("Latest Updates")
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.5))
+
+                    ForEach(0..<updates.count, id: \.self) { i in
+                        UpdateCard(
+                            imageName: updates[i].image,
+                            heading: updates[i].heading,
+                            date: updates[i].date
                         )
                     }
                 }
@@ -107,7 +176,7 @@ struct ContentView: View {
             Tab("Home", systemImage: "house.fill") {
                 NavigationStack {
                     HomeView()
-                        .navigationTitle("Glasskit")
+                        .navigationBarHidden(true)
                 }
             }
 
@@ -126,10 +195,10 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Settings", systemImage: "gearshape.fill") {
+            Tab("Suggest", systemImage: "lightbulb.fill") {
                 NavigationStack {
-                    Text("Settings")
-                        .navigationTitle("Settings")
+                    Text("Suggest")
+                        .navigationTitle("Suggest")
                 }
             }
         }

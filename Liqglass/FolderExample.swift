@@ -984,25 +984,90 @@ struct ContainerShape: Shape {
     }
 }
 
+// MARK: - Scroll Offset Key
+
+private struct ScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
 // MARK: - Folder Example Page
 
 struct FolderExample: View {
     @State private var animate = false
     @State private var animationEnabled = true
+    @State private var selectedFilter: String? = nil
+    @State private var showFilterBar = true
+    @State private var lastScrollOffset: CGFloat = 0
+
+    let filters = ["Unique Shape", "Stickers", "Text"]
 
     var body: some View {
         ScrollView {
-                // folder1Section
-                // folder2Section
-                // folder3Section
-                // folder4Section
-                // folder5Section
-                // folder6Section
-                // folder7Section
-                // folder8Section
-                // folder9Section
+            VStack(spacing: 0) {
+                GeometryReader { geo in
+                    Color.clear
+                        .preference(key: ScrollOffsetKey.self, value: geo.frame(in: .named("scroll")).minY)
+                }
+                .frame(height: 0)
+
+                folder1Section
+                folder2Section
+                folder3Section
+                folder4Section
+                folder5Section
+                folder6Section
+                folder7Section
+                folder8Section
+                folder9Section
                 folder10Section
                 folder11Section
+            }
+        }
+        .coordinateSpace(name: "scroll")
+        .onPreferenceChange(ScrollOffsetKey.self) { offset in
+            let delta = offset - lastScrollOffset
+            if abs(delta) > 5 {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    showFilterBar = delta > 0
+                }
+                lastScrollOffset = offset
+            }
+        }
+        .safeAreaInset(edge: .top) {
+            if showFilterBar {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(filters, id: \.self) { filter in
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    selectedFilter = selectedFilter == filter ? nil : filter
+                                }
+                            } label: {
+                                Text(filter)
+                                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(selectedFilter == filter ? .white : .black.opacity(0.7))
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        Capsule()
+                                            .fill(selectedFilter == filter ? Color.black.opacity(0.75) : Color.clear)
+                                    )
+                                    .overlay(
+                                        Capsule()
+                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1.5)
+                                    )
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                }
+                .glassEffect(.clear, in: .rect(cornerRadius: 0))
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
         }
         .safeAreaInset(edge: .bottom) {
             // Animation Toggle - pinned above tab bar
