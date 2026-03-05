@@ -1466,16 +1466,18 @@ struct FolderExample: View {
                     .rotationEffect(.degrees(3))
                     .offset(x: 20 + (animate ? 0.5 : -0.5), y: -30 + (animate ? -1 : 1))
 
-                // SVG 2 (middle) - wave mirrored, 202x160, grey gradient
+                // SVG 2 (middle) - wave mirrored, 202x160
                 FolderShape9b()
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
                     .fill(LinearGradient(
                         gradient: Gradient(stops: [
-                            .init(color: Color.gray.opacity(0.35), location: 0),
-                            .init(color: Color.gray.opacity(0.65), location: 1)
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
                         ]),
                         startPoint: .top,
                         endPoint: .bottom
                     ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 3)
                     .frame(width: 202, height: 160)
 
                 // Card 1 - behind SVG 1
