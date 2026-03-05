@@ -1854,6 +1854,18 @@ struct FolderExample: View {
                     .frame(width: 205, height: 201)
                     .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
                     .glassEffect(.clear, in: FolderShape11a())
+                    .overlay(alignment: .bottomLeading) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("広島")
+                                .font(.system(size: 20, weight: .bold, design: .rounded))
+                                .foregroundStyle(.black)
+                            Text("ひろしま")
+                                .font(.system(size: 12, weight: .medium, design: .rounded))
+                                .foregroundStyle(.black.opacity(0.45))
+                        }
+                        .padding(.leading, 12)
+                        .padding(.bottom, 12)
+                    }
             }
             .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
             Text("Folder Design 11")
