@@ -348,6 +348,130 @@ struct FolderShape4: Shape {
     }
 }
 
+// MARK: - Folder Shape 11a (front - notched corners, 205x201)
+
+struct FolderShape11a: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 205
+        let sy = rect.height / 201
+
+        var path = Path()
+        path.move(to: CGPoint(x: 5.27207 * sx, y: 45.7279 * sy))
+        path.addLine(to: CGPoint(x: 45.7279 * sx, y: 5.27208 * sy))
+        path.addCurve(
+            to: CGPoint(x: 58.4558 * sx, y: 0),
+            control1: CGPoint(x: 49.1036 * sx, y: 1.89642 * sy),
+            control2: CGPoint(x: 53.6819 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 96.1737 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 110.405 * sx, y: 6.97807 * sy),
+            control1: CGPoint(x: 101.741 * sx, y: 0),
+            control2: CGPoint(x: 106.995 * sx, y: 2.57637 * sy)
+        )
+        path.addLine(to: CGPoint(x: 139.095 * sx, y: 44.0219 * sy))
+        path.addCurve(
+            to: CGPoint(x: 153.326 * sx, y: 51 * sy),
+            control1: CGPoint(x: 142.505 * sx, y: 48.4236 * sy),
+            control2: CGPoint(x: 147.759 * sx, y: 51 * sy)
+        )
+        path.addLine(to: CGPoint(x: 186.5 * sx, y: 51 * sy))
+        path.addCurve(
+            to: CGPoint(x: 204.5 * sx, y: 69 * sy),
+            control1: CGPoint(x: 196.441 * sx, y: 51 * sy),
+            control2: CGPoint(x: 204.5 * sx, y: 59.0589 * sy)
+        )
+        path.addLine(to: CGPoint(x: 204.5 * sx, y: 158 * sy))
+        path.addCurve(
+            to: CGPoint(x: 186.5 * sx, y: 176 * sy),
+            control1: CGPoint(x: 204.5 * sx, y: 167.941 * sy),
+            control2: CGPoint(x: 196.441 * sx, y: 176 * sy)
+        )
+        path.addLine(to: CGPoint(x: 134.456 * sx, y: 176 * sy))
+        path.addCurve(
+            to: CGPoint(x: 121.728 * sx, y: 181.272 * sy),
+            control1: CGPoint(x: 129.682 * sx, y: 176 * sy),
+            control2: CGPoint(x: 125.104 * sx, y: 177.896 * sy)
+        )
+        path.addLine(to: CGPoint(x: 107.772 * sx, y: 195.228 * sy))
+        path.addCurve(
+            to: CGPoint(x: 95.0442 * sx, y: 200.5 * sy),
+            control1: CGPoint(x: 104.396 * sx, y: 198.604 * sy),
+            control2: CGPoint(x: 99.8181 * sx, y: 200.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 18 * sx, y: 200.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 0, y: 182.5 * sy),
+            control1: CGPoint(x: 8.05887 * sx, y: 200.5 * sy),
+            control2: CGPoint(x: 0, y: 192.441 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: 58.4558 * sy))
+        path.addCurve(
+            to: CGPoint(x: 5.27207 * sx, y: 45.7279 * sy),
+            control1: CGPoint(x: 0, y: 53.6819 * sy),
+            control2: CGPoint(x: 1.89641 * sx, y: 49.1036 * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Shape 11b (back - notched corners without tab, 205x201)
+
+struct FolderShape11b: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 205
+        let sy = rect.height / 201
+
+        var path = Path()
+        path.move(to: CGPoint(x: 5.27207 * sx, y: 45.7279 * sy))
+        path.addLine(to: CGPoint(x: 45.7279 * sx, y: 5.27208 * sy))
+        path.addCurve(
+            to: CGPoint(x: 58.4558 * sx, y: 0),
+            control1: CGPoint(x: 49.1036 * sx, y: 1.89642 * sy),
+            control2: CGPoint(x: 53.6819 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 186.5 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 204.5 * sx, y: 18 * sy),
+            control1: CGPoint(x: 196.441 * sx, y: 0),
+            control2: CGPoint(x: 204.5 * sx, y: 8.05888 * sy)
+        )
+        path.addLine(to: CGPoint(x: 204.5 * sx, y: 158 * sy))
+        path.addCurve(
+            to: CGPoint(x: 186.5 * sx, y: 176 * sy),
+            control1: CGPoint(x: 204.5 * sx, y: 167.941 * sy),
+            control2: CGPoint(x: 196.441 * sx, y: 176 * sy)
+        )
+        path.addLine(to: CGPoint(x: 134.456 * sx, y: 176 * sy))
+        path.addCurve(
+            to: CGPoint(x: 121.728 * sx, y: 181.272 * sy),
+            control1: CGPoint(x: 129.682 * sx, y: 176 * sy),
+            control2: CGPoint(x: 125.104 * sx, y: 177.896 * sy)
+        )
+        path.addLine(to: CGPoint(x: 107.772 * sx, y: 195.228 * sy))
+        path.addCurve(
+            to: CGPoint(x: 95.0442 * sx, y: 200.5 * sy),
+            control1: CGPoint(x: 104.396 * sx, y: 198.604 * sy),
+            control2: CGPoint(x: 99.8181 * sx, y: 200.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 18 * sx, y: 200.5 * sy))
+        path.addCurve(
+            to: CGPoint(x: 0, y: 182.5 * sy),
+            control1: CGPoint(x: 8.05887 * sx, y: 200.5 * sy),
+            control2: CGPoint(x: 0, y: 192.441 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: 58.4558 * sy))
+        path.addCurve(
+            to: CGPoint(x: 5.27207 * sx, y: 45.7279 * sy),
+            control1: CGPoint(x: 0, y: 53.6819 * sy),
+            control2: CGPoint(x: 1.89641 * sx, y: 49.1036 * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Folder Shape 10a (envelope front, 389x262)
 
 struct FolderShape10a: Shape {
@@ -878,6 +1002,7 @@ struct FolderExample: View {
                 // folder8Section
                 // folder9Section
                 folder10Section
+                folder11Section
         }
         .safeAreaInset(edge: .bottom) {
             // Animation Toggle - pinned above tab bar
@@ -1674,6 +1799,64 @@ struct FolderExample: View {
             }
             .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
             Text("Folder Design 10")
+                .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(.black).opacity(0.06), in: .capsule)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Folder 11
+    private var folder11Section: some View {
+        VStack(spacing: 32) {
+            ZStack(alignment: .bottom) {
+                // SVG 2 (back) - notched corners without tab, light grey horizontal gradient
+                FolderShape11b()
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.gray.opacity(0.25), location: 0),
+                            .init(color: Color.gray.opacity(0.45), location: 1)
+                        ]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    ))
+                    .frame(width: 205, height: 201)
+
+                // Card 1 - near top right corner
+                Image("card1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 90, height: 125)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(5))
+                    .offset(x: 30, y: -60)
+
+                // SVG 1 (front) - notched corners with tab
+                FolderShape11a()
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 3)
+                    .frame(width: 205, height: 201)
+                    .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+                    .glassEffect(.clear, in: FolderShape11a())
+            }
+            .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
+            Text("Folder Design 11")
                 .font(.system(size: 13.5, weight: .semibold, design: .rounded))
                 .foregroundStyle(.black.opacity(0.5))
                 .padding(.horizontal, 14)
