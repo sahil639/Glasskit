@@ -348,6 +348,84 @@ struct FolderShape4: Shape {
     }
 }
 
+// MARK: - Folder Shape 10a (envelope front, 389x262)
+
+struct FolderShape10a: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 389
+        let sy = rect.height / 262
+
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: 24.0328 * sy))
+        path.addCurve(
+            to: CGPoint(x: 35.1464 * sx, y: 2.7782 * sy),
+            control1: CGPoint(x: 0, y: 5.98821 * sy),
+            control2: CGPoint(x: 19.1659 * sx, y: -5.60229 * sy)
+        )
+        path.addLine(to: CGPoint(x: 194.5 * sx, y: 86.3467 * sy))
+        path.addLine(to: CGPoint(x: 353.854 * sx, y: 2.77819 * sy))
+        path.addCurve(
+            to: CGPoint(x: 389 * sx, y: 24.0328 * sy),
+            control1: CGPoint(x: 369.834 * sx, y: -5.6023 * sy),
+            control2: CGPoint(x: 389 * sx, y: 5.98821 * sy)
+        )
+        path.addLine(to: CGPoint(x: 389 * sx, y: 178.641 * sy))
+        path.addLine(to: CGPoint(x: 389 * sx, y: 237.347 * sy))
+        path.addCurve(
+            to: CGPoint(x: 365 * sx, y: 261.347 * sy),
+            control1: CGPoint(x: 389 * sx, y: 250.602 * sy),
+            control2: CGPoint(x: 378.255 * sx, y: 261.347 * sy)
+        )
+        path.addLine(to: CGPoint(x: 24 * sx, y: 261.347 * sy))
+        path.addCurve(
+            to: CGPoint(x: 0, y: 237.347 * sy),
+            control1: CGPoint(x: 10.7452 * sx, y: 261.347 * sy),
+            control2: CGPoint(x: 0, y: 250.602 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: 24.0328 * sy))
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Shape 10b (envelope back, 389x289)
+
+struct FolderShape10b: Shape {
+    func path(in rect: CGRect) -> Path {
+        let sx = rect.width / 389
+        let sy = rect.height / 289
+
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: 34 * sy))
+        path.addCurve(
+            to: CGPoint(x: 34 * sx, y: 0),
+            control1: CGPoint(x: 0, y: 15.2223 * sy),
+            control2: CGPoint(x: 15.2223 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 355 * sx, y: 0))
+        path.addCurve(
+            to: CGPoint(x: 389 * sx, y: 34 * sy),
+            control1: CGPoint(x: 373.778 * sx, y: 0),
+            control2: CGPoint(x: 389 * sx, y: 15.2223 * sy)
+        )
+        path.addLine(to: CGPoint(x: 389 * sx, y: 265 * sy))
+        path.addCurve(
+            to: CGPoint(x: 365 * sx, y: 289 * sy),
+            control1: CGPoint(x: 389 * sx, y: 278.255 * sy),
+            control2: CGPoint(x: 378.255 * sx, y: 289 * sy)
+        )
+        path.addLine(to: CGPoint(x: 24 * sx, y: 289 * sy))
+        path.addCurve(
+            to: CGPoint(x: 0, y: 265 * sy),
+            control1: CGPoint(x: 10.7452 * sx, y: 289 * sy),
+            control2: CGPoint(x: 0, y: 278.255 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: 34 * sy))
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Folder Shape 9a (front wave, 202x100)
 
 struct FolderShape9a: Shape {
@@ -795,10 +873,11 @@ struct FolderExample: View {
                 // folder3Section
                 // folder4Section
                 // folder5Section
-                folder6Section
-                folder7Section
-                folder8Section
-                folder9Section
+                // folder6Section
+                // folder7Section
+                // folder8Section
+                // folder9Section
+                folder10Section
         }
         .safeAreaInset(edge: .bottom) {
             // Animation Toggle - pinned above tab bar
@@ -1443,16 +1522,17 @@ struct FolderExample: View {
     private var folder9Section: some View {
         VStack(spacing: 32) {
             ZStack(alignment: .bottom) {
-                // SVG 3 (back) - rounded rect, 202x204, darker grey gradient
+                // SVG 3 (back) - rounded rect, 202x204, light grey gradient
                 FolderShape9c()
                     .fill(LinearGradient(
                         gradient: Gradient(stops: [
-                            .init(color: Color.gray.opacity(0.6), location: 0),
-                            .init(color: Color.gray.opacity(0.9), location: 1)
+                            .init(color: Color.gray.opacity(0.2), location: 0),
+                            .init(color: Color.gray.opacity(0.4), location: 1)
                         ]),
                         startPoint: .top,
                         endPoint: .bottom
                     ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 3)
                     .frame(width: 202, height: 204)
 
                 // Card 2 - behind SVG 2
@@ -1505,9 +1585,95 @@ struct FolderExample: View {
                     .stroke(Color.white.opacity(0.45), lineWidth: 3)
                     .frame(width: 202, height: 100)
                     .glassEffect(.clear, in: FolderShape9a())
+                    .overlay(alignment: .bottomLeading) {
+                        Text("鹿児島")
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .foregroundStyle(.green)
+                            .padding(.leading, 8)
+                            .padding(.bottom, 8)
+                    }
             }
             .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
             Text("Folder Design 9")
+                .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(.black).opacity(0.06), in: .capsule)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Folder 10
+    private var folder10Section: some View {
+        VStack(spacing: 32) {
+            ZStack(alignment: .bottom) {
+                // SVG 2 (back) - rounded rect, 389x289, light grey gradient
+                FolderShape10b()
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.gray.opacity(0.2), location: 0),
+                            .init(color: Color.gray.opacity(0.45), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .frame(width: 200, height: 149)
+
+                // Card 3 (back)
+                Image("card3")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 90, height: 125)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(0))
+                    .offset(x: 30 + (animate ? 1 : -1), y: -10 + (animate ? -0.5 : 0.5))
+
+                // Card 1 (middle)
+                Image("card1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 90, height: 125)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(3))
+                    .offset(x: -2 + (animate ? -0.5 : 0.5), y: -16 + (animate ? 1 : -1))
+
+                // Card 2 (front)
+                Image("card2")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 90, height: 125)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 4))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(0))
+                    .offset(x: -36 + (animate ? 0.5 : -0.5), y: -22 + (animate ? -1 : 1))
+
+                // SVG 1 (front) - envelope, 200x135
+                FolderShape10a()
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 3)
+                    .frame(width: 200, height: 135)
+                    .glassEffect(.clear, in: FolderShape10a())
+            }
+            .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
+            Text("Folder Design 10")
                 .font(.system(size: 13.5, weight: .semibold, design: .rounded))
                 .foregroundStyle(.black.opacity(0.5))
                 .padding(.horizontal, 14)
