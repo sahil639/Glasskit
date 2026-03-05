@@ -7,6 +7,37 @@
 
 import SwiftUI
 
+// MARK: - Favorites Manager
+
+@Observable
+class FavoritesManager {
+    private static let key = "favoritedFolders"
+
+    var favoritedIDs: Set<String> {
+        didSet {
+            let array = Array(favoritedIDs)
+            UserDefaults.standard.set(array, forKey: Self.key)
+        }
+    }
+
+    init() {
+        let saved = UserDefaults.standard.stringArray(forKey: Self.key) ?? []
+        self.favoritedIDs = Set(saved)
+    }
+
+    func isFavorited(_ id: String) -> Bool {
+        favoritedIDs.contains(id)
+    }
+
+    func toggle(_ id: String) {
+        if favoritedIDs.contains(id) {
+            favoritedIDs.remove(id)
+        } else {
+            favoritedIDs.insert(id)
+        }
+    }
+}
+
 // MARK: - Reminder Card
 
 struct ReminderCard: View {
@@ -168,6 +199,14 @@ struct HomeView: View {
     }
 }
 
+// MARK: - Favorites View
+
+struct FavoritesView: View {
+    var body: some View {
+        FolderExample(favoritesOnly: true)
+    }
+}
+
 // MARK: - Content View
 
 struct ContentView: View {
@@ -190,15 +229,16 @@ struct ContentView: View {
 
             Tab("Favorites", systemImage: "heart.fill") {
                 NavigationStack {
-                    Text("Favorites")
-                        .navigationTitle("Favorites")
+                    FavoritesView()
+                        .navigationTitle("Favourite GL Designs")
+                        .toolbarTitleDisplayMode(.inline)
                 }
             }
 
-            Tab("Suggest", systemImage: "lightbulb.fill") {
+            Tab("Analytics", systemImage: "chart.bar.fill") {
                 NavigationStack {
-                    Text("Suggest")
-                        .navigationTitle("Suggest")
+                    Text("Analytics")
+                        .navigationTitle("Analytics")
                 }
             }
         }

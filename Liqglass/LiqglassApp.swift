@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct GlassKitApp: App {
+    @State private var favoritesManager = FavoritesManager()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(favoritesManager)
         }
     }
 }

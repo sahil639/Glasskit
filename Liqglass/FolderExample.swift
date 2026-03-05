@@ -984,35 +984,63 @@ struct ContainerShape: Shape {
     }
 }
 
-// MARK: - Scroll Offset Key
-
-private struct ScrollOffsetKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
-
 // MARK: - Folder Example Page
 
 struct FolderExample: View {
     @State private var animate = false
     @State private var animationEnabled = true
-    @State private var selectedFilter: String? = nil
-    @State private var showFilterBar = true
-    @State private var lastScrollOffset: CGFloat = 0
+    @Environment(FavoritesManager.self) private var favoritesManager
+    var favoritesOnly = false
 
-    let filters = ["Unique Shape", "Stickers", "Text"]
+    private func heartButton(for id: String) -> some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                favoritesManager.toggle(id)
+            }
+        } label: {
+            Image(systemName: favoritesManager.isFavorited(id) ? "heart.fill" : "heart")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(favoritesManager.isFavorited(id) ? .red : .black.opacity(0.3))
+        }
+    }
+
+    private var folderEntries: [(id: String, section: AnyView)] {
+        [
+            ("folder1", AnyView(folder1Section)),
+            ("folder2", AnyView(folder2Section)),
+            ("folder3", AnyView(folder3Section)),
+            ("folder4", AnyView(folder4Section)),
+            ("folder5", AnyView(folder5Section)),
+            ("folder6", AnyView(folder6Section)),
+            ("folder7", AnyView(folder7Section)),
+            ("folder8", AnyView(folder8Section)),
+            ("folder9", AnyView(folder9Section)),
+            ("folder10", AnyView(folder10Section)),
+            ("folder11", AnyView(folder11Section))
+        ]
+    }
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
-                GeometryReader { geo in
-                    Color.clear
-                        .preference(key: ScrollOffsetKey.self, value: geo.frame(in: .named("scroll")).minY)
+            if favoritesOnly {
+                let favorited = folderEntries.filter { favoritesManager.isFavorited($0.id) }
+                if favorited.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: "heart.slash")
+                            .font(.system(size: 40))
+                            .foregroundStyle(.black.opacity(0.15))
+                        Text("No favourites yet")
+                            .font(.system(size: 16, weight: .medium, design: .rounded))
+                            .foregroundStyle(.black.opacity(0.35))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 120)
+                } else {
+                    ForEach(favorited, id: \.id) { entry in
+                        entry.section
+                    }
                 }
-                .frame(height: 0)
-
+            } else {
                 folder1Section
                 folder2Section
                 folder3Section
@@ -1026,64 +1054,23 @@ struct FolderExample: View {
                 folder11Section
             }
         }
-        .coordinateSpace(name: "scroll")
-        .onPreferenceChange(ScrollOffsetKey.self) { offset in
-            let delta = offset - lastScrollOffset
-            if abs(delta) > 5 {
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    showFilterBar = delta > 0
-                }
-                lastScrollOffset = offset
-            }
-        }
-        .safeAreaInset(edge: .top) {
-            if showFilterBar {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
-                        ForEach(filters, id: \.self) { filter in
-                            Button {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    selectedFilter = selectedFilter == filter ? nil : filter
-                                }
-                            } label: {
-                                Text(filter)
-                                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                    .foregroundStyle(selectedFilter == filter ? .white : .black.opacity(0.7))
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 8)
-                                    .background(
-                                        Capsule()
-                                            .fill(selectedFilter == filter ? Color.black.opacity(0.75) : Color.clear)
-                                    )
-                                    .overlay(
-                                        Capsule()
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1.5)
-                                    )
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 8)
-                }
-                .glassEffect(.clear, in: .rect(cornerRadius: 0))
-                .transition(.move(edge: .top).combined(with: .opacity))
-            }
-        }
         .safeAreaInset(edge: .bottom) {
-            // Animation Toggle - pinned above tab bar
-            HStack {
-                Text("Animation")
-                    .font(.system(.body, design: .rounded))
-                    .fontWeight(.medium)
-                Spacer()
-                Toggle("", isOn: $animationEnabled)
-                    .labelsHidden()
+            if !favoritesOnly {
+                // Animation Toggle - pinned above tab bar
+                HStack {
+                    Text("Animation")
+                        .font(.system(.body, design: .rounded))
+                        .fontWeight(.medium)
+                    Spacer()
+                    Toggle("", isOn: $animationEnabled)
+                        .labelsHidden()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .glassEffect(.clear, in: .capsule)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .glassEffect(.clear, in: .capsule)
-            .padding(.horizontal, 20)
-            .padding(.bottom, 8)
         }
         .onAppear {
             if animationEnabled {
@@ -1129,6 +1116,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder1").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1253,6 +1241,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder2").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1337,6 +1326,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder3").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1417,6 +1407,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder4").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1484,6 +1475,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder5").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1565,6 +1557,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder6").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1644,6 +1637,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder7").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1705,6 +1699,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder8").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1795,6 +1790,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder9").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1874,6 +1870,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder10").padding(14) }
         .padding(.horizontal, 12)
     }
 
@@ -1944,6 +1941,7 @@ struct FolderExample: View {
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder11").padding(14) }
         .padding(.horizontal, 12)
     }
 }
