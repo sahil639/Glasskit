@@ -1948,4 +1948,5 @@ struct FolderExample: View {
 
 #Preview {
     FolderExample()
+        .environment(FavoritesManager())
 }
