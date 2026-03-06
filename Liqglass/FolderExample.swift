@@ -1079,6 +1079,107 @@ struct FolderShape12b: Shape {
     }
 }
 
+// MARK: - Folder Shape 13a (Front, 172x107)
+
+struct FolderShape13a: Shape {
+    func path(in rect: CGRect) -> Path {
+        let w = rect.width
+        let h = rect.height
+        let sx = w / 172
+        let sy = h / 107
+
+        var path = Path()
+        path.move(to: CGPoint(x: 33.01 * sx, y: 0))
+        path.addLine(to: CGPoint(x: 4.002 * sx, y: 0))
+        // Top-left corner curve
+        path.addCurve(
+            to: CGPoint(x: 0.16 * sx, y: 5.113 * sy),
+            control1: CGPoint(x: 1.338 * sx, y: 0),
+            control2: CGPoint(x: -0.581 * sx, y: 2.555 * sy)
+        )
+        path.addLine(to: CGPoint(x: 26.542 * sx, y: 96.174 * sy))
+        // Bottom-left curve
+        path.addCurve(
+            to: CGPoint(x: 40.95 * sx, y: 107 * sy),
+            control1: CGPoint(x: 28.4 * sx, y: 102.587 * sy),
+            control2: CGPoint(x: 34.273 * sx, y: 107 * sy)
+        )
+        path.addLine(to: CGPoint(x: 165.195 * sx, y: 107 * sy))
+        // Bottom-right corner curve
+        path.addCurve(
+            to: CGPoint(x: 170.987 * sx, y: 99.432 * sy),
+            control1: CGPoint(x: 169.147 * sx, y: 107 * sy),
+            control2: CGPoint(x: 172.019 * sx, y: 103.246 * sy)
+        )
+        path.addLine(to: CGPoint(x: 150.179 * sx, y: 22.58 * sy))
+        // Top-right area curve
+        path.addCurve(
+            to: CGPoint(x: 135.7 * sx, y: 11.5 * sy),
+            control1: CGPoint(x: 148.408 * sx, y: 16.041 * sy),
+            control2: CGPoint(x: 142.474 * sx, y: 11.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 65.348 * sx, y: 11.5 * sy))
+        // Tab notch curves
+        path.addCurve(
+            to: CGPoint(x: 59.28 * sx, y: 10.218 * sy),
+            control1: CGPoint(x: 63.258 * sx, y: 11.5 * sy),
+            control2: CGPoint(x: 61.192 * sx, y: 11.063 * sy)
+        )
+        path.addLine(to: CGPoint(x: 39.077 * sx, y: 1.282 * sy))
+        path.addCurve(
+            to: CGPoint(x: 33.01 * sx, y: 0),
+            control1: CGPoint(x: 37.166 * sx, y: 0.437 * sy),
+            control2: CGPoint(x: 35.099 * sx, y: 0)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Shape 13b (Back, 161x100)
+
+struct FolderShape13b: Shape {
+    func path(in rect: CGRect) -> Path {
+        let w = rect.width
+        let h = rect.height
+        let sx = w / 161
+        let sy = h / 100
+
+        var path = Path()
+        path.move(to: CGPoint(x: 152.993 * sx, y: 0))
+        path.addLine(to: CGPoint(x: 15.007 * sx, y: 0))
+        // Top-left rounded curve
+        path.addCurve(
+            to: CGPoint(x: 0.438 * sx, y: 18.57 * sy),
+            control1: CGPoint(x: 5.278 * sx, y: 0),
+            control2: CGPoint(x: -1.877 * sx, y: 9.12 * sy)
+        )
+        path.addLine(to: CGPoint(x: 17.588 * sx, y: 88.57 * sy))
+        // Bottom-left curve
+        path.addCurve(
+            to: CGPoint(x: 32.157 * sx, y: 100 * sy),
+            control1: CGPoint(x: 19.232 * sx, y: 95.281 * sy),
+            control2: CGPoint(x: 25.248 * sx, y: 100 * sy)
+        )
+        path.addLine(to: CGPoint(x: 130.733 * sx, y: 100 * sy))
+        // Bottom-right curve
+        path.addCurve(
+            to: CGPoint(x: 138.466 * sx, y: 94.05 * sy),
+            control1: CGPoint(x: 134.362 * sx, y: 100 * sy),
+            control2: CGPoint(x: 137.536 * sx, y: 97.558 * sy)
+        )
+        path.addLine(to: CGPoint(x: 160.726 * sx, y: 10.049 * sy))
+        // Top-right curve
+        path.addCurve(
+            to: CGPoint(x: 152.993 * sx, y: 0),
+            control1: CGPoint(x: 162.071 * sx, y: 4.973 * sy),
+            control2: CGPoint(x: 158.244 * sx, y: 0)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Folder Example Page
 
 struct FolderExample: View {
@@ -1112,7 +1213,8 @@ struct FolderExample: View {
             ("folder9", AnyView(folder9Section)),
             ("folder10", AnyView(folder10Section)),
             ("folder11", AnyView(folder11Section)),
-            ("folder12", AnyView(folder12Section))
+            ("folder12", AnyView(folder12Section)),
+            ("folder13", AnyView(folder13Section))
         ]
     }
 
@@ -1149,6 +1251,7 @@ struct FolderExample: View {
                 // folder10Section
                 // folder11Section
                 folder12Section
+                folder13Section
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -2130,6 +2233,85 @@ struct FolderExample: View {
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder12").padding(14) }
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Folder 13
+    private var folder13Section: some View {
+        VStack(spacing: 32) {
+            ZStack(alignment: .bottom) {
+                // SVG 2 (back) - grey gradient parallelogram
+                FolderShape13b()
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.gray.opacity(0.3), location: 0),
+                            .init(color: Color.gray.opacity(0.5), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .frame(width: 161, height: 100)
+                    .offset(x: 12)
+
+                // Cards between layers
+                Image("card3")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 70, height: 95)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(-10))
+                    .offset(x: -40, y: -10 + (animate ? -1 : 1))
+
+                Image("card1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 70, height: 95)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(3))
+                    .offset(x: 0, y: -15 + (animate ? 1 : -1))
+
+                Image("card2")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 70, height: 95)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(8))
+                    .offset(x: 40, y: -8 + (animate ? -0.5 : 0.5))
+
+                // SVG 1 (front) - slanted folder
+                FolderShape13a()
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 2)
+                    .frame(width: 172, height: 107)
+                    .glassEffect(.clear, in: FolderShape13a())
+            }
+            .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
+            Text("Folder Design 13")
+                .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(.black).opacity(0.06), in: .capsule)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder13").padding(14) }
         .padding(.horizontal, 12)
     }
 }
