@@ -1180,6 +1180,146 @@ struct FolderShape13b: Shape {
     }
 }
 
+// MARK: - Folder Shape 14a (Front, 197x120)
+
+struct FolderShape14a: Shape {
+    func path(in rect: CGRect) -> Path {
+        let w = rect.width
+        let h = rect.height
+        let sx = w / 197
+        let sy = h / 120
+
+        var path = Path()
+        // Start bottom-right area
+        path.move(to: CGPoint(x: 188.819 * sx, y: 105.846 * sy))
+        path.addLine(to: CGPoint(x: 196.116 * sx, y: 24.846 * sy))
+        // Top-right curve
+        path.addCurve(
+            to: CGPoint(x: 181.177 * sx, y: 8.5 * sy),
+            control1: CGPoint(x: 196.907 * sx, y: 16.066 * sy),
+            control2: CGPoint(x: 189.992 * sx, y: 8.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 133.353 * sx, y: 8.5 * sy))
+        // Right tab notch
+        path.addCurve(
+            to: CGPoint(x: 123.638 * sx, y: 4.929 * sy),
+            control1: CGPoint(x: 129.793 * sx, y: 8.5 * sy),
+            control2: CGPoint(x: 126.35 * sx, y: 7.234 * sy)
+        )
+        path.addLine(to: CGPoint(x: 122.04 * sx, y: 3.571 * sy))
+        path.addCurve(
+            to: CGPoint(x: 112.325 * sx, y: 0),
+            control1: CGPoint(x: 119.328 * sx, y: 1.266 * sy),
+            control2: CGPoint(x: 115.885 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 83.853 * sx, y: 0))
+        // Left tab notch
+        path.addCurve(
+            to: CGPoint(x: 74.138 * sx, y: 3.571 * sy),
+            control1: CGPoint(x: 80.293 * sx, y: 0),
+            control2: CGPoint(x: 76.85 * sx, y: 1.266 * sy)
+        )
+        path.addLine(to: CGPoint(x: 72.54 * sx, y: 4.929 * sy))
+        path.addCurve(
+            to: CGPoint(x: 62.825 * sx, y: 8.5 * sy),
+            control1: CGPoint(x: 69.828 * sx, y: 7.234 * sy),
+            control2: CGPoint(x: 66.385 * sx, y: 8.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 15.001 * sx, y: 8.5 * sy))
+        // Top-left curve
+        path.addCurve(
+            to: CGPoint(x: 0.061 * sx, y: 24.846 * sy),
+            control1: CGPoint(x: 6.185 * sx, y: 8.5 * sy),
+            control2: CGPoint(x: -0.73 * sx, y: 16.066 * sy)
+        )
+        path.addLine(to: CGPoint(x: 7.359 * sx, y: 105.846 * sy))
+        // Bottom-left curve
+        path.addCurve(
+            to: CGPoint(x: 22.298 * sx, y: 119.5 * sy),
+            control1: CGPoint(x: 8.055 * sx, y: 113.577 * sy),
+            control2: CGPoint(x: 14.536 * sx, y: 119.5 * sy)
+        )
+        path.addLine(to: CGPoint(x: 173.879 * sx, y: 119.5 * sy))
+        // Bottom-right curve
+        path.addCurve(
+            to: CGPoint(x: 188.819 * sx, y: 105.846 * sy),
+            control1: CGPoint(x: 181.642 * sx, y: 119.5 * sy),
+            control2: CGPoint(x: 188.122 * sx, y: 113.577 * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Shape 14b (Back, 113x72)
+
+struct FolderShape14b: Shape {
+    func path(in rect: CGRect) -> Path {
+        let w = rect.width
+        let h = rect.height
+        let sx = w / 113
+        let sy = h / 72
+
+        var path = Path()
+        path.move(to: CGPoint(x: 109.04 * sx, y: 58.347 * sy))
+        path.addLine(to: CGPoint(x: 112.114 * sx, y: 24.255 * sy))
+        // Top-right curve
+        path.addCurve(
+            to: CGPoint(x: 97.175 * sx, y: 7.908 * sy),
+            control1: CGPoint(x: 112.906 * sx, y: 15.475 * sy),
+            control2: CGPoint(x: 105.991 * sx, y: 7.908 * sy)
+        )
+        path.addLine(to: CGPoint(x: 88.177 * sx, y: 7.908 * sy))
+        // Right notch curve
+        path.addCurve(
+            to: CGPoint(x: 80.391 * sx, y: 3.954 * sy),
+            control1: CGPoint(x: 85.1 * sx, y: 7.908 * sy),
+            control2: CGPoint(x: 82.207 * sx, y: 6.439 * sy)
+        )
+        // Center dip
+        path.addCurve(
+            to: CGPoint(x: 72.604 * sx, y: 0),
+            control1: CGPoint(x: 78.575 * sx, y: 1.469 * sy),
+            control2: CGPoint(x: 75.682 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 39.572 * sx, y: 0))
+        // Left notch curve
+        path.addCurve(
+            to: CGPoint(x: 31.785 * sx, y: 3.954 * sy),
+            control1: CGPoint(x: 36.494 * sx, y: 0),
+            control2: CGPoint(x: 33.601 * sx, y: 1.469 * sy)
+        )
+        path.addCurve(
+            to: CGPoint(x: 23.999 * sx, y: 7.908 * sy),
+            control1: CGPoint(x: 29.969 * sx, y: 6.439 * sy),
+            control2: CGPoint(x: 27.076 * sx, y: 7.908 * sy)
+        )
+        path.addLine(to: CGPoint(x: 15.001 * sx, y: 7.908 * sy))
+        // Top-left curve
+        path.addCurve(
+            to: CGPoint(x: 0.062 * sx, y: 24.255 * sy),
+            control1: CGPoint(x: 6.185 * sx, y: 7.908 * sy),
+            control2: CGPoint(x: -0.73 * sx, y: 15.475 * sy)
+        )
+        path.addLine(to: CGPoint(x: 3.136 * sx, y: 58.347 * sy))
+        // Bottom-left curve
+        path.addCurve(
+            to: CGPoint(x: 18.075 * sx, y: 72 * sy),
+            control1: CGPoint(x: 3.833 * sx, y: 66.078 * sy),
+            control2: CGPoint(x: 10.313 * sx, y: 72 * sy)
+        )
+        path.addLine(to: CGPoint(x: 94.101 * sx, y: 72 * sy))
+        // Bottom-right curve
+        path.addCurve(
+            to: CGPoint(x: 109.04 * sx, y: 58.347 * sy),
+            control1: CGPoint(x: 101.863 * sx, y: 72 * sy),
+            control2: CGPoint(x: 108.343 * sx, y: 66.078 * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Folder Example Page
 
 struct FolderExample: View {
@@ -1214,7 +1354,8 @@ struct FolderExample: View {
             ("folder10", AnyView(folder10Section)),
             ("folder11", AnyView(folder11Section)),
             ("folder12", AnyView(folder12Section)),
-            ("folder13", AnyView(folder13Section))
+            ("folder13", AnyView(folder13Section)),
+            ("folder14", AnyView(folder14Section))
         ]
     }
 
@@ -1252,6 +1393,7 @@ struct FolderExample: View {
                 // folder11Section
                 folder12Section
                 folder13Section
+                folder14Section
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -2312,6 +2454,82 @@ struct FolderExample: View {
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder13").padding(14) }
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Folder 14
+    private var folder14Section: some View {
+        VStack(spacing: 32) {
+            ZStack {
+                // SVG 2 (back, above SVG 1)
+                FolderShape14b()
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.gray.opacity(0.25), location: 0),
+                            .init(color: Color.gray.opacity(0.45), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .frame(width: 113, height: 72)
+                    .offset(y: -50)
+
+                // 3 cards stacked symmetrically, each +4pt y, 15% smaller
+                Image("card3")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 70, height: 95)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .offset(y: -16 + (animate ? -0.5 : 0.5))
+
+                Image("card1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 70 * 0.85, height: 95 * 0.85)
+                    .clipShape(.rect(cornerRadius: 10, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 3))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .offset(y: -12 + (animate ? 0.5 : -0.5))
+
+                Image("card2")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 70 * 0.72, height: 95 * 0.72)
+                    .clipShape(.rect(cornerRadius: 9, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 9).stroke(.white, lineWidth: 2.5))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .offset(y: -8 + (animate ? -0.5 : 0.5))
+
+                // SVG 1 (front)
+                FolderShape14a()
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 2)
+                    .frame(width: 197, height: 120)
+                    .glassEffect(.clear, in: FolderShape14a())
+            }
+            .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
+            Text("Folder Design 14")
+                .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(.black).opacity(0.06), in: .capsule)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder14").padding(14) }
         .padding(.horizontal, 12)
     }
 }
