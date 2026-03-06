@@ -984,6 +984,101 @@ struct ContainerShape: Shape {
     }
 }
 
+// MARK: - Folder Shape 12a (Front, 180x143)
+
+struct FolderShape12a: Shape {
+    func path(in rect: CGRect) -> Path {
+        let w = rect.width
+        let h = rect.height
+        let sx = w / 180
+        let sy = h / 143
+
+        var path = Path()
+        path.move(to: CGPoint(x: 164.5 * sx, y: 142.5 * sy))
+        path.addLine(to: CGPoint(x: 0, y: 142.5 * sy))
+        // Curved bottom-left corner rising up
+        path.addCurve(
+            to: CGPoint(x: 10 * sx, y: 119.902 * sy),
+            control1: CGPoint(x: 2.198 * sx, y: 140.082 * sy),
+            control2: CGPoint(x: 10 * sx, y: 127.365 * sy)
+        )
+        path.addLine(to: CGPoint(x: 10 * sx, y: 15 * sy))
+        // Top-left rounded corner
+        path.addCurve(
+            to: CGPoint(x: 25 * sx, y: 0),
+            control1: CGPoint(x: 10 * sx, y: 6.716 * sy),
+            control2: CGPoint(x: 16.716 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 179.5 * sx, y: 0))
+        path.addLine(to: CGPoint(x: 179.5 * sx, y: 127.5 * sy))
+        // Bottom-right rounded corner
+        path.addCurve(
+            to: CGPoint(x: 164.5 * sx, y: 142.5 * sy),
+            control1: CGPoint(x: 179.5 * sx, y: 135.784 * sy),
+            control2: CGPoint(x: 172.784 * sx, y: 142.5 * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - Folder Shape 12b (Back, 202x201)
+
+struct FolderShape12b: Shape {
+    func path(in rect: CGRect) -> Path {
+        let w = rect.width
+        let h = rect.height
+        let sx = w / 202
+        let sy = h / 201
+
+        var path = Path()
+        path.move(to: CGPoint(x: 15 * sx, y: 20 * sy))
+        path.addLine(to: CGPoint(x: 96.701 * sx, y: 20 * sy))
+        // Tab curve up
+        path.addCurve(
+            to: CGPoint(x: 120.209 * sx, y: 3.901 * sy),
+            control1: CGPoint(x: 100.432 * sx, y: 20 * sy),
+            control2: CGPoint(x: 104.03 * sx, y: 18.609 * sy)
+        )
+        // Tab curve down
+        path.addCurve(
+            to: CGPoint(x: 130.299 * sx, y: 0),
+            control1: CGPoint(x: 122.97 * sx, y: 1.391 * sy),
+            control2: CGPoint(x: 126.568 * sx, y: 0)
+        )
+        path.addLine(to: CGPoint(x: 187 * sx, y: 0))
+        // Top-right rounded corner
+        path.addCurve(
+            to: CGPoint(x: 202 * sx, y: 15 * sy),
+            control1: CGPoint(x: 195.284 * sx, y: 0),
+            control2: CGPoint(x: 202 * sx, y: 6.716 * sy)
+        )
+        path.addLine(to: CGPoint(x: 202 * sx, y: 186 * sy))
+        // Bottom-right rounded corner
+        path.addCurve(
+            to: CGPoint(x: 187 * sx, y: 201 * sy),
+            control1: CGPoint(x: 202 * sx, y: 194.284 * sy),
+            control2: CGPoint(x: 195.284 * sx, y: 201 * sy)
+        )
+        path.addLine(to: CGPoint(x: 15 * sx, y: 201 * sy))
+        // Bottom-left rounded corner
+        path.addCurve(
+            to: CGPoint(x: 0, y: 186 * sy),
+            control1: CGPoint(x: 6.716 * sx, y: 201 * sy),
+            control2: CGPoint(x: 0, y: 194.284 * sy)
+        )
+        path.addLine(to: CGPoint(x: 0, y: 35 * sy))
+        // Top-left rounded corner
+        path.addCurve(
+            to: CGPoint(x: 15 * sx, y: 20 * sy),
+            control1: CGPoint(x: 0, y: 26.716 * sy),
+            control2: CGPoint(x: 6.716 * sx, y: 20 * sy)
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
 // MARK: - Folder Example Page
 
 struct FolderExample: View {
@@ -1016,7 +1111,8 @@ struct FolderExample: View {
             ("folder8", AnyView(folder8Section)),
             ("folder9", AnyView(folder9Section)),
             ("folder10", AnyView(folder10Section)),
-            ("folder11", AnyView(folder11Section))
+            ("folder11", AnyView(folder11Section)),
+            ("folder12", AnyView(folder12Section))
         ]
     }
 
@@ -1041,17 +1137,18 @@ struct FolderExample: View {
                     }
                 }
             } else {
-                folder1Section
-                folder2Section
-                folder3Section
-                folder4Section
-                folder5Section
-                folder6Section
-                folder7Section
-                folder8Section
-                folder9Section
-                folder10Section
-                folder11Section
+                // folder1Section
+                // folder2Section
+                // folder3Section
+                // folder4Section
+                // folder5Section
+                // folder6Section
+                // folder7Section
+                // folder8Section
+                // folder9Section
+                // folder10Section
+                // folder11Section
+                folder12Section
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -1942,6 +2039,67 @@ struct FolderExample: View {
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder11").padding(14) }
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Folder 12
+    private var folder12Section: some View {
+        VStack(spacing: 32) {
+            ZStack(alignment: .bottomTrailing) {
+                // SVG 2 (back) - dark folder with tab
+                FolderShape12b()
+                    .fill(Color(red: 0x45/255, green: 0x45/255, blue: 0x45/255))
+                    .frame(width: 202, height: 201)
+
+                // Cards between layers
+                Image("card2")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 80, height: 110)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(-8))
+                    .offset(x: -60, y: -50 + (animate ? -1 : 1))
+
+                Image("card1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 80, height: 110)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(5))
+                    .offset(x: -20, y: -40 + (animate ? 1 : -1))
+
+                // SVG 1 (front) - diagonal bottom-left corner
+                FolderShape12a()
+                    .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white.opacity(0), location: 0),
+                            .init(color: Color.white.opacity(1), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .stroke(Color.white.opacity(0.45), lineWidth: 2)
+                    .frame(width: 180, height: 143)
+                    .glassEffect(.clear, in: FolderShape12a())
+            }
+            .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
+            Text("Folder Design 12")
+                .font(.system(size: 13.5, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(.black).opacity(0.06), in: .capsule)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .overlay(alignment: .topTrailing) { heartButton(for: "folder12").padding(14) }
         .padding(.horizontal, 12)
     }
 }
