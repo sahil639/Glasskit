@@ -2046,12 +2046,29 @@ struct FolderExample: View {
     private var folder12Section: some View {
         VStack(spacing: 32) {
             ZStack(alignment: .bottomTrailing) {
-                // SVG 2 (back) - dark folder with tab
+                // SVG 2 (back) - light grey gradient folder with tab
                 FolderShape12b()
-                    .fill(Color(red: 0x45/255, green: 0x45/255, blue: 0x45/255))
+                    .fill(LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.gray.opacity(0.25), location: 0),
+                            .init(color: Color.gray.opacity(0.45), location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
                     .frame(width: 202, height: 201)
 
                 // Cards between layers
+                Image("card3")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 80, height: 110)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
+                    .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+                    .rotationEffect(.degrees(-12))
+                    .offset(x: -80, y: -45 + (animate ? -1 : 1))
+
                 Image("card2")
                     .resizable()
                     .scaledToFill()
@@ -2059,8 +2076,8 @@ struct FolderExample: View {
                     .clipShape(.rect(cornerRadius: 12, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
                     .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
-                    .rotationEffect(.degrees(-8))
-                    .offset(x: -60, y: -50 + (animate ? -1 : 1))
+                    .rotationEffect(.degrees(-3))
+                    .offset(x: -45, y: -55 + (animate ? 1 : -1))
 
                 Image("card1")
                     .resizable()
@@ -2070,7 +2087,7 @@ struct FolderExample: View {
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: 3))
                     .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
                     .rotationEffect(.degrees(5))
-                    .offset(x: -20, y: -40 + (animate ? 1 : -1))
+                    .offset(x: -10, y: -40 + (animate ? -0.5 : 0.5))
 
                 // SVG 1 (front) - diagonal bottom-left corner
                 FolderShape12a()
@@ -2086,6 +2103,19 @@ struct FolderExample: View {
                     .stroke(Color.white.opacity(0.45), lineWidth: 2)
                     .frame(width: 180, height: 143)
                     .glassEffect(.clear, in: FolderShape12a())
+                    .overlay(alignment: .bottomTrailing) {
+                        HStack(alignment: .bottom, spacing: 24) {
+                            Text("名古屋")
+                                .font(.system(size: 20, weight: .bold, design: .rounded))
+                                .foregroundStyle(.black)
+                            Text("Manufacturing and shipping")
+                                .font(.system(size: 10, weight: .medium, design: .rounded))
+                                .foregroundStyle(.black.opacity(0.45))
+                                .lineSpacing(1)
+                        }
+                        .padding(.trailing, 12)
+                        .padding(.bottom, 12)
+                    }
             }
             .shadow(color: .black.opacity(0.15), radius: 12, y: 8)
             Text("Folder Design 12")
