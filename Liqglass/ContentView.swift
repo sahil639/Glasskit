@@ -321,36 +321,28 @@ struct ContentView: View {
         }
         .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
-            HStack(spacing: 10) {
-                // Search icon — separate container, same height as tab bar
-                Button { } label: {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 16))
-                        .foregroundStyle(.black.opacity(0.65))
-                        .frame(width: 50, height: 50)
-                }
-                .glassEffect(.clear, in: .capsule)
-
-                // Tab bar pill
-                HStack(spacing: 0) {
-                    tabButton(icon: "house.fill", tag: 0)
-                    tabButton(icon: "folder.fill", tag: 1)
-                    tabButton(icon: "heart.fill", tag: 2)
-                    tabButton(icon: "chart.bar.fill", tag: 3)
-                }
-                .glassEffect(.clear, in: .capsule)
+            // Single full-width container with search + 4 tab icons
+            HStack(spacing: 0) {
+                tabButton(icon: "magnifyingglass", tag: -1)
+                tabButton(icon: "house.fill", tag: 0)
+                tabButton(icon: "folder.fill", tag: 1)
+                tabButton(icon: "heart.fill", tag: 2)
+                tabButton(icon: "chart.bar.fill", tag: 3)
             }
-            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity)
+            .glassEffect(.clear, in: .capsule)
+            .padding(.horizontal, 12)
             .padding(.bottom, 12)
         }
     }
 
     private func tabButton(icon: String, tag: Int) -> some View {
-        Button { selectedTab = tag } label: {
+        Button { if tag >= 0 { selectedTab = tag } } label: {
             Image(systemName: icon)
-                .font(.system(size: 15))
+                .font(.system(size: 20))
                 .foregroundStyle(selectedTab == tag ? Color.primary : Color.primary.opacity(0.35))
-                .frame(width: 56, height: 50)
+                .frame(maxWidth: .infinity)
+                .frame(height: 54)
         }
     }
 }
