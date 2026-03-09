@@ -374,10 +374,10 @@ struct AnalyticsView: View {
                                     .foregroundStyle(.black)
 
                                 Text("\(filter.count)")
-                                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                                    .font(.system(size: 15, weight: .bold, design: .rounded))
                                     .foregroundStyle(.white)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
+                                    .padding(.horizontal, 7)
+                                    .padding(.vertical, 3)
                                     .background(Color.blue, in: .capsule)
                             }
                             .padding(.horizontal, 24)
@@ -391,15 +391,15 @@ struct AnalyticsView: View {
                         }
                     }
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
             }
             .background(.clear)
             .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                Capsule()
                     .stroke(Color.gray.opacity(0.25), lineWidth: 1)
             )
-            .glassEffect(.clear, in: .rect(cornerRadius: 20, style: .continuous))
+            .glassEffect(.clear, in: .capsule)
             .padding(.horizontal, 16)
             .padding(.top, 6)
             .padding(.bottom, 4)
