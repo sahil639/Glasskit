@@ -321,9 +321,7 @@ struct ContentView: View {
         }
         .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
-            // Single full-width container with search + 4 tab icons
             HStack(spacing: 0) {
-                tabButton(icon: "magnifyingglass", tag: -1)
                 tabButton(icon: "house.fill", tag: 0)
                 tabButton(icon: "folder.fill", tag: 1)
                 tabButton(icon: "heart.fill", tag: 2)
@@ -337,7 +335,7 @@ struct ContentView: View {
     }
 
     private func tabButton(icon: String, tag: Int) -> some View {
-        Button { if tag >= 0 { selectedTab = tag } } label: {
+        Button { selectedTab = tag } label: {
             Image(systemName: icon)
                 .font(.system(size: 20))
                 .foregroundStyle(selectedTab == tag ? Color.primary : Color.primary.opacity(0.35))
