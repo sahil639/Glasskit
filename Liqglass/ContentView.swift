@@ -283,43 +283,90 @@ struct FavoritesView: View {
 // MARK: - Content View
 
 struct ContentView: View {
+    @State private var selectedTab = 0
+
+    private let tabs: [(label: String, icon: String, tag: Int)] = [
+        ("Home", "house.fill", 0),
+        ("Folders", "folder.fill", 1),
+        ("Favourites", "heart.fill", 2),
+        ("Analytics", "chart.bar.fill", 3)
+    ]
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house.fill") {
-                NavigationStack {
-                    HomeView()
-                        .navigationTitle("")
-                        .toolbarTitleDisplayMode(.inline)
-                        .toolbar { SharedToolbar() }
-                }
+        TabView(selection: $selectedTab) {
+            NavigationStack {
+                HomeView()
+                    .navigationTitle("")
+                    .toolbarTitleDisplayMode(.inline)
+                    .toolbar { SharedToolbar() }
             }
+            .tag(0)
 
-            Tab("Folders", systemImage: "folder.fill") {
-                NavigationStack {
-                    FolderExample()
-                        .navigationTitle("Glass Folders")
-                        .toolbarTitleDisplayMode(.inline)
-                        .toolbar { SharedToolbar() }
-                }
+            NavigationStack {
+                FolderExample()
+                    .navigationTitle("Glass Folders")
+                    .toolbarTitleDisplayMode(.inline)
+                    .toolbar { SharedToolbar() }
             }
+            .tag(1)
 
-            Tab("Favorites", systemImage: "heart.fill") {
-                NavigationStack {
-                    FavoritesView()
-                        .navigationTitle("Favourite GL Designs")
-                        .toolbarTitleDisplayMode(.inline)
-                        .toolbar { SharedToolbar() }
-                }
+            NavigationStack {
+                FavoritesView()
+                    .navigationTitle("Favourite GL Designs")
+                    .toolbarTitleDisplayMode(.inline)
+                    .toolbar { SharedToolbar() }
             }
+            .tag(2)
 
-            Tab("Analytics", systemImage: "chart.bar.fill") {
-                NavigationStack {
-                    AnalyticsView()
-                        .navigationTitle("Analytics")
-                        .toolbarTitleDisplayMode(.inline)
-                        .toolbar { SharedToolbar() }
-                }
+            NavigationStack {
+                AnalyticsView()
+                    .navigationTitle("Analytics")
+                    .toolbarTitleDisplayMode(.inline)
+                    .toolbar { SharedToolbar() }
             }
+            .tag(3)
+        }
+        .toolbar(.hidden, for: .tabBar)
+        .safeAreaInset(edge: .bottom) {
+            HStack(spacing: 10) {
+                // Main tab pill with 4 items
+                HStack(spacing: 0) {
+                    ForEach(tabs, id: \.tag) { tab in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.15)) { selectedTab = tab.tag }
+                        } label: {
+                            VStack(spacing: 4) {
+                                Image(systemName: tab.icon)
+                                    .font(.system(size: 19, weight: .medium))
+                                Text(tab.label)
+                                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                            }
+                            .foregroundStyle(selectedTab == tab.tag ? Color.primary : Color.primary.opacity(0.35))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 58)
+                            .background(
+                                selectedTab == tab.tag
+                                    ? Color.primary.opacity(0.08)
+                                    : Color.clear,
+                                in: .capsule
+                            )
+                            .padding(.horizontal, 4)
+                        }
+                    }
+                }
+                .glassEffect(.clear, in: .capsule)
+
+                // Search button — separate pill on the right
+                Button { } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(Color.primary.opacity(0.65))
+                        .frame(width: 58, height: 58)
+                }
+                .glassEffect(.clear, in: .capsule)
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 12)
         }
     }
 }
