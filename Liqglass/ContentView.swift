@@ -283,64 +283,43 @@ struct FavoritesView: View {
 // MARK: - Content View
 
 struct ContentView: View {
-    @State private var selectedTab = 0
-
     var body: some View {
-        TabView(selection: $selectedTab) {
-            NavigationStack {
-                HomeView()
-                    .navigationTitle("")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar { SharedToolbar() }
+        TabView {
+            Tab("Home", systemImage: "house.fill") {
+                NavigationStack {
+                    HomeView()
+                        .navigationTitle("")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
+                }
             }
-            .tag(0)
 
-            NavigationStack {
-                FolderExample()
-                    .navigationTitle("Glass Folders")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar { SharedToolbar() }
+            Tab("Folders", systemImage: "folder.fill") {
+                NavigationStack {
+                    FolderExample()
+                        .navigationTitle("Glass Folders")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
+                }
             }
-            .tag(1)
 
-            NavigationStack {
-                FavoritesView()
-                    .navigationTitle("Favourite GL Designs")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar { SharedToolbar() }
+            Tab("Favorites", systemImage: "heart.fill") {
+                NavigationStack {
+                    FavoritesView()
+                        .navigationTitle("Favourite GL Designs")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
+                }
             }
-            .tag(2)
 
-            NavigationStack {
-                AnalyticsView()
-                    .navigationTitle("Analytics")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar { SharedToolbar() }
+            Tab("Analytics", systemImage: "chart.bar.fill") {
+                NavigationStack {
+                    AnalyticsView()
+                        .navigationTitle("Analytics")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
+                }
             }
-            .tag(3)
-        }
-        .toolbar(.hidden, for: .tabBar)
-        .safeAreaInset(edge: .bottom) {
-            HStack(spacing: 0) {
-                tabButton(icon: "house.fill", tag: 0)
-                tabButton(icon: "folder.fill", tag: 1)
-                tabButton(icon: "heart.fill", tag: 2)
-                tabButton(icon: "chart.bar.fill", tag: 3)
-            }
-            .frame(maxWidth: .infinity)
-            .glassEffect(.clear, in: .capsule)
-            .padding(.horizontal, 12)
-            .padding(.bottom, 12)
-        }
-    }
-
-    private func tabButton(icon: String, tag: Int) -> some View {
-        Button { selectedTab = tag } label: {
-            Image(systemName: icon)
-                .font(.system(size: 20))
-                .foregroundStyle(selectedTab == tag ? Color.primary : Color.primary.opacity(0.35))
-                .frame(maxWidth: .infinity)
-                .frame(height: 54)
         }
     }
 }
