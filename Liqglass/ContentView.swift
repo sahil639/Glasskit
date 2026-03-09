@@ -38,6 +38,41 @@ class FavoritesManager {
     }
 }
 
+// MARK: - Shared Toolbar
+
+struct SharedToolbar: ToolbarContent {
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            HStack(spacing: 10) {
+                // Profile button
+                Button { } label: {
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 13))
+                        .foregroundStyle(.black.opacity(0.7))
+                        .frame(width: 30, height: 30)
+                }
+                .glassEffect(.clear, in: .circle)
+
+                // Favorites heart button
+                Button { } label: {
+                    Image(systemName: "heart")
+                        .font(.system(size: 13))
+                        .foregroundStyle(.black.opacity(0.7))
+                        .frame(width: 30, height: 30)
+                }
+                .glassEffect(.clear, in: .circle)
+
+                // Edit
+                Button { } label: {
+                    Text("Edit")
+                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.8))
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Reminder Card
 
 struct ReminderCard: View {
@@ -199,6 +234,179 @@ struct HomeView: View {
     }
 }
 
+// MARK: - Chart Card
+
+struct ChartCard: View {
+    let title: String
+    let category: String
+    let icon: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Image(systemName: icon)
+                .font(.system(size: 26))
+                .foregroundStyle(.black.opacity(0.55))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 12)
+
+            Spacer()
+
+            Text(title)
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.8))
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text(category)
+                .font(.system(size: 11, weight: .medium, design: .rounded))
+                .foregroundStyle(.black.opacity(0.35))
+                .padding(.top, 4)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .frame(height: 140)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                .fill(LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color.white.opacity(0), location: 0),
+                        .init(color: Color.white.opacity(1), location: 1)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.gray.opacity(0.3), Color.gray.opacity(0.15)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ),
+                    lineWidth: 2
+                )
+        )
+        .glassEffect(.clear, in: .rect(cornerRadius: 16, style: .continuous))
+    }
+}
+
+// MARK: - Analytics View
+
+struct AnalyticsView: View {
+    @State private var selectedFilter = "All"
+
+    let filters: [(label: String, count: Int)] = [
+        ("All", 24),
+        ("Pie Chart", 12),
+        ("Gantt Chart", 5),
+        ("Histogram", 2),
+        ("Diagrams", 4)
+    ]
+
+    struct ChartItem: Identifiable {
+        let id = UUID()
+        let title: String
+        let category: String
+        let icon: String
+    }
+
+    let chartItems: [ChartItem] = [
+        // Pie Charts (12)
+        ChartItem(title: "Revenue Distribution", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Market Share", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Budget Allocation", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "User Demographics", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Traffic Sources", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Product Categories", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Regional Sales", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Platform Usage", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Cost Breakdown", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Time Allocation", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Resource Split", category: "Pie Chart", icon: "chart.pie.fill"),
+        ChartItem(title: "Department Budget", category: "Pie Chart", icon: "chart.pie.fill"),
+        // Gantt Charts (5)
+        ChartItem(title: "Project Roadmap", category: "Gantt Chart", icon: "chart.bar.xaxis.ascending"),
+        ChartItem(title: "Sprint Timeline", category: "Gantt Chart", icon: "chart.bar.xaxis.ascending"),
+        ChartItem(title: "Release Schedule", category: "Gantt Chart", icon: "chart.bar.xaxis.ascending"),
+        ChartItem(title: "Campaign Calendar", category: "Gantt Chart", icon: "chart.bar.xaxis.ascending"),
+        ChartItem(title: "Milestone Tracker", category: "Gantt Chart", icon: "chart.bar.xaxis.ascending"),
+        // Histograms (2)
+        ChartItem(title: "Score Distribution", category: "Histogram", icon: "chart.bar.fill"),
+        ChartItem(title: "Age Demographics", category: "Histogram", icon: "chart.bar.fill"),
+        // Diagrams (4)
+        ChartItem(title: "System Architecture", category: "Diagrams", icon: "square.and.line.vertical.and.square.fill"),
+        ChartItem(title: "User Flow", category: "Diagrams", icon: "arrow.triangle.branch"),
+        ChartItem(title: "Data Pipeline", category: "Diagrams", icon: "arrow.triangle.branch"),
+        ChartItem(title: "Network Map", category: "Diagrams", icon: "square.and.line.vertical.and.square.fill")
+    ]
+
+    var filteredItems: [ChartItem] {
+        if selectedFilter == "All" { return chartItems }
+        return chartItems.filter { $0.category == selectedFilter }
+    }
+
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: [
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12)
+            ], spacing: 12) {
+                ForEach(filteredItems) { item in
+                    ChartCard(title: item.title, category: item.category, icon: item.icon)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
+            .padding(.bottom, 20)
+            .animation(.easeInOut(duration: 0.2), value: selectedFilter)
+        }
+        .safeAreaInset(edge: .top) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 4) {
+                    ForEach(filters, id: \.label) { filter in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                selectedFilter = filter.label
+                            }
+                        } label: {
+                            HStack(spacing: 7) {
+                                Text(filter.label)
+                                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(.black)
+
+                                Text("\(filter.count)")
+                                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.blue, in: .capsule)
+                            }
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 9)
+                            .background(
+                                selectedFilter == filter.label
+                                    ? Color.black.opacity(0.12)
+                                    : Color.clear,
+                                in: .capsule
+                            )
+                        }
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+            }
+            .background(.clear)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .stroke(Color.gray.opacity(0.25), lineWidth: 1)
+            )
+            .glassEffect(.clear, in: .rect(cornerRadius: 20, style: .continuous))
+            .padding(.horizontal, 16)
+            .padding(.top, 6)
+            .padding(.bottom, 4)
+        }
+    }
+}
+
 // MARK: - Favorites View
 
 struct FavoritesView: View {
@@ -215,7 +423,9 @@ struct ContentView: View {
             Tab("Home", systemImage: "house.fill") {
                 NavigationStack {
                     HomeView()
-                        .navigationBarHidden(true)
+                        .navigationTitle("")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
                 }
             }
 
@@ -224,6 +434,7 @@ struct ContentView: View {
                     FolderExample()
                         .navigationTitle("Glass Folders")
                         .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
                 }
             }
 
@@ -232,13 +443,16 @@ struct ContentView: View {
                     FavoritesView()
                         .navigationTitle("Favourite GL Designs")
                         .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
                 }
             }
 
             Tab("Analytics", systemImage: "chart.bar.fill") {
                 NavigationStack {
-                    Text("Analytics")
+                    AnalyticsView()
                         .navigationTitle("Analytics")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
                 }
             }
         }
