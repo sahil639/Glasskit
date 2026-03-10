@@ -289,6 +289,10 @@ struct FavoritesView: View {
 struct ContentView: View {
     @State private var selectedTab = 0
 
+    init() {
+        UITabBar.appearance().isHidden = true
+    }
+
     private let tabs: [(label: String, icon: String, tag: Int)] = [
         ("Home", "house.fill", 0),
         ("Folders", "folder.fill", 1),
@@ -330,7 +334,6 @@ struct ContentView: View {
             }
             .tag(3)
         }
-        .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
             HStack(spacing: 8) {
                 // Compact tab pill — 4 items
