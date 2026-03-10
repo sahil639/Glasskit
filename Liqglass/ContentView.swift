@@ -288,6 +288,7 @@ struct FavoritesView: View {
 
 struct ContentView: View {
     @State private var selectedTab = 0
+    @Namespace private var tabNamespace
 
     init() {
         UITabBar.appearance().isHidden = true
@@ -335,43 +336,50 @@ struct ContentView: View {
             .tag(3)
         }
         .safeAreaInset(edge: .bottom) {
-            HStack(spacing: 8) {
-                // Compact tab pill — 4 items
-                HStack(spacing: 0) {
-                    ForEach(tabs, id: \.tag) { tab in
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.15)) { selectedTab = tab.tag }
-                        } label: {
-                            VStack(spacing: 3) {
-                                Image(systemName: tab.icon)
-                                    .font(.system(size: 17, weight: .medium))
-                                Text(tab.label)
-                                    .font(.system(size: 9, weight: .semibold, design: .rounded))
+            GlassEffectContainer(spacing: 8) {
+                HStack(spacing: 8) {
+                    // Compact tab pill — 4 items
+                    HStack(spacing: 0) {
+                        ForEach(tabs, id: \.tag) { tab in
+                            Button {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                    selectedTab = tab.tag
+                                }
+                            } label: {
+                                VStack(spacing: 3) {
+                                    Image(systemName: tab.icon)
+                                        .font(.system(size: 17, weight: .medium))
+                                    Text(tab.label)
+                                        .font(.system(size: 9, weight: .semibold, design: .rounded))
+                                }
+                                .foregroundStyle(selectedTab == tab.tag ? Color.primary : Color.primary.opacity(0.35))
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 50)
+                                .background {
+                                    if selectedTab == tab.tag {
+                                        Capsule()
+                                            .fill(Color.primary.opacity(0.08))
+                                            .matchedGeometryEffect(id: "tabSelection", in: tabNamespace)
+                                    }
+                                }
+                                .padding(.horizontal, 4)
                             }
-                            .foregroundStyle(selectedTab == tab.tag ? Color.primary : Color.primary.opacity(0.35))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(
-                                selectedTab == tab.tag ? Color.primary.opacity(0.08) : Color.clear,
-                                in: .capsule
-                            )
-                            .padding(.horizontal, 4)
                         }
                     }
-                }
-                .glassEffect(.clear, in: .capsule)
+                    .glassEffect(.clear, in: .capsule)
 
-                // Circular search button — same height as tab pill
-                Button { } label: {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(Color.primary.opacity(0.65))
-                        .frame(width: 50, height: 50)
+                    // Circular search button — same height as tab pill
+                    Button { } label: {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(Color.primary.opacity(0.65))
+                            .frame(width: 50, height: 50)
+                    }
+                    .glassEffect(.clear, in: .circle)
                 }
-                .glassEffect(.clear, in: .circle)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 12)
             }
-            .padding(.horizontal, 12)
-            .padding(.bottom, 12)
         }
     }
 }
