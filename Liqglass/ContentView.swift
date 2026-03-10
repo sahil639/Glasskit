@@ -287,29 +287,15 @@ struct FavoritesView: View {
 // MARK: - Content View
 
 struct ContentView: View {
-    @State private var selectedTab = 0
-    @Namespace private var tabNamespace
-
-    init() {
-        UITabBar.appearance().isHidden = true
-    }
-
-    private let tabs: [(label: String, icon: String, tag: Int)] = [
-        ("Home", "house.fill", 0),
-        ("Folders", "folder.fill", 1),
-        ("Favourites", "heart.fill", 2),
-        ("Analytics", "chart.bar.fill", 3)
-    ]
-
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView {
             NavigationStack {
                 HomeView()
                     .navigationTitle("")
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tag(0)
+            .tabItem { Label("Home", systemImage: "house.fill") }
 
             NavigationStack {
                 FolderExample()
@@ -317,7 +303,7 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tag(1)
+            .tabItem { Label("Folders", systemImage: "folder.fill") }
 
             NavigationStack {
                 FavoritesView()
@@ -325,7 +311,7 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tag(2)
+            .tabItem { Label("Favourites", systemImage: "heart.fill") }
 
             NavigationStack {
                 AnalyticsView()
@@ -333,53 +319,7 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tag(3)
-        }
-        .safeAreaInset(edge: .bottom) {
-            GlassEffectContainer(spacing: 8) {
-                HStack(spacing: 8) {
-                    // Compact tab pill — 4 items
-                    HStack(spacing: 0) {
-                        ForEach(tabs, id: \.tag) { tab in
-                            Button {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                                    selectedTab = tab.tag
-                                }
-                            } label: {
-                                VStack(spacing: 3) {
-                                    Image(systemName: tab.icon)
-                                        .font(.system(size: 17, weight: .medium))
-                                    Text(tab.label)
-                                        .font(.system(size: 9, weight: .semibold, design: .rounded))
-                                }
-                                .foregroundStyle(selectedTab == tab.tag ? Color.primary : Color.primary.opacity(0.35))
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                                .background {
-                                    if selectedTab == tab.tag {
-                                        Capsule()
-                                            .fill(Color.primary.opacity(0.08))
-                                            .matchedGeometryEffect(id: "tabSelection", in: tabNamespace)
-                                    }
-                                }
-                                .padding(.horizontal, 4)
-                            }
-                        }
-                    }
-                    .glassEffect(.clear, in: .capsule)
-
-                    // Circular search button — same height as tab pill
-                    Button { } label: {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(Color.primary.opacity(0.65))
-                            .frame(width: 50, height: 50)
-                    }
-                    .glassEffect(.clear, in: .circle)
-                }
-                .padding(.horizontal, 12)
-                .padding(.bottom, 12)
-            }
+            .tabItem { Label("Analytics", systemImage: "chart.bar.fill") }
         }
     }
 }
