@@ -287,17 +287,24 @@ struct FavoritesView: View {
 // MARK: - Content View
 
 struct ContentView: View {
+    @State private var selectedTab = 0
+
+    private let tabs: [(label: String, icon: String, tag: Int)] = [
+        ("Home", "house.fill", 0),
+        ("Folders", "folder.fill", 1),
+        ("Favourites", "heart.fill", 2),
+        ("Analytics", "chart.bar.fill", 3)
+    ]
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             NavigationStack {
                 HomeView()
                     .navigationTitle("")
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tabItem {
-                Label("Home", systemImage: "house.fill")
-            }
+            .tag(0)
 
             NavigationStack {
                 FolderExample()
@@ -305,9 +312,7 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tabItem {
-                Label("Folders", systemImage: "folder.fill")
-            }
+            .tag(1)
 
             NavigationStack {
                 FavoritesView()
@@ -315,9 +320,7 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tabItem {
-                Label("Favourites", systemImage: "heart.fill")
-            }
+            .tag(2)
 
             NavigationStack {
                 AnalyticsView()
@@ -325,9 +328,47 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tabItem {
-                Label("Analytics", systemImage: "chart.bar.fill")
+            .tag(3)
+        }
+        .toolbar(.hidden, for: .tabBar)
+        .safeAreaInset(edge: .bottom) {
+            HStack(spacing: 8) {
+                // Compact tab pill — 4 items
+                HStack(spacing: 0) {
+                    ForEach(tabs, id: \.tag) { tab in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.15)) { selectedTab = tab.tag }
+                        } label: {
+                            VStack(spacing: 3) {
+                                Image(systemName: tab.icon)
+                                    .font(.system(size: 17, weight: .medium))
+                                Text(tab.label)
+                                    .font(.system(size: 9, weight: .semibold, design: .rounded))
+                            }
+                            .foregroundStyle(selectedTab == tab.tag ? Color.primary : Color.primary.opacity(0.35))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(
+                                selectedTab == tab.tag ? Color.primary.opacity(0.08) : Color.clear,
+                                in: .capsule
+                            )
+                            .padding(.horizontal, 4)
+                        }
+                    }
+                }
+                .glassEffect(.clear, in: .capsule)
+
+                // Circular search button — same height as tab pill
+                Button { } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(Color.primary.opacity(0.65))
+                        .frame(width: 50, height: 50)
+                }
+                .glassEffect(.clear, in: .circle)
             }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 12)
         }
     }
 }
