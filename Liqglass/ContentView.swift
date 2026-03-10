@@ -37,31 +37,33 @@ class FavoritesManager {
 
 struct SharedToolbar: ToolbarContent {
     var body: some ToolbarContent {
-        // Edit — far right, bold, separate
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button { } label: {
-                Text("Edit")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.85))
-            }
-        }
-        // Profile + Heart — grouped together, to the left of Edit
         ToolbarItem(placement: .navigationBarTrailing) {
             HStack(spacing: 10) {
-                // Heart — plain, no container
-                Button { } label: {
-                    Image(systemName: "heart")
-                        .font(.system(size: 15))
-                        .foregroundStyle(.black.opacity(0.65))
+                // Profile + Heart — grouped together
+                HStack(spacing: 10) {
+                    // Heart — plain, no container
+                    Button { } label: {
+                        Image(systemName: "heart")
+                            .font(.system(size: 15))
+                            .foregroundStyle(.black.opacity(0.65))
+                    }
+
+                    // Profile — SF symbol person.circle.fill
+                    Button { } label: {
+                        Image(systemName: "person.circle.fill")
+                            .font(.system(size: 26))
+                            .foregroundStyle(.black.opacity(0.65))
+                    }
                 }
 
-                // Profile — image clipped to circle, no glass container
+                // Gap between icons and Edit
+                Color.clear.frame(width: 8)
+
+                // Edit — bold, separated by gap
                 Button { } label: {
-                    Image("profilePhoto")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 28, height: 28)
-                        .clipShape(.circle)
+                    Text("Edit")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.85))
                 }
             }
         }
@@ -213,6 +215,7 @@ struct HomeView: View {
 
 struct AnalyticsView: View {
     @State private var selectedFilter = "All"
+    @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
         ("All", 24), ("Pie Chart", 12), ("Gantt Chart", 5),
@@ -230,7 +233,7 @@ struct AnalyticsView: View {
                     HStack(spacing: 4) {
                         ForEach(filters, id: \.label) { filter in
                             Button {
-                                withAnimation(.easeInOut(duration: 0.2)) {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
                                     selectedFilter = filter.label
                                 }
                             } label: {
@@ -248,12 +251,13 @@ struct AnalyticsView: View {
                                 }
                                 .padding(.horizontal, 24)
                                 .padding(.vertical, 9)
-                                .background(
-                                    selectedFilter == filter.label
-                                        ? Color.black.opacity(0.12)
-                                        : Color.clear,
-                                    in: .capsule
-                                )
+                                .background {
+                                    if selectedFilter == filter.label {
+                                        Capsule()
+                                            .fill(Color.black.opacity(0.12))
+                                            .matchedGeometryEffect(id: "filterSelection", in: filterNamespace)
+                                    }
+                                }
                             }
                         }
                     }
@@ -283,24 +287,17 @@ struct FavoritesView: View {
 // MARK: - Content View
 
 struct ContentView: View {
-    @State private var selectedTab = 0
-
-    private let tabs: [(label: String, icon: String, tag: Int)] = [
-        ("Home", "house.fill", 0),
-        ("Folders", "folder.fill", 1),
-        ("Favourites", "heart.fill", 2),
-        ("Analytics", "chart.bar.fill", 3)
-    ]
-
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView {
             NavigationStack {
                 HomeView()
                     .navigationTitle("")
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tag(0)
+            .tabItem {
+                Label("Home", systemImage: "house.fill")
+            }
 
             NavigationStack {
                 FolderExample()
@@ -308,7 +305,9 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tag(1)
+            .tabItem {
+                Label("Folders", systemImage: "folder.fill")
+            }
 
             NavigationStack {
                 FavoritesView()
@@ -316,7 +315,9 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tag(2)
+            .tabItem {
+                Label("Favourites", systemImage: "heart.fill")
+            }
 
             NavigationStack {
                 AnalyticsView()
@@ -324,49 +325,9 @@ struct ContentView: View {
                     .toolbarTitleDisplayMode(.inline)
                     .toolbar { SharedToolbar() }
             }
-            .tag(3)
-        }
-        .toolbar(.hidden, for: .tabBar)
-        .safeAreaInset(edge: .bottom) {
-            HStack(spacing: 10) {
-                // Main tab pill with 4 items
-                HStack(spacing: 0) {
-                    ForEach(tabs, id: \.tag) { tab in
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.15)) { selectedTab = tab.tag }
-                        } label: {
-                            VStack(spacing: 4) {
-                                Image(systemName: tab.icon)
-                                    .font(.system(size: 19, weight: .medium))
-                                Text(tab.label)
-                                    .font(.system(size: 10, weight: .semibold, design: .rounded))
-                            }
-                            .foregroundStyle(selectedTab == tab.tag ? Color.primary : Color.primary.opacity(0.35))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 58)
-                            .background(
-                                selectedTab == tab.tag
-                                    ? Color.primary.opacity(0.08)
-                                    : Color.clear,
-                                in: .capsule
-                            )
-                            .padding(.horizontal, 4)
-                        }
-                    }
-                }
-                .glassEffect(.clear, in: .capsule)
-
-                // Search button — separate pill on the right
-                Button { } label: {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(Color.primary.opacity(0.65))
-                        .frame(width: 58, height: 58)
-                }
-                .glassEffect(.clear, in: .capsule)
+            .tabItem {
+                Label("Analytics", systemImage: "chart.bar.fill")
             }
-            .padding(.horizontal, 12)
-            .padding(.bottom, 12)
         }
     }
 }
