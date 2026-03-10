@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/quminsoda/Documents/Glasskit add:*)",
+      "Bash(git -C /Users/quminsoda/Documents/Glasskit commit -m \"$\\(cat <<''EOF''\nAdd glass container shape and update UI layout\n\nSimplify ContentView by removing unavailable TabView page style.\nAdd ContainerShape with glass effect below folder cards. Center-align\nheading as \"Glass Containers\" with smaller font.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /Users/quminsoda/Documents/Glasskit push)",
+      "Bash(git pull:*)"
+    ]
+  }
+}

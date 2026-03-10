@@ -1396,24 +1396,6 @@ struct FolderExample: View {
                 folder14Section
             }
         }
-        .safeAreaInset(edge: .bottom) {
-            if !favoritesOnly {
-                // Animation Toggle - pinned above tab bar
-                HStack {
-                    Text("Animation")
-                        .font(.system(.body, design: .rounded))
-                        .fontWeight(.medium)
-                    Spacer()
-                    Toggle("", isOn: $animationEnabled)
-                        .labelsHidden()
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .glassEffect(.clear, in: .capsule)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 8)
-            }
-        }
         .onAppear {
             if animationEnabled {
                 withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
