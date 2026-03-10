@@ -287,6 +287,12 @@ struct FavoritesView: View {
 // MARK: - Content View
 
 struct ContentView: View {
+    init() {
+        UITabBar.appearance().itemPositioning = .fill
+        UITabBar.appearance().itemWidth = 40
+        UITabBar.appearance().itemSpacing = 5
+    }
+
     var body: some View {
         TabView {
             NavigationStack {
