@@ -37,7 +37,7 @@ class FavoritesManager {
 
 struct SharedToolbar: ToolbarContent {
     var body: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
+        ToolbarItem(placement: .topBarTrailing) {
             HStack(spacing: 10) {
                 // Profile + Heart — grouped together
                 HStack(spacing: 10) {
