@@ -37,29 +37,23 @@ class FavoritesManager {
 
 struct SharedToolbar: ToolbarContent {
     var body: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
+        #if os(iOS)
+        ToolbarItem(placement: .topBarTrailing) {
             HStack(spacing: 10) {
                 // Profile + Heart — grouped together
                 HStack(spacing: 10) {
-                    // Heart — plain, no container
                     Button { } label: {
                         Image(systemName: "heart")
                             .font(.system(size: 15))
                             .foregroundStyle(.black.opacity(0.65))
                     }
-
-                    // Profile — SF symbol person.circle.fill
                     Button { } label: {
                         Image(systemName: "person.circle.fill")
                             .font(.system(size: 26))
                             .foregroundStyle(.black.opacity(0.65))
                     }
                 }
-
-                // Gap between icons and Edit
                 Color.clear.frame(width: 8)
-
-                // Edit — bold, separated by gap
                 Button { } label: {
                     Text("Edit")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
@@ -67,6 +61,7 @@ struct SharedToolbar: ToolbarContent {
                 }
             }
         }
+        #endif
     }
 }
 
@@ -291,7 +286,6 @@ struct SearchView: View {
     @State private var searchText = ""
     @State private var selectedFilter = "All"
     @Namespace private var filterNamespace
-    var onDismiss: () -> Void
 
     let filters: [(label: String, count: Int)] = [
         ("All", 24), ("Pie Chart", 12), ("Gantt Chart", 5),
@@ -315,8 +309,11 @@ struct SearchView: View {
                 .padding(.vertical, 11)
                 .glassEffect(.regular, in: .capsule)
 
-                // X button — same proportions as search circle in tab bar
-                Button { onDismiss() } label: {
+                // X button — dismisses keyboard
+                Button {
+                    isSearchFocused = false
+                    searchText = ""
+                } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(Color.primary.opacity(0.65))
@@ -367,7 +364,9 @@ struct SearchView: View {
 
             Spacer()
         }
+        #if os(iOS)
         .toolbar(.hidden, for: .tabBar)
+        #endif
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                 withAnimation { isSearchFocused = true }
@@ -379,11 +378,9 @@ struct SearchView: View {
 // MARK: - Content View
 
 struct ContentView: View {
-    @State private var selectedTab = "home"
-
     var body: some View {
-        TabView(selection: $selectedTab) {
-            Tab("Home", systemImage: "house.fill", value: "home") {
+        TabView {
+            Tab("Home", systemImage: "house.fill") {
                 NavigationStack {
                     HomeView()
                         .navigationTitle("")
@@ -392,7 +389,7 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Folders", systemImage: "folder.fill", value: "folders") {
+            Tab("Folders", systemImage: "folder.fill") {
                 NavigationStack {
                     FolderExample()
                         .navigationTitle("Glass Folders")
@@ -401,7 +398,7 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Favourites", systemImage: "heart.fill", value: "favourites") {
+            Tab("Favourites", systemImage: "heart.fill") {
                 NavigationStack {
                     FavoritesView()
                         .navigationTitle("Favourite GL Designs")
@@ -410,7 +407,7 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Analytics", systemImage: "chart.bar.fill", value: "analytics") {
+            Tab("Analytics", systemImage: "chart.bar.fill") {
                 NavigationStack {
                     AnalyticsView()
                         .navigationTitle("Analytics")
@@ -420,11 +417,7 @@ struct ContentView: View {
             }
 
             Tab(role: .search) {
-                SearchView {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                        selectedTab = "home"
-                    }
-                }
+                SearchView()
             }
         }
     }
