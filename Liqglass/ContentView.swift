@@ -287,45 +287,50 @@ struct FavoritesView: View {
 // MARK: - Content View
 
 struct ContentView: View {
-    init() {
-        UITabBar.appearance().itemPositioning = .fill
-        UITabBar.appearance().itemWidth = 40
-        UITabBar.appearance().itemSpacing = 5
-    }
-
     var body: some View {
         TabView {
-            NavigationStack {
-                HomeView()
-                    .navigationTitle("")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar { SharedToolbar() }
+            Tab("Home", systemImage: "house.fill") {
+                NavigationStack {
+                    HomeView()
+                        .navigationTitle("")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
+                }
             }
-            .tabItem { Label("Home", systemImage: "house.fill") }
 
-            NavigationStack {
-                FolderExample()
-                    .navigationTitle("Glass Folders")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar { SharedToolbar() }
+            Tab("Folders", systemImage: "folder.fill") {
+                NavigationStack {
+                    FolderExample()
+                        .navigationTitle("Glass Folders")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
+                }
             }
-            .tabItem { Label("Folders", systemImage: "folder.fill") }
 
-            NavigationStack {
-                FavoritesView()
-                    .navigationTitle("Favourite GL Designs")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar { SharedToolbar() }
+            Tab("Favourites", systemImage: "heart.fill") {
+                NavigationStack {
+                    FavoritesView()
+                        .navigationTitle("Favourite GL Designs")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
+                }
             }
-            .tabItem { Label("Favourites", systemImage: "heart.fill") }
 
-            NavigationStack {
-                AnalyticsView()
-                    .navigationTitle("Analytics")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar { SharedToolbar() }
+            Tab("Analytics", systemImage: "chart.bar.fill") {
+                NavigationStack {
+                    AnalyticsView()
+                        .navigationTitle("Analytics")
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { SharedToolbar() }
+                }
             }
-            .tabItem { Label("Analytics", systemImage: "chart.bar.fill") }
+
+            Tab(role: .search) {
+                NavigationStack {
+                    Text("Search")
+                        .navigationTitle("Search")
+                }
+            }
         }
     }
 }
