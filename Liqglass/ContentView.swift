@@ -37,6 +37,7 @@ class FavoritesManager {
 
 struct SharedToolbar: ToolbarContent {
     var body: some ToolbarContent {
+        #if os(iOS)
         ToolbarItem(placement: .topBarTrailing) {
             HStack(spacing: 10) {
                 // Profile + Heart — grouped together
@@ -67,6 +68,7 @@ struct SharedToolbar: ToolbarContent {
                 }
             }
         }
+        #endif
     }
 }
 
