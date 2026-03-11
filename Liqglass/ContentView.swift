@@ -221,8 +221,7 @@ struct AnalyticsView: View {
         }
         .safeAreaInset(edge: .top) {
             ScrollView(.horizontal, showsIndicators: false) {
-                GlassEffectContainer(spacing: 6) {
-                    HStack(spacing: 6) {
+                HStack(spacing: 6) {
                         ForEach(filters, id: \.label) { filter in
                             let isSelected = selectedFilter == filter.label
                             Button {
@@ -244,14 +243,18 @@ struct AnalyticsView: View {
                                 }
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
+                                .background {
+                                    if isSelected {
+                                        Capsule()
+                                            .fill(Color.primary.opacity(0.08))
+                                            .matchedGeometryEffect(id: "filterPill", in: filterNamespace)
+                                    }
+                                }
                             }
-                            .glassEffect(.regular, in: .capsule, isEnabled: isSelected)
-                            .glassEffectID(isSelected ? "filterPill" : filter.label, in: filterNamespace)
                         }
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                }
             }
             .padding(.horizontal, 16)
             .padding(.top, 6)
