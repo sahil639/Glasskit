@@ -37,26 +37,33 @@ class FavoritesManager {
 
 struct SharedToolbar: ToolbarContent {
     var body: some ToolbarContent {
-        ToolbarItem(placement: .automatic) {
-            Button { } label: {
-                Text("Edit")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.85))
-            }
-        }
-        ToolbarItem(placement: .automatic) {
+        ToolbarItem(placement: .navigationBarTrailing) {
             HStack(spacing: 10) {
-                Button { } label: {
-                    Image(systemName: "heart")
-                        .font(.system(size: 15))
-                        .foregroundStyle(.black.opacity(0.65))
+                // Profile + Heart — grouped together
+                HStack(spacing: 10) {
+                    // Heart — plain, no container
+                    Button { } label: {
+                        Image(systemName: "heart")
+                            .font(.system(size: 15))
+                            .foregroundStyle(.black.opacity(0.65))
+                    }
+
+                    // Profile — SF symbol person.circle.fill
+                    Button { } label: {
+                        Image(systemName: "person.circle.fill")
+                            .font(.system(size: 26))
+                            .foregroundStyle(.black.opacity(0.65))
+                    }
                 }
+
+                // Gap between icons and Edit
+                Color.clear.frame(width: 8)
+
+                // Edit — bold, separated by gap
                 Button { } label: {
-                    Image("profilePhoto")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 28, height: 28)
-                        .clipShape(.circle)
+                    Text("Edit")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(.black.opacity(0.85))
                 }
             }
         }
@@ -220,42 +227,48 @@ struct AnalyticsView: View {
             // Chart content will go here
         }
         .safeAreaInset(edge: .top) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 6) {
+            // Filter bar: ZStack so glass effect clips the scroll content correctly
+            ZStack {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 4) {
                         ForEach(filters, id: \.label) { filter in
-                            let isSelected = selectedFilter == filter.label
                             Button {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
                                     selectedFilter = filter.label
                                 }
                             } label: {
-                                HStack(spacing: 6) {
+                                HStack(spacing: 7) {
                                     Text(filter.label)
-                                        .font(.system(size: 13, weight: .semibold, design: .rounded))
-                                        .foregroundStyle(isSelected ? Color.primary : Color.primary.opacity(0.5))
+                                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                        .foregroundStyle(.black)
 
                                     Text("\(filter.count)")
-                                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                                        .font(.system(size: 15, weight: .bold, design: .rounded))
                                         .foregroundStyle(.white)
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 2)
+                                        .padding(.horizontal, 7)
+                                        .padding(.vertical, 3)
                                         .background(Color.blue, in: .capsule)
                                 }
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 9)
                                 .background {
-                                    if isSelected {
+                                    if selectedFilter == filter.label {
                                         Capsule()
-                                            .fill(Color.primary.opacity(0.08))
-                                            .matchedGeometryEffect(id: "filterPill", in: filterNamespace)
+                                            .fill(Color.black.opacity(0.12))
+                                            .matchedGeometryEffect(id: "filterSelection", in: filterNamespace)
                                     }
                                 }
                             }
                         }
                     }
-                    .padding(.horizontal, 12)
+                    // Equal padding all sides (8pt) so left matches top/bottom
+                    .padding(.horizontal, 8)
                     .padding(.vertical, 8)
+                }
             }
+            .clipShape(Capsule())
+            .overlay(Capsule().stroke(Color.gray.opacity(0.25), lineWidth: 1))
+            .glassEffect(.clear, in: .capsule)
             .padding(.horizontal, 16)
             .padding(.top, 6)
             .padding(.bottom, 4)
@@ -271,12 +284,106 @@ struct FavoritesView: View {
     }
 }
 
+// MARK: - Search View
+
+struct SearchView: View {
+    @FocusState private var isSearchFocused: Bool
+    @State private var searchText = ""
+    @State private var selectedFilter = "All"
+    @Namespace private var filterNamespace
+    var onDismiss: () -> Void
+
+    let filters: [(label: String, count: Int)] = [
+        ("All", 24), ("Pie Chart", 12), ("Gantt Chart", 5),
+        ("Histogram", 2), ("Diagrams", 4)
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Search bar + X button
+            HStack(spacing: 10) {
+                HStack(spacing: 8) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 15))
+                        .foregroundStyle(.secondary)
+                    TextField("Search", text: $searchText)
+                        .focused($isSearchFocused)
+                        .font(.system(size: 16))
+                        .submitLabel(.search)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 11)
+                .glassEffect(.regular, in: .capsule)
+
+                // X button — same proportions as search circle in tab bar
+                Button { onDismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color.primary.opacity(0.65))
+                        .frame(width: 44, height: 44)
+                }
+                .glassEffect(.regular, in: .circle)
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+
+            // Filter bar — 16pt below search bar
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(filters, id: \.label) { filter in
+                        let isSelected = selectedFilter == filter.label
+                        Button {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                selectedFilter = filter.label
+                            }
+                        } label: {
+                            HStack(spacing: 6) {
+                                Text(filter.label)
+                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(isSelected ? Color.primary : Color.primary.opacity(0.5))
+                                Text("\(filter.count)")
+                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.blue, in: .capsule)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background {
+                                if isSelected {
+                                    Capsule()
+                                        .fill(Color.primary.opacity(0.08))
+                                        .matchedGeometryEffect(id: "searchFilterPill", in: filterNamespace)
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 6)
+            }
+            .padding(.top, 16)
+
+            Spacer()
+        }
+        .toolbar(.hidden, for: .tabBar)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                withAnimation { isSearchFocused = true }
+            }
+        }
+    }
+}
+
 // MARK: - Content View
 
 struct ContentView: View {
+    @State private var selectedTab = "home"
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house.fill") {
+        TabView(selection: $selectedTab) {
+            Tab("Home", systemImage: "house.fill", value: "home") {
                 NavigationStack {
                     HomeView()
                         .navigationTitle("")
@@ -285,7 +392,7 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Folders", systemImage: "folder.fill") {
+            Tab("Folders", systemImage: "folder.fill", value: "folders") {
                 NavigationStack {
                     FolderExample()
                         .navigationTitle("Glass Folders")
@@ -294,7 +401,7 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Favourites", systemImage: "heart.fill") {
+            Tab("Favourites", systemImage: "heart.fill", value: "favourites") {
                 NavigationStack {
                     FavoritesView()
                         .navigationTitle("Favourite GL Designs")
@@ -303,7 +410,7 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Analytics", systemImage: "chart.bar.fill") {
+            Tab("Analytics", systemImage: "chart.bar.fill", value: "analytics") {
                 NavigationStack {
                     AnalyticsView()
                         .navigationTitle("Analytics")
@@ -313,9 +420,10 @@ struct ContentView: View {
             }
 
             Tab(role: .search) {
-                NavigationStack {
-                    Text("Search")
-                        .navigationTitle("Search")
+                SearchView {
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                        selectedTab = "home"
+                    }
                 }
             }
         }
