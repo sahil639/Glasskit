@@ -227,48 +227,39 @@ struct AnalyticsView: View {
             // Chart content will go here
         }
         .safeAreaInset(edge: .top) {
-            // Filter bar: ZStack so glass effect clips the scroll content correctly
-            ZStack {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 4) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                GlassEffectContainer(spacing: 6) {
+                    HStack(spacing: 6) {
                         ForEach(filters, id: \.label) { filter in
+                            let isSelected = selectedFilter == filter.label
                             Button {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
                                     selectedFilter = filter.label
                                 }
                             } label: {
-                                HStack(spacing: 7) {
+                                HStack(spacing: 6) {
                                     Text(filter.label)
-                                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                        .foregroundStyle(.black)
+                                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                        .foregroundStyle(isSelected ? Color.primary : Color.primary.opacity(0.5))
 
                                     Text("\(filter.count)")
-                                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                                        .font(.system(size: 13, weight: .bold, design: .rounded))
                                         .foregroundStyle(.white)
-                                        .padding(.horizontal, 7)
-                                        .padding(.vertical, 3)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 2)
                                         .background(Color.blue, in: .capsule)
                                 }
-                                .padding(.horizontal, 24)
-                                .padding(.vertical, 9)
-                                .background {
-                                    if selectedFilter == filter.label {
-                                        Capsule()
-                                            .fill(Color.black.opacity(0.12))
-                                            .matchedGeometryEffect(id: "filterSelection", in: filterNamespace)
-                                    }
-                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
                             }
+                            .glassEffect(.regular, in: .capsule, isEnabled: isSelected)
+                            .glassEffectID(isSelected ? "filterPill" : filter.label, in: filterNamespace)
                         }
                     }
-                    // Equal padding all sides (8pt) so left matches top/bottom
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                 }
             }
-            .clipShape(Capsule())
-            .overlay(Capsule().stroke(Color.gray.opacity(0.25), lineWidth: 1))
-            .glassEffect(.clear, in: .capsule)
             .padding(.horizontal, 16)
             .padding(.top, 6)
             .padding(.bottom, 4)
