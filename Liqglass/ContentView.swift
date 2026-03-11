@@ -37,38 +37,29 @@ class FavoritesManager {
 
 struct SharedToolbar: ToolbarContent {
     var body: some ToolbarContent {
-        #if os(iOS)
-        ToolbarItem(placement: .topBarTrailing) {
+        ToolbarItem(placement: .automatic) {
+            Button { } label: {
+                Text("Edit")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(.black.opacity(0.85))
+            }
+        }
+        ToolbarItem(placement: .automatic) {
             HStack(spacing: 10) {
-                // Profile + Heart — grouped together
-                HStack(spacing: 10) {
-                    // Heart — plain, no container
-                    Button { } label: {
-                        Image(systemName: "heart")
-                            .font(.system(size: 15))
-                            .foregroundStyle(.black.opacity(0.65))
-                    }
-
-                    // Profile — SF symbol person.circle.fill
-                    Button { } label: {
-                        Image(systemName: "person.circle.fill")
-                            .font(.system(size: 26))
-                            .foregroundStyle(.black.opacity(0.65))
-                    }
-                }
-
-                // Gap between icons and Edit
-                Color.clear.frame(width: 8)
-
-                // Edit — bold, separated by gap
                 Button { } label: {
-                    Text("Edit")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(.black.opacity(0.85))
+                    Image(systemName: "heart")
+                        .font(.system(size: 15))
+                        .foregroundStyle(.black.opacity(0.65))
+                }
+                Button { } label: {
+                    Image("profilePhoto")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 28, height: 28)
+                        .clipShape(.circle)
                 }
             }
         }
-        #endif
     }
 }
 
