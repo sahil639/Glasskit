@@ -222,7 +222,6 @@ struct AnalyticsView: View {
             // Chart content will go here
         }
         .safeAreaInset(edge: .top) {
-            // Filter bar: ZStack so glass effect clips the scroll content correctly
             ZStack {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 4) {
@@ -236,7 +235,6 @@ struct AnalyticsView: View {
                                     Text(filter.label)
                                         .font(.system(size: 14, weight: .semibold, design: .rounded))
                                         .foregroundStyle(.black)
-
                                     Text("\(filter.count)")
                                         .font(.system(size: 15, weight: .bold, design: .rounded))
                                         .foregroundStyle(.white)
@@ -256,14 +254,14 @@ struct AnalyticsView: View {
                             }
                         }
                     }
-                    // Equal padding all sides (8pt) so left matches top/bottom
                     .padding(.horizontal, 8)
                     .padding(.vertical, 8)
                 }
             }
             .clipShape(Capsule())
-            .overlay(Capsule().stroke(Color.gray.opacity(0.25), lineWidth: 1))
             .glassEffect(.clear, in: .capsule)
+            .overlay(Capsule().stroke(Color.white.opacity(0.55), lineWidth: 2))
+            .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 4)
             .padding(.horizontal, 16)
             .padding(.top, 6)
             .padding(.bottom, 4)
@@ -279,9 +277,10 @@ struct FavoritesView: View {
     }
 }
 
-// MARK: - Search View
+// MARK: - Search Overlay
 
-struct SearchView: View {
+struct SearchOverlay: View {
+    @Binding var isSearching: Bool
     @FocusState private var isSearchFocused: Bool
     @State private var searchText = ""
     @State private var selectedFilter = "All"
@@ -308,10 +307,13 @@ struct SearchView: View {
                 .padding(.horizontal, 14)
                 .padding(.vertical, 11)
                 .glassEffect(.regular, in: .capsule)
+                .overlay(Capsule().stroke(Color.white.opacity(0.55), lineWidth: 2))
 
-                // X button — dismisses keyboard
+                // X button — closes search, returns to current page
                 Button {
-                    isSearchFocused = false
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                        isSearching = false
+                    }
                     searchText = ""
                 } label: {
                     Image(systemName: "xmark")
@@ -320,56 +322,61 @@ struct SearchView: View {
                         .frame(width: 44, height: 44)
                 }
                 .glassEffect(.regular, in: .circle)
+                .overlay(Circle().stroke(Color.white.opacity(0.55), lineWidth: 2))
             }
             .padding(.horizontal, 16)
-            .padding(.top, 16)
+            .padding(.top, 12)
 
             // Filter bar — 16pt below search bar
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 6) {
-                    ForEach(filters, id: \.label) { filter in
-                        let isSelected = selectedFilter == filter.label
-                        Button {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                                selectedFilter = filter.label
-                            }
-                        } label: {
-                            HStack(spacing: 6) {
-                                Text(filter.label)
-                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                                    .foregroundStyle(isSelected ? Color.primary : Color.primary.opacity(0.5))
-                                Text("\(filter.count)")
-                                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                                    .foregroundStyle(.white)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color.blue, in: .capsule)
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background {
-                                if isSelected {
-                                    Capsule()
-                                        .fill(Color.primary.opacity(0.08))
-                                        .matchedGeometryEffect(id: "searchFilterPill", in: filterNamespace)
+            ZStack {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(filters, id: \.label) { filter in
+                            let isSelected = selectedFilter == filter.label
+                            Button {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                    selectedFilter = filter.label
+                                }
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Text(filter.label)
+                                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                        .foregroundStyle(isSelected ? Color.primary : Color.primary.opacity(0.5))
+                                    Text("\(filter.count)")
+                                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 2)
+                                        .background(Color.blue, in: .capsule)
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background {
+                                    if isSelected {
+                                        Capsule()
+                                            .fill(Color.primary.opacity(0.08))
+                                            .matchedGeometryEffect(id: "searchFilterPill", in: filterNamespace)
+                                    }
                                 }
                             }
                         }
                     }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 8)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 6)
             }
+            .clipShape(Capsule())
+            .glassEffect(.clear, in: .capsule)
+            .overlay(Capsule().stroke(Color.white.opacity(0.55), lineWidth: 2))
+            .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 4)
+            .padding(.horizontal, 16)
             .padding(.top, 16)
 
             Spacer()
         }
-        #if os(iOS)
-        .toolbar(.hidden, for: .tabBar)
-        #endif
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                withAnimation { isSearchFocused = true }
+                isSearchFocused = true
             }
         }
     }
@@ -378,47 +385,117 @@ struct SearchView: View {
 // MARK: - Content View
 
 struct ContentView: View {
+    @State private var selectedTab = 0
+    @State private var isSearching = false
+    @Namespace private var tabNamespace
+
+    init() {
+        UITabBar.appearance().isHidden = true
+    }
+
+    private let tabs: [(label: String, icon: String, tag: Int)] = [
+        ("Home", "house.fill", 0),
+        ("Folders", "folder.fill", 1),
+        ("Favourites", "heart.fill", 2),
+        ("Analytics", "chart.bar.fill", 3)
+    ]
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house.fill") {
+        ZStack(alignment: .top) {
+            TabView(selection: $selectedTab) {
                 NavigationStack {
                     HomeView()
                         .navigationTitle("")
                         .toolbarTitleDisplayMode(.inline)
                         .toolbar { SharedToolbar() }
                 }
-            }
+                .tag(0)
 
-            Tab("Folders", systemImage: "folder.fill") {
                 NavigationStack {
                     FolderExample()
                         .navigationTitle("Glass Folders")
                         .toolbarTitleDisplayMode(.inline)
                         .toolbar { SharedToolbar() }
                 }
-            }
+                .tag(1)
 
-            Tab("Favourites", systemImage: "heart.fill") {
                 NavigationStack {
                     FavoritesView()
                         .navigationTitle("Favourite GL Designs")
                         .toolbarTitleDisplayMode(.inline)
                         .toolbar { SharedToolbar() }
                 }
-            }
+                .tag(2)
 
-            Tab("Analytics", systemImage: "chart.bar.fill") {
                 NavigationStack {
                     AnalyticsView()
                         .navigationTitle("Analytics")
                         .toolbarTitleDisplayMode(.inline)
                         .toolbar { SharedToolbar() }
                 }
+                .tag(3)
             }
 
-            Tab(role: .search) {
-                SearchView()
+            // Search overlay — slides down from top below nav bar
+            if isSearching {
+                SearchOverlay(isSearching: $isSearching)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .zIndex(1)
             }
+        }
+        .animation(.spring(response: 0.35, dampingFraction: 0.75), value: isSearching)
+        .safeAreaInset(edge: .bottom) {
+            HStack(spacing: 8) {
+                // Tab pill with 4 items
+                HStack(spacing: 0) {
+                    ForEach(tabs, id: \.tag) { tab in
+                        Button {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                selectedTab = tab.tag
+                            }
+                        } label: {
+                            VStack(spacing: 3) {
+                                Image(systemName: tab.icon)
+                                    .font(.system(size: 17, weight: .medium))
+                                Text(tab.label)
+                                    .font(.system(size: 9, weight: .semibold, design: .rounded))
+                            }
+                            .foregroundStyle(selectedTab == tab.tag ? Color.primary : Color.primary.opacity(0.35))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background {
+                                if selectedTab == tab.tag {
+                                    Capsule()
+                                        .fill(Color.primary.opacity(0.08))
+                                        .matchedGeometryEffect(id: "tabSelection", in: tabNamespace)
+                                }
+                            }
+                            .padding(.horizontal, 4)
+                        }
+                    }
+                }
+                .glassEffect(.clear, in: .capsule)
+                .overlay(Capsule().stroke(Color.white.opacity(0.55), lineWidth: 2))
+
+                // Search circle button
+                Button {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                        isSearching = true
+                    }
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(Color.primary.opacity(0.65))
+                        .frame(width: 50, height: 50)
+                }
+                .glassEffect(.clear, in: .circle)
+                .overlay(Circle().stroke(Color.white.opacity(0.55), lineWidth: 2))
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 12)
+            .opacity(isSearching ? 0 : 1)
+            .offset(y: isSearching ? 20 : 0)
+            .animation(.spring(response: 0.35, dampingFraction: 0.75), value: isSearching)
         }
     }
 }
