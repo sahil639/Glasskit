@@ -176,11 +176,6 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                Text("glasskit")
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity, alignment: .center)
-
                 LazyVGrid(columns: [
                     GridItem(.flexible(), spacing: 12),
                     GridItem(.flexible(), spacing: 12)
@@ -378,9 +373,15 @@ struct SearchView: View {
 // MARK: - Content View
 
 struct ContentView: View {
+    @State private var selectedTab = 0
+    @State private var prevTab = 0
+    @State private var isSearching = false
+    @State private var searchText = ""
+    @FocusState private var searchFocused: Bool
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house.fill") {
+        TabView(selection: $selectedTab) {
+            Tab("Home", systemImage: "house.fill", value: 0) {
                 NavigationStack {
                     HomeView()
                         .toolbarTitleDisplayMode(.inline)
@@ -388,15 +389,15 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Folders", systemImage: "folder.fill") {
+            Tab("Folders", systemImage: "folder.fill", value: 1) {
                 NavigationStack {
                     FolderExample()
                         .toolbarTitleDisplayMode(.inline)
-                        .toolbar { SharedToolbar(title: "Glasskit") }
+                        .toolbar { SharedToolbar(title: "Glass Folders") }
                 }
             }
 
-            Tab("Favourites", systemImage: "heart.fill") {
+            Tab("Favourites", systemImage: "heart.fill", value: 2) {
                 NavigationStack {
                     FavoritesView()
                         .toolbarTitleDisplayMode(.inline)
@@ -404,7 +405,7 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Analytics", systemImage: "chart.bar.fill") {
+            Tab("Analytics", systemImage: "chart.bar.fill", value: 3) {
                 NavigationStack {
                     AnalyticsView()
                         .toolbarTitleDisplayMode(.inline)
@@ -412,10 +413,64 @@ struct ContentView: View {
                 }
             }
 
-            Tab(role: .search) {
+            Tab("Search", systemImage: "magnifyingglass", value: 4) {
                 EmptyView()
             }
         }
+        .onChange(of: selectedTab) { old, new in
+            if new == 4 {
+                if old == 1 || old == 3 {
+                    prevTab = old
+                    selectedTab = old
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                        isSearching = true
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        searchFocused = true
+                    }
+                } else {
+                    selectedTab = old
+                }
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if isSearching {
+                HStack(spacing: 10) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 15))
+                            .foregroundStyle(.secondary)
+                        TextField("Search", text: $searchText)
+                            .focused($searchFocused)
+                            .submitLabel(.search)
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
+                    .background(.regularMaterial, in: .capsule)
+
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            isSearching = false
+                            searchText = ""
+                        }
+                        searchFocused = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(.primary)
+                            .frame(width: 44, height: 44)
+                            .background(.regularMaterial, in: .circle)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 8)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        #if os(iOS)
+        .toolbar(isSearching ? .hidden : .visible, for: .tabBar)
+        #endif
     }
 }
 
