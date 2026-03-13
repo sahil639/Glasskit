@@ -343,9 +343,7 @@ struct AnalyticsCard: View {
 
                 // Title row with dropdown toggle
                 Button {
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                        isExpanded.toggle()
-                    }
+                    isExpanded.toggle()
                 } label: {
                     HStack {
                         Text(title)
@@ -356,19 +354,22 @@ struct AnalyticsCard: View {
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(.secondary)
                             .rotationEffect(.degrees(isExpanded ? 0 : -90))
+                            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isExpanded)
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 14)
                 }
 
-                if isExpanded {
-                    VStack(spacing: 14) {
-                        Divider().padding(.horizontal, 20)
-                        pieSettingsView
-                        itemListView
-                    }
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                // Always rendered — height clips to 0 when collapsed
+                VStack(spacing: 14) {
+                    Divider().padding(.horizontal, 20)
+                    pieSettingsView
+                    itemListView
                 }
+                .frame(maxHeight: isExpanded ? .infinity : 0)
+                .clipped()
+                .opacity(isExpanded ? 1 : 0)
+                .animation(.spring(response: 0.45, dampingFraction: 0.82), value: isExpanded)
             }
             .padding(.bottom, 8)
         }
