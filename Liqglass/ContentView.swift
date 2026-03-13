@@ -265,8 +265,7 @@ struct AnalyticsCard: View {
     let title: String
     let categories: [String]
     @State private var items: [AnalyticsDataItem]
-    @State private var chartType: ChartType = .pie
-    @Namespace private var chartTypeNS
+    @State private var isExpanded: Bool = true
     @State private var editingID: UUID? = nil
     @State private var editingText: String = ""
     @State private var sliceGap: Double = 1.5
@@ -284,11 +283,6 @@ struct AnalyticsCard: View {
         Color(red: 0.38, green: 0.65, blue: 0.58),
         Color(red: 0.82, green: 0.92, blue: 0.88),
     ]
-
-    enum ChartType: String, CaseIterable {
-        case pie = "Pie Chart"
-        case gantt = "Gantt Chart"
-    }
 
     enum SortOrder: String, CaseIterable {
         case none = "Default"
@@ -336,60 +330,47 @@ struct AnalyticsCard: View {
     var body: some View {
         VStack(spacing: 0) {
 
-            // TOP — visualization
-            Group {
-                if chartType == .pie { pieChartView } else { ganttChartView }
-            }
-            .frame(height: 240)
-            .padding(.horizontal, 24)
-            .padding(.top, 24)
+            // TOP — pie chart (always visible)
+            pieChartView
+                .frame(height: 240)
+                .padding(.horizontal, 24)
+                .padding(.top, 24)
 
             Divider().padding(.top, 16).padding(.horizontal, 12)
 
-            // BOTTOM — controls + list
-            VStack(spacing: 14) {
+            // BOTTOM — title row + collapsible controls
+            VStack(spacing: 0) {
 
-                // Title pill
-                Text(title)
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
-                    .padding(.horizontal, 16).padding(.vertical, 7)
-                    .background(Color.black.opacity(0.06), in: .capsule)
-
-                // Chart type switcher
-                HStack(spacing: 4) {
-                    ForEach(ChartType.allCases, id: \.self) { type in
-                        Button {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { chartType = type }
-                        } label: {
-                            HStack(spacing: 5) {
-                                Image(systemName: type == .pie ? "chart.pie.fill" : "chart.bar.fill")
-                                    .font(.system(size: 11))
-                                Text(type.rawValue)
-                                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                            }
-                            .padding(.horizontal, 14).padding(.vertical, 7)
-                            .background {
-                                if chartType == type {
-                                    Capsule().fill(Color.black.opacity(0.1))
-                                        .matchedGeometryEffect(id: "chartTypePill", in: chartTypeNS)
-                                }
-                            }
-                        }
-                        .foregroundStyle(chartType == type ? .primary : .secondary)
+                // Title row with dropdown toggle
+                Button {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                        isExpanded.toggle()
                     }
+                } label: {
+                    HStack {
+                        Text(title)
+                            .font(.system(size: 15, weight: .semibold, design: .rounded))
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(.secondary)
+                            .rotationEffect(.degrees(isExpanded ? 0 : -90))
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 14)
                 }
-                .padding(.horizontal, 10).padding(.vertical, 4)
-                .background(Color.black.opacity(0.04), in: .capsule)
 
-                // Pie chart settings (only shown in pie mode)
-                if chartType == .pie {
-                    pieSettingsView
+                if isExpanded {
+                    VStack(spacing: 14) {
+                        Divider().padding(.horizontal, 20)
+                        pieSettingsView
+                        itemListView
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .top)))
                 }
-
-                // Items list
-                itemListView
             }
-            .padding(.top, 14).padding(.bottom, 8)
+            .padding(.bottom, 8)
         }
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .padding(.horizontal, 12)
@@ -544,38 +525,6 @@ struct AnalyticsCard: View {
             .frame(width: size, height: size)
             .position(x: geo.size.width / 2, y: geo.size.height / 2)
             .animation(.spring(response: 0.4, dampingFraction: 0.8), value: slices.map { $0.startAngle.degrees })
-        }
-    }
-
-    // MARK: Gantt chart
-
-    var ganttChartView: some View {
-        VStack(spacing: 12) {
-            Spacer()
-            ForEach(items) { item in
-                HStack(spacing: 10) {
-                    Text(item.label)
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .frame(width: 52, alignment: .leading)
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                .fill(Color.black.opacity(0.05))
-                            RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                .fill(item.color)
-                                .glassEffect(.clear, in: .rect(cornerRadius: 7, style: .continuous))
-                                .frame(width: max(6, geo.size.width * item.percentage / 100))
-                                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: item.percentage)
-                        }
-                    }
-                    .frame(height: 28)
-                    Text("\(Int(item.percentage))%")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .frame(width: 36, alignment: .trailing)
-                }
-            }
-            Spacer()
         }
     }
 
