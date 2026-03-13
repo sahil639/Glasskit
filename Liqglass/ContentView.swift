@@ -199,38 +199,24 @@ struct HomeView: View {
     }
 }
 
-// MARK: - Analytics Data Model
-
-// MARK: - Native Color Picker (iOS only)
+// MARK: - Color Picker Coordinator (iOS)
 
 #if os(iOS)
-struct NativeColorPicker: UIViewControllerRepresentable {
-    @Binding var color: Color
-    @Binding var isPresented: Bool
+final class ColorPickerCoordinator: NSObject, UIColorPickerViewControllerDelegate {
+    var onSelect: (Color) -> Void
+    init(_ onSelect: @escaping (Color) -> Void) { self.onSelect = onSelect }
 
-    func makeUIViewController(context: Context) -> UIColorPickerViewController {
-        let vc = UIColorPickerViewController()
-        vc.selectedColor = UIColor(color)
-        vc.supportsAlpha = false
-        vc.delegate = context.coordinator
-        return vc
+    func colorPickerViewController(_ vc: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+        onSelect(Color(color))
     }
+}
 
-    func updateUIViewController(_ vc: UIColorPickerViewController, context: Context) {}
-
-    func makeCoordinator() -> Coordinator { Coordinator(self) }
-
-    class Coordinator: NSObject, UIColorPickerViewControllerDelegate {
-        let parent: NativeColorPicker
-        init(_ parent: NativeColorPicker) { self.parent = parent }
-
-        func colorPickerViewController(_ vc: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
-            parent.color = Color(color)
-        }
-        func colorPickerViewControllerDidFinish(_ vc: UIColorPickerViewController) {
-            parent.isPresented = false
-        }
-    }
+private func topViewController() -> UIViewController? {
+    guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let window = scene.windows.first(where: { $0.isKeyWindow }),
+          var vc = window.rootViewController else { return nil }
+    while let presented = vc.presentedViewController { vc = presented }
+    return vc
 }
 #endif
 
@@ -283,7 +269,9 @@ struct AnalyticsCard: View {
     @Namespace private var chartTypeNS
     @State private var editingID: UUID? = nil
     @State private var editingText: String = ""
-    @State private var colorPickerIndex: Int? = nil
+    #if os(iOS)
+    @State private var pickerCoordinator: ColorPickerCoordinator? = nil
+    #endif
 
     static let colorPalette: [Color] = [
         Color(red: 0.28, green: 0.16, blue: 0.72),
@@ -403,29 +391,22 @@ struct AnalyticsCard: View {
                     .padding(.vertical, 14)
             }
         }
-        .sheet(isPresented: Binding(
-            get: { colorPickerIndex != nil },
-            set: { if !$0 { colorPickerIndex = nil } }
-        )) {
-            #if os(iOS)
-            if let idx = colorPickerIndex {
-                NativeColorPicker(
-                    color: $items[idx].color,
-                    isPresented: Binding(
-                        get: { colorPickerIndex != nil },
-                        set: { if !$0 { colorPickerIndex = nil } }
-                    )
-                )
-                .ignoresSafeArea()
-            }
-            #endif
-        }
     }
 
     @ViewBuilder
     func itemRow(index: Int, item: AnalyticsDataItem) -> some View {
         HStack(spacing: 12) {
-            Button { colorPickerIndex = index } label: {
+            Button {
+                #if os(iOS)
+                let coord = ColorPickerCoordinator { color in items[index].color = color }
+                pickerCoordinator = coord
+                let vc = UIColorPickerViewController()
+                vc.selectedColor = UIColor(items[index].color)
+                vc.supportsAlpha = false
+                vc.delegate = coord
+                topViewController()?.present(vc, animated: true)
+                #endif
+            } label: {
                 Circle()
                     .fill(items[index].color)
                     .frame(width: 28, height: 28)
