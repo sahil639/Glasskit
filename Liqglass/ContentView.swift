@@ -259,6 +259,32 @@ struct PieSliceShape: Shape {
     }
 }
 
+// MARK: - Pie Arc Path (for rounded edges stroke rendering)
+
+struct PieArcPath: Shape {
+    var startAngle: Angle
+    var endAngle: Angle
+    var innerRadiusRatio: CGFloat = 0.52
+    var gap: Double = 1.5
+
+    var animatableData: AnimatablePair<Double, Double> {
+        get { AnimatablePair(startAngle.degrees, endAngle.degrees) }
+        set { startAngle = .degrees(newValue.first); endAngle = .degrees(newValue.second) }
+    }
+
+    func path(in rect: CGRect) -> Path {
+        let c = CGPoint(x: rect.midX, y: rect.midY)
+        let outerR = min(rect.width, rect.height) / 2
+        let midR = outerR * (1 + innerRadiusRatio) / 2
+        let s = Angle(degrees: startAngle.degrees + gap)
+        let e = Angle(degrees: endAngle.degrees - gap)
+        guard e.degrees > s.degrees else { return Path() }
+        var p = Path()
+        p.addArc(center: c, radius: midR, startAngle: s, endAngle: e, clockwise: false)
+        return p
+    }
+}
+
 // MARK: - Analytics Card
 
 struct AnalyticsCard: View {
@@ -271,6 +297,7 @@ struct AnalyticsCard: View {
     @State private var sliceGap: Double = 1.5
     @State private var chartStartAngle: Double = -90.0
     @State private var sortOrder: SortOrder = .none
+    @State private var roundedEdges: Bool = false
     #if os(iOS)
     @State private var pickerCoordinator: ColorPickerCoordinator? = nil
     #endif
@@ -433,6 +460,31 @@ struct AnalyticsCard: View {
                 }
                 Spacer()
             }
+
+            // Edges
+            HStack(spacing: 10) {
+                Text("Edges")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 62, alignment: .leading)
+                HStack(spacing: 4) {
+                    ForEach(["Sharp", "Rounded"], id: \.self) { style in
+                        let isSelected = style == "Rounded" ? roundedEdges : !roundedEdges
+                        Button {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                                roundedEdges = style == "Rounded"
+                            }
+                        } label: {
+                            Text(style)
+                                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                                .padding(.horizontal, 12).padding(.vertical, 5)
+                                .background(isSelected ? Color.black.opacity(0.1) : Color.clear, in: .capsule)
+                        }
+                        .foregroundStyle(isSelected ? .primary : .secondary)
+                    }
+                }
+                Spacer()
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -516,11 +568,31 @@ struct AnalyticsCard: View {
     var pieChartView: some View {
         GeometryReader { geo in
             let size = min(geo.size.width, geo.size.height)
+            let outerR = size / 2
+            let innerRadiusRatio: CGFloat = 0.52
+            let strokeWidth = outerR * (1 - innerRadiusRatio)
             ZStack {
                 ForEach(slices) { slice in
-                    PieSliceShape(startAngle: slice.startAngle, endAngle: slice.endAngle, gap: sliceGap)
-                        .fill(slice.color)
-                        .glassEffect(.clear, in: PieSliceShape(startAngle: slice.startAngle, endAngle: slice.endAngle, gap: sliceGap))
+                    let sliceShape = PieSliceShape(startAngle: slice.startAngle, endAngle: slice.endAngle, gap: sliceGap)
+                    Group {
+                        if roundedEdges {
+                            PieArcPath(startAngle: slice.startAngle, endAngle: slice.endAngle, gap: sliceGap)
+                                .stroke(slice.color.opacity(0.75), style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round))
+                                .glassEffect(.clear, in: sliceShape)
+                        } else {
+                            sliceShape
+                                .fill(slice.color.opacity(0.75))
+                                .glassEffect(.clear, in: sliceShape)
+                        }
+                    }
+                    .overlay(sliceShape.stroke(Color.white.opacity(0.25), lineWidth: 0.4))
+                    .overlay(
+                        sliceShape
+                            .stroke(Color.white, lineWidth: 8)
+                            .blur(radius: 4)
+                            .opacity(0.25)
+                            .clipShape(sliceShape)
+                    )
                 }
             }
             .frame(width: size, height: size)
