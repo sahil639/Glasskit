@@ -201,6 +201,41 @@ struct HomeView: View {
 
 // MARK: - Analytics Data Model
 
+// MARK: - Native Color Picker (iOS only)
+
+#if os(iOS)
+struct NativeColorPicker: UIViewControllerRepresentable {
+    @Binding var color: Color
+    @Binding var isPresented: Bool
+
+    func makeUIViewController(context: Context) -> UIColorPickerViewController {
+        let vc = UIColorPickerViewController()
+        vc.selectedColor = UIColor(color)
+        vc.supportsAlpha = false
+        vc.delegate = context.coordinator
+        return vc
+    }
+
+    func updateUIViewController(_ vc: UIColorPickerViewController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+
+    class Coordinator: NSObject, UIColorPickerViewControllerDelegate {
+        let parent: NativeColorPicker
+        init(_ parent: NativeColorPicker) { self.parent = parent }
+
+        func colorPickerViewController(_ vc: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+            parent.color = Color(color)
+        }
+        func colorPickerViewControllerDidFinish(_ vc: UIColorPickerViewController) {
+            parent.isPresented = false
+        }
+    }
+}
+#endif
+
+// MARK: - Analytics Data Model
+
 struct AnalyticsDataItem: Identifiable {
     let id = UUID()
     let label: String
@@ -248,6 +283,7 @@ struct AnalyticsCard: View {
     @Namespace private var chartTypeNS
     @State private var editingID: UUID? = nil
     @State private var editingText: String = ""
+    @State private var colorPickerIndex: Int? = nil
 
     static let colorPalette: [Color] = [
         Color(red: 0.28, green: 0.16, blue: 0.72),
@@ -367,25 +403,35 @@ struct AnalyticsCard: View {
                     .padding(.vertical, 14)
             }
         }
+        .sheet(isPresented: Binding(
+            get: { colorPickerIndex != nil },
+            set: { if !$0 { colorPickerIndex = nil } }
+        )) {
+            #if os(iOS)
+            if let idx = colorPickerIndex {
+                NativeColorPicker(
+                    color: $items[idx].color,
+                    isPresented: Binding(
+                        get: { colorPickerIndex != nil },
+                        set: { if !$0 { colorPickerIndex = nil } }
+                    )
+                )
+                .ignoresSafeArea()
+            }
+            #endif
+        }
     }
 
     @ViewBuilder
     func itemRow(index: Int, item: AnalyticsDataItem) -> some View {
         HStack(spacing: 12) {
-            ZStack {
-                ColorPicker("", selection: $items[index].color, supportsOpacity: false)
-                    .labelsHidden()
-                    .opacity(0.015)
-                RoundedRectangle(cornerRadius: 7, style: .continuous)
+            Button { colorPickerIndex = index } label: {
+                Circle()
                     .fill(items[index].color)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 7, style: .continuous)
-                            .stroke(Color.white.opacity(0.7), lineWidth: 1.5)
-                    )
+                    .frame(width: 28, height: 28)
+                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
                     .shadow(color: .black.opacity(0.18), radius: 4, y: 2)
-                    .allowsHitTesting(false)
             }
-            .frame(width: 28, height: 28)
             Text(item.label)
                 .font(.system(size: 15, weight: .medium, design: .rounded))
             Spacer()
