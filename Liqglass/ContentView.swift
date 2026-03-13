@@ -235,7 +235,7 @@ struct PieSliceShape: Shape {
     var startAngle: Angle
     var endAngle: Angle
     var innerRadiusRatio: CGFloat = 0.52
-    private let gap: Double = 1.5
+    var gap: Double = 1.5
 
     var animatableData: AnimatablePair<Double, Double> {
         get { AnimatablePair(startAngle.degrees, endAngle.degrees) }
@@ -269,6 +269,9 @@ struct AnalyticsCard: View {
     @Namespace private var chartTypeNS
     @State private var editingID: UUID? = nil
     @State private var editingText: String = ""
+    @State private var sliceGap: Double = 1.5
+    @State private var chartStartAngle: Double = -90.0
+    @State private var sortOrder: SortOrder = .none
     #if os(iOS)
     @State private var pickerCoordinator: ColorPickerCoordinator? = nil
     #endif
@@ -285,6 +288,12 @@ struct AnalyticsCard: View {
     enum ChartType: String, CaseIterable {
         case pie = "Pie Chart"
         case gantt = "Gantt Chart"
+    }
+
+    enum SortOrder: String, CaseIterable {
+        case none = "Default"
+        case ascending = "Asc"
+        case descending = "Desc"
     }
 
     init(title: String, categories: [String], items: [AnalyticsDataItem]) {
@@ -304,10 +313,17 @@ struct AnalyticsCard: View {
 
     var slices: [Slice] {
         var result: [Slice] = []
-        var cursor = -90.0
-        let total = items.reduce(0) { $0 + $1.percentage }
+        var cursor = chartStartAngle
+        let sorted: [AnalyticsDataItem] = {
+            switch sortOrder {
+            case .none: return items
+            case .ascending: return items.sorted { $0.percentage < $1.percentage }
+            case .descending: return items.sorted { $0.percentage > $1.percentage }
+            }
+        }()
+        let total = sorted.reduce(0) { $0 + $1.percentage }
         guard total > 0 else { return [] }
-        for item in items {
+        for item in sorted {
             let sweep = 360.0 * item.percentage / total
             result.append(Slice(id: item.id, startAngle: .degrees(cursor), endAngle: .degrees(cursor + sweep), color: item.color))
             cursor += sweep
@@ -365,6 +381,11 @@ struct AnalyticsCard: View {
                 .padding(.horizontal, 10).padding(.vertical, 4)
                 .background(Color.black.opacity(0.04), in: .capsule)
 
+                // Pie chart settings (only shown in pie mode)
+                if chartType == .pie {
+                    pieSettingsView
+                }
+
                 // Items list
                 itemListView
             }
@@ -373,6 +394,68 @@ struct AnalyticsCard: View {
         .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .padding(.horizontal, 12)
         .onTapGesture { editingID = nil }
+    }
+
+    // MARK: Pie settings
+
+    var pieSettingsView: some View {
+        VStack(spacing: 10) {
+            // Slice Spacing
+            HStack(spacing: 10) {
+                Text("Spacing")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 62, alignment: .leading)
+                Slider(value: $sliceGap, in: 0...10, step: 0.5)
+                    .animation(.spring(response: 0.3), value: sliceGap)
+                Text(String(format: "%.1f°", sliceGap))
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 32, alignment: .trailing)
+            }
+
+            // Start Angle
+            HStack(spacing: 10) {
+                Text("Start")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 62, alignment: .leading)
+                Slider(value: $chartStartAngle, in: -180...180, step: 15)
+                    .animation(.spring(response: 0.3), value: chartStartAngle)
+                Text("\(Int(chartStartAngle))°")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 32, alignment: .trailing)
+            }
+
+            // Sort Order
+            HStack(spacing: 10) {
+                Text("Sort")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 62, alignment: .leading)
+                HStack(spacing: 4) {
+                    ForEach(SortOrder.allCases, id: \.self) { order in
+                        Button {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                                sortOrder = order
+                            }
+                        } label: {
+                            Text(order.rawValue)
+                                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                                .padding(.horizontal, 12).padding(.vertical, 5)
+                                .background(sortOrder == order ? Color.black.opacity(0.1) : Color.clear, in: .capsule)
+                        }
+                        .foregroundStyle(sortOrder == order ? .primary : .secondary)
+                    }
+                }
+                Spacer()
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color.black.opacity(0.04), in: .rect(cornerRadius: 14, style: .continuous))
+        .padding(.horizontal, 4)
     }
 
     // MARK: Item list view
@@ -453,9 +536,9 @@ struct AnalyticsCard: View {
             let size = min(geo.size.width, geo.size.height)
             ZStack {
                 ForEach(slices) { slice in
-                    PieSliceShape(startAngle: slice.startAngle, endAngle: slice.endAngle)
+                    PieSliceShape(startAngle: slice.startAngle, endAngle: slice.endAngle, gap: sliceGap)
                         .fill(slice.color)
-                        .glassEffect(.clear, in: PieSliceShape(startAngle: slice.startAngle, endAngle: slice.endAngle))
+                        .glassEffect(.clear, in: PieSliceShape(startAngle: slice.startAngle, endAngle: slice.endAngle, gap: sliceGap))
                 }
             }
             .frame(width: size, height: size)
