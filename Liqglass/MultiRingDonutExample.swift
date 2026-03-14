@@ -245,7 +245,7 @@ struct MultiRingDonutCard: View {
             }
             .padding(.bottom, 8)
         }
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .padding(.horizontal, 12)
         .onTapGesture { editingItemID = nil }
     }
@@ -645,7 +645,7 @@ struct MultiRingDonutCard: View {
                 Spacer()
                 if rings.count > 1 {
                     Button {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { rings.remove(at: ringIdx) }
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { rings.removeAll { $0.id == ring.id } }
                     } label: {
                         Image(systemName: "minus.circle")
                             .font(.system(size: 14))
@@ -702,7 +702,9 @@ struct MultiRingDonutCard: View {
                 HStack(spacing: 2) {
                     TextField("0", text: $editingText)
                         .font(.system(size: 15, weight: .bold, design: .rounded))
+                        #if os(iOS)
                         .keyboardType(.numberPad)
+                        #endif
                         .multilineTextAlignment(.trailing)
                         .frame(width: 48)
                         .onChange(of: editingText) { _, val in

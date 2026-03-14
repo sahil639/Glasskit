@@ -1439,7 +1439,7 @@ struct FolderExample: View {
         .padding(.top, 56)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder1").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -1564,7 +1564,7 @@ struct FolderExample: View {
         .padding(.top, 90)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder2").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -1649,7 +1649,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder3").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -1730,7 +1730,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder4").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -1798,7 +1798,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder5").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -1880,7 +1880,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder6").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -1960,7 +1960,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder7").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -2022,7 +2022,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder8").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -2113,7 +2113,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder9").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -2193,7 +2193,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder10").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -2264,7 +2264,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder11").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -2355,7 +2355,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder12").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -2434,7 +2434,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder13").padding(14) }
         .padding(.horizontal, 12)
     }
@@ -2510,7 +2510,7 @@ struct FolderExample: View {
         .padding(.top, 36)
         .padding(.bottom, 36)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .overlay(alignment: .topTrailing) { heartButton(for: "folder14").padding(14) }
         .padding(.horizontal, 12)
     }

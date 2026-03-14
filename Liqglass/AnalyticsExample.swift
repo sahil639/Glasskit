@@ -209,7 +209,7 @@ struct AnalyticsCard: View {
             }
             .padding(.bottom, 8)
         }
-        .background(Color(.systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
         .padding(.horizontal, 12)
         .onTapGesture { editingID = nil }
     }
