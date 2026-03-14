@@ -451,7 +451,7 @@ struct AnalyticsView: View {
 
     let filters: [(label: String, count: Int)] = [
         ("All", 24), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Gantt Chart", 5), ("Histogram", 2)
+        ("Multi Ring", 4), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -478,6 +478,25 @@ struct AnalyticsView: View {
                             AnalyticsDataItem(label: "Design", percentage: 40, color: AnalyticsCard.colorPalette[0]),
                             AnalyticsDataItem(label: "Dev", percentage: 35, color: AnalyticsCard.colorPalette[1]),
                             AnalyticsDataItem(label: "Other", percentage: 25, color: AnalyticsCard.colorPalette[2]),
+                        ]
+                    )
+                }
+                let multiRingCategories = ["Multi Ring", "Pie Chart"]
+                if selectedFilter == "All" || multiRingCategories.contains(selectedFilter) {
+                    MultiRingDonutCard(
+                        title: "Multi Ring Donut",
+                        categories: multiRingCategories,
+                        rings: [
+                            DonutRing(name: "Ring 1", items: [
+                                RingDataItem(label: "Design", percentage: 40, color: MultiRingDonutCard.colorPalettes[0][0]),
+                                RingDataItem(label: "Dev",    percentage: 35, color: MultiRingDonutCard.colorPalettes[0][1]),
+                                RingDataItem(label: "Other",  percentage: 25, color: MultiRingDonutCard.colorPalettes[0][2]),
+                            ]),
+                            DonutRing(name: "Ring 2", items: [
+                                RingDataItem(label: "Q1", percentage: 30, color: MultiRingDonutCard.colorPalettes[1][0]),
+                                RingDataItem(label: "Q2", percentage: 45, color: MultiRingDonutCard.colorPalettes[1][1]),
+                                RingDataItem(label: "Q3", percentage: 25, color: MultiRingDonutCard.colorPalettes[1][2]),
+                            ]),
                         ]
                     )
                 }
