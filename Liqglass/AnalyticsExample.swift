@@ -451,7 +451,7 @@ struct AnalyticsView: View {
 
     let filters: [(label: String, count: Int)] = [
         ("All", 24), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Gantt Chart", 5)
+        ("Multi Ring", 4), ("Radial", 3), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -479,6 +479,13 @@ struct AnalyticsView: View {
                             AnalyticsDataItem(label: "Dev", percentage: 35, color: AnalyticsCard.colorPalette[1]),
                             AnalyticsDataItem(label: "Other", percentage: 25, color: AnalyticsCard.colorPalette[2]),
                         ]
+                    )
+                }
+                let radialCategories = ["Radial", "Pie Chart"]
+                if selectedFilter == "All" || radialCategories.contains(selectedFilter) {
+                    RadialProgressCard(
+                        title: "Radial Progress",
+                        categories: radialCategories
                     )
                 }
                 let multiRingCategories = ["Multi Ring", "Pie Chart"]
