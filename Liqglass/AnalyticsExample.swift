@@ -17,7 +17,7 @@ final class ColorPickerCoordinator: NSObject, UIColorPickerViewControllerDelegat
     }
 }
 
-private func topViewController() -> UIViewController? {
+func topViewController() -> UIViewController? {
     guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
           let window = scene.windows.first(where: { $0.isKeyWindow }),
           var vc = window.rootViewController else { return nil }
@@ -97,7 +97,7 @@ struct AnalyticsCard: View {
     let title: String
     let categories: [String]
     @State private var items: [AnalyticsDataItem]
-    @State private var isExpanded: Bool = true
+    @State private var isExpanded: Bool = false
     @State private var editingID: UUID? = nil
     @State private var editingText: String = ""
     @State private var sliceGap: Double = 1.5
@@ -168,7 +168,7 @@ struct AnalyticsCard: View {
                 .frame(height: 240)
                 .padding(.horizontal, 24)
                 .padding(.top, 24)
-
+                
             Divider().padding(.top, 16).padding(.horizontal, 12)
 
             // BOTTOM — title row + collapsible controls
@@ -178,16 +178,19 @@ struct AnalyticsCard: View {
                 Button {
                     isExpanded.toggle()
                 } label: {
-                    HStack {
+                    ZStack {
                         Text(title)
                             .font(.system(size: 15, weight: .semibold, design: .rounded))
                             .foregroundStyle(.primary)
-                        Spacer()
-                        Image(systemName: "chevron.down")
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                            .rotationEffect(.degrees(isExpanded ? 0 : -90))
-                            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isExpanded)
+                            .frame(maxWidth: .infinity)
+                        HStack {
+                            Spacer()
+                            Image(systemName: "chevron.down")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                                .rotationEffect(.degrees(isExpanded ? 0 : -90))
+                                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isExpanded)
+                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 14)
@@ -447,22 +450,34 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 24), ("Pie Chart", 12), ("Gantt Chart", 5),
-        ("Histogram", 2), ("Diagrams", 4)
+        ("All", 24), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Gantt Chart", 5), ("Histogram", 2)
     ]
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                let cardCategories = ["Pie Chart", "Gantt Chart"]
-                if selectedFilter == "All" || cardCategories.contains(selectedFilter) {
+                let pieCategories = ["Pie Chart", "Gantt Chart"]
+                if selectedFilter == "All" || pieCategories.contains(selectedFilter) {
                     AnalyticsCard(
                         title: "Simple Pie Chart",
-                        categories: cardCategories,
+                        categories: pieCategories,
                         items: [
                             AnalyticsDataItem(label: "Item 1", percentage: 32, color: AnalyticsCard.colorPalette[0]),
                             AnalyticsDataItem(label: "Item 2", percentage: 12, color: AnalyticsCard.colorPalette[1]),
                             AnalyticsDataItem(label: "Item 3", percentage: 56, color: AnalyticsCard.colorPalette[2]),
+                        ]
+                    )
+                }
+                let donutCategories = ["Half Donut", "Pie Chart"]
+                if selectedFilter == "All" || donutCategories.contains(selectedFilter) {
+                    HalfDonutCard(
+                        title: "Half Donut Chart",
+                        categories: donutCategories,
+                        items: [
+                            AnalyticsDataItem(label: "Design", percentage: 40, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Dev", percentage: 35, color: AnalyticsCard.colorPalette[1]),
+                            AnalyticsDataItem(label: "Other", percentage: 25, color: AnalyticsCard.colorPalette[2]),
                         ]
                     )
                 }
