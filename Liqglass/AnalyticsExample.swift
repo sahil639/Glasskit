@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 24), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Gantt Chart", 5)
+        ("All", 28), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -486,6 +486,20 @@ struct AnalyticsView: View {
                     RadialProgressCard(
                         title: "Radial Progress",
                         categories: radialCategories
+                    )
+                }
+                let polarAreaCategories = ["Polar Area", "Pie Chart"]
+                if selectedFilter == "All" || polarAreaCategories.contains(selectedFilter) {
+                    PolarAreaCard(
+                        title: "Polar Area Chart",
+                        categories: polarAreaCategories,
+                        items: [
+                            AnalyticsDataItem(label: "Design",  percentage: 80, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Dev",     percentage: 60, color: AnalyticsCard.colorPalette[1]),
+                            AnalyticsDataItem(label: "QA",      percentage: 40, color: AnalyticsCard.colorPalette[2]),
+                            AnalyticsDataItem(label: "PM",      percentage: 55, color: AnalyticsCard.colorPalette[3]),
+                            AnalyticsDataItem(label: "DevOps",  percentage: 30, color: AnalyticsCard.colorPalette[4]),
+                        ]
                     )
                 }
                 let multiRingCategories = ["Multi Ring", "Pie Chart"]
