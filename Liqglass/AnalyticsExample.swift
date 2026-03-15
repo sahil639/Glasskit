@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 28), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Gantt Chart", 5)
+        ("All", 32), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 4), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -499,6 +499,21 @@ struct AnalyticsView: View {
                             AnalyticsDataItem(label: "QA",      percentage: 40, color: AnalyticsCard.colorPalette[2]),
                             AnalyticsDataItem(label: "PM",      percentage: 55, color: AnalyticsCard.colorPalette[3]),
                             AnalyticsDataItem(label: "DevOps",  percentage: 30, color: AnalyticsCard.colorPalette[4]),
+                        ]
+                    )
+                }
+                let barCategories = ["Bar Chart"]
+                if selectedFilter == "All" || barCategories.contains(selectedFilter) {
+                    VerticalBarCard(
+                        title: "Vertical Bar Chart",
+                        categories: barCategories,
+                        items: [
+                            AnalyticsDataItem(label: "Jan", percentage: 72, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Feb", percentage: 45, color: AnalyticsCard.colorPalette[1]),
+                            AnalyticsDataItem(label: "Mar", percentage: 88, color: AnalyticsCard.colorPalette[2]),
+                            AnalyticsDataItem(label: "Apr", percentage: 61, color: AnalyticsCard.colorPalette[3]),
+                            AnalyticsDataItem(label: "May", percentage: 93, color: AnalyticsCard.colorPalette[4]),
+                            AnalyticsDataItem(label: "Jun", percentage: 54, color: AnalyticsCard.colorPalette[5]),
                         ]
                     )
                 }
