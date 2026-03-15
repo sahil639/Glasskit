@@ -268,6 +268,7 @@ struct RadialProgressCard: View {
                             }
                         }
                     }
+                    .clipShape(progressShape)
                     .overlay(progressShape.stroke(Color.white.opacity(0.25), lineWidth: 0.4))
                     .overlay(
                         progressShape

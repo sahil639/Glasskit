@@ -36,7 +36,7 @@ struct VerticalBarCard: View {
     @State private var valueFormat: ValueFormat = .number
 
     // Bar Styling
-    @State private var cornerRadius: Double = 8
+    @State private var cornerRadius: Double = 0
     @State private var gradientFill: Bool = false
     @State private var shadowEnabled: Bool = true
     @State private var barOpacity: Double = 0.85
