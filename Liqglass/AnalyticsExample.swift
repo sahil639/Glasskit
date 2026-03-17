@@ -451,7 +451,7 @@ struct AnalyticsView: View {
 
     let filters: [(label: String, count: Int)] = [
         ("All", 36), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Gantt Chart", 5)
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -584,6 +584,26 @@ struct AnalyticsView: View {
                             RangeBarItem(label: "QA",      minValue: 55, maxValue: 85, color: AnalyticsCard.colorPalette[2]),
                             RangeBarItem(label: "DevOps",  minValue: 20, maxValue: 50, color: AnalyticsCard.colorPalette[3]),
                             RangeBarItem(label: "PM",      minValue: 5,  maxValue: 40, color: AnalyticsCard.colorPalette[4]),
+                        ]
+                    )
+                }
+                let stackedBarCategories = ["Stacked Bar", "Bar Chart"]
+                if selectedFilter == "All" || stackedBarCategories.contains(selectedFilter) {
+                    StackedBarCard(
+                        title: "Stacked Bar Chart",
+                        categories: stackedBarCategories,
+                        series: [
+                            StackedSeries(name: "Design",  color: AnalyticsCard.colorPalette[0]),
+                            StackedSeries(name: "Dev",     color: AnalyticsCard.colorPalette[1]),
+                            StackedSeries(name: "QA",      color: AnalyticsCard.colorPalette[2]),
+                        ],
+                        cats: [
+                            StackedCategory(label: "Jan", values: [30, 45, 15]),
+                            StackedCategory(label: "Feb", values: [20, 55, 20]),
+                            StackedCategory(label: "Mar", values: [40, 35, 25]),
+                            StackedCategory(label: "Apr", values: [25, 60, 10]),
+                            StackedCategory(label: "May", values: [35, 40, 30]),
+                            StackedCategory(label: "Jun", values: [50, 30, 20]),
                         ]
                     )
                 }
