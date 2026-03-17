@@ -451,7 +451,7 @@ struct AnalyticsView: View {
 
     let filters: [(label: String, count: Int)] = [
         ("All", 36), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Gantt Chart", 5)
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -527,6 +527,20 @@ struct AnalyticsView: View {
                             AnalyticsDataItem(label: "Apr", percentage: 61, color: AnalyticsCard.colorPalette[3]),
                             AnalyticsDataItem(label: "May", percentage: 93, color: AnalyticsCard.colorPalette[4]),
                             AnalyticsDataItem(label: "Jun", percentage: 54, color: AnalyticsCard.colorPalette[5]),
+                        ]
+                    )
+                }
+                let dumbbellCategories = ["Dumbbell"]
+                if selectedFilter == "All" || dumbbellCategories.contains(selectedFilter) {
+                    DumbbellCard(
+                        title: "Dumbbell Chart",
+                        categories: dumbbellCategories,
+                        items: [
+                            DumbbellDataItem(label: "Design",  startValue: 42, endValue: 78, color: AnalyticsCard.colorPalette[0]),
+                            DumbbellDataItem(label: "Dev",     startValue: 55, endValue: 88, color: AnalyticsCard.colorPalette[1]),
+                            DumbbellDataItem(label: "QA",      startValue: 30, endValue: 52, color: AnalyticsCard.colorPalette[2]),
+                            DumbbellDataItem(label: "DevOps",  startValue: 60, endValue: 45, color: AnalyticsCard.colorPalette[3]),
+                            DumbbellDataItem(label: "PM",      startValue: 25, endValue: 70, color: AnalyticsCard.colorPalette[4]),
                         ]
                     )
                 }
