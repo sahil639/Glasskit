@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 50), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Gantt Chart", 5)
+        ("All", 57), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -653,6 +653,22 @@ struct AnalyticsView: View {
                             MultiLineSeries(name: "2025", color: AnalyticsCard.colorPalette[2], values: [30, 55, 85, 40, 70, 65, 95]),
                         ],
                         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]
+                    )
+                }
+                let stepLineCategories = ["Step Line", "Line Chart"]
+                if selectedFilter == "All" || stepLineCategories.contains(selectedFilter) {
+                    StepLineChartCard(
+                        title: "Step Line Chart",
+                        categories: stepLineCategories,
+                        items: [
+                            AnalyticsDataItem(label: "Jan", percentage: 40, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Feb", percentage: 40, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Mar", percentage: 75, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Apr", percentage: 75, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "May", percentage: 55, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Jun", percentage: 90, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Jul", percentage: 90, color: AnalyticsCard.colorPalette[0]),
+                        ]
                     )
                 }
                 let multiRingCategories = ["Multi Ring", "Pie Chart"]
