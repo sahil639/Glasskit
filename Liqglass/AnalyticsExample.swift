@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 36), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Gantt Chart", 5)
+        ("All", 43), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -623,6 +623,22 @@ struct AnalyticsView: View {
                             GroupedCategory(label: "Mar", values: [30, 75, 50]),
                             GroupedCategory(label: "Apr", values: [68, 45, 60]),
                             GroupedCategory(label: "May", values: [48, 62, 80]),
+                        ]
+                    )
+                }
+                let lineChartCategories = ["Line Chart"]
+                if selectedFilter == "All" || lineChartCategories.contains(selectedFilter) {
+                    LineChartCard(
+                        title: "Simple Line Chart",
+                        categories: lineChartCategories,
+                        items: [
+                            AnalyticsDataItem(label: "Jan", percentage: 42, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Feb", percentage: 68, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Mar", percentage: 35, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Apr", percentage: 80, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "May", percentage: 55, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Jun", percentage: 91, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Jul", percentage: 73, color: AnalyticsCard.colorPalette[0]),
                         ]
                     )
                 }
