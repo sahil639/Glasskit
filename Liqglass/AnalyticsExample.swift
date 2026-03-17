@@ -451,7 +451,7 @@ struct AnalyticsView: View {
 
     let filters: [(label: String, count: Int)] = [
         ("All", 36), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Gantt Chart", 5)
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -555,6 +555,21 @@ struct AnalyticsView: View {
                             AnalyticsDataItem(label: "QA",      percentage: 45, color: AnalyticsCard.colorPalette[2]),
                             AnalyticsDataItem(label: "DevOps",  percentage: 58, color: AnalyticsCard.colorPalette[3]),
                             AnalyticsDataItem(label: "PM",      percentage: 39, color: AnalyticsCard.colorPalette[4]),
+                        ]
+                    )
+                }
+                let floatingBarCategories = ["Floating Bar", "Bar Chart"]
+                if selectedFilter == "All" || floatingBarCategories.contains(selectedFilter) {
+                    FloatingBarCard(
+                        title: "Floating Bar Chart",
+                        categories: floatingBarCategories,
+                        items: [
+                            FloatingBarItem(label: "Jan", startValue: 0, endValue:  45, color: AnalyticsCard.colorPalette[0]),
+                            FloatingBarItem(label: "Feb", startValue: 0, endValue: -20, color: AnalyticsCard.colorPalette[1]),
+                            FloatingBarItem(label: "Mar", startValue: 0, endValue:  72, color: AnalyticsCard.colorPalette[2]),
+                            FloatingBarItem(label: "Apr", startValue: 0, endValue: -35, color: AnalyticsCard.colorPalette[3]),
+                            FloatingBarItem(label: "May", startValue: 0, endValue:  58, color: AnalyticsCard.colorPalette[4]),
+                            FloatingBarItem(label: "Jun", startValue: 0, endValue:  88, color: AnalyticsCard.colorPalette[5]),
                         ]
                     )
                 }
