@@ -1,0 +1,835 @@
+//
+//  RangeBarExample.swift
+//  GlassKit
+//
+
+import SwiftUI
+
+// MARK: - Range Bar Data Model
+
+struct RangeBarItem: Identifiable {
+    let id = UUID()
+    var label: String
+    var minValue: Double
+    var maxValue: Double
+    var color: Color
+}
+
+// MARK: - Range Bar Card
+
+struct RangeBarCard: View {
+
+    let title: String
+    let categories: [String]
+    @State private var items: [RangeBarItem]
+    @State private var isExpanded = false
+    @State private var highlightedID: UUID? = nil
+    @State private var editingID: UUID? = nil
+    @State private var editingField: EditField = .min
+    @State private var editingText = ""
+
+    // Chart Geometry
+    @State private var barHeight: Double = 28
+    @State private var barSpacing: Double = 10
+    @State private var chartPadding: Double = 12
+
+    // Axis Controls
+    @State private var showXAxis: Bool = true
+    @State private var showYAxis: Bool = true
+    @State private var axisLabels: Bool = true
+    @State private var axisGrid: Bool = true
+    @State private var gridOpacity: Double = 0.25
+
+    // Value Scaling
+    @State private var autoScale: Bool = true
+    @State private var xAxisMin: Double = 0
+    @State private var xAxisMax: Double = 100
+    @State private var valueFormat: ValueFormat = .number
+
+    // Range Controls
+    @State private var rangeStyle: RangeStyle = .solidBar
+    @State private var minMaxIndicator: Bool = true
+    @State private var rangePadding: Double = 0
+    @State private var rangeDirection: RangeDirection = .leftToRight
+
+    // Bar Styling
+    @State private var cornerRadius: Double = 6
+    @State private var gradientFill: Bool = false
+    @State private var shadowEnabled: Bool = true
+    @State private var barOpacity: Double = 0.85
+
+    // Labels
+    @State private var valueLabelOn: Bool = true
+    @State private var labelType: LabelType = .both
+    @State private var labelPosition: LabelPosition = .outside
+    @State private var categoryLabelOn: Bool = true
+
+    // Interaction
+    @State private var hoverHighlight: Bool = true
+
+    // Sorting
+    @State private var sortOrder: SortOrder = .none
+
+    #if os(iOS)
+    @State private var pickerCoordinator: ColorPickerCoordinator? = nil
+    #endif
+
+    // MARK: - Enums
+
+    enum EditField { case min, max }
+    enum ValueFormat: String, CaseIterable { case number = "Number", percent = "Percent", time = "Time", currency = "Currency" }
+    enum RangeStyle: String, CaseIterable { case solidBar = "Solid Bar", floatingBar = "Floating" }
+    enum RangeDirection: String, CaseIterable { case leftToRight = "L → R", rightToLeft = "R → L" }
+    enum LabelType: String, CaseIterable { case min = "Min", max = "Max", both = "Both" }
+    enum LabelPosition: String, CaseIterable { case inside = "Inside", outside = "Outside", hidden = "Hidden" }
+    enum SortOrder: String, CaseIterable { case none = "Default", ascending = "Asc", descending = "Desc" }
+
+    static let colorPalette = AnalyticsCard.colorPalette
+
+    // MARK: - Init
+
+    init(title: String, categories: [String], items: [RangeBarItem]) {
+        self.title = title
+        self.categories = categories
+        self._items = State(initialValue: items)
+    }
+
+    // MARK: - Computed
+
+    var sortedItems: [RangeBarItem] {
+        switch sortOrder {
+        case .none: return items
+        case .ascending: return items.sorted { ($0.minValue + $0.maxValue) < ($1.minValue + $1.maxValue) }
+        case .descending: return items.sorted { ($0.minValue + $0.maxValue) > ($1.minValue + $1.maxValue) }
+        }
+    }
+
+    var allValues: [Double] { items.flatMap { [$0.minValue, $0.maxValue] } }
+
+    var effectiveXMax: Double {
+        autoScale ? (allValues.max() ?? 100) * 1.1 : xAxisMax
+    }
+
+    var effectiveXMin: Double {
+        autoScale ? max(0, (allValues.min() ?? 0) * 0.9) : xAxisMin
+    }
+
+    func xRatio(for value: Double) -> CGFloat {
+        let range = effectiveXMax - effectiveXMin
+        guard range > 0 else { return 0 }
+        let ratio = CGFloat(max(0, min(1, (value - effectiveXMin) / range)))
+        return rangeDirection == .leftToRight ? ratio : 1 - ratio
+    }
+
+    func formattedValue(_ value: Double) -> String {
+        switch valueFormat {
+        case .number:   return "\(Int(value))"
+        case .percent:  return "\(Int(value))%"
+        case .currency: return "$\(Int(value))"
+        case .time:
+            let hours = Int(value) / 60
+            let mins = Int(value) % 60
+            return hours > 0 ? "\(hours)h\(mins)m" : "\(mins)m"
+        }
+    }
+
+    // MARK: - Body
+
+    var body: some View {
+        VStack(spacing: 0) {
+            chartView
+                .frame(height: 240)
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+                .shadow(color: .black.opacity(shadowEnabled ? 0.15 : 0), radius: 20, x: 0, y: 10)
+                .shadow(color: .black.opacity(shadowEnabled ? 0.10 : 0), radius: 3, x: 0, y: 2)
+
+            Divider().padding(.top, 16).padding(.horizontal, 12)
+
+            VStack(spacing: 0) {
+                Button { isExpanded.toggle() } label: {
+                    ZStack {
+                        Text(title)
+                            .font(.system(size: 15, weight: .semibold, design: .rounded))
+                            .foregroundStyle(.primary)
+                            .frame(maxWidth: .infinity)
+                        HStack {
+                            Spacer()
+                            Image(systemName: "chevron.down")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                                .rotationEffect(.degrees(isExpanded ? 0 : -90))
+                                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isExpanded)
+                        }
+                    }
+                    .padding(.horizontal, 20).padding(.vertical, 14)
+                }
+
+                VStack(spacing: 14) {
+                    Divider().padding(.horizontal, 20)
+                    geometrySettingsView
+                    axisSettingsView
+                    scalingSettingsView
+                    rangeControlsView
+                    stylingSettingsView
+                    labelSettingsView
+                    interactionSettingsView
+                    sortingSettingsView
+                    itemListView
+                }
+                .frame(maxHeight: isExpanded ? .infinity : 0)
+                .clipped()
+                .opacity(isExpanded ? 1 : 0)
+                .animation(.spring(response: 0.45, dampingFraction: 0.82), value: isExpanded)
+            }
+            .padding(.bottom, 8)
+        }
+        .background(Color(uiColor: .systemGray6), in: .rect(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal, 12)
+        .onTapGesture {
+            editingID = nil
+            if hoverHighlight { highlightedID = nil }
+        }
+    }
+
+    // MARK: - Chart View
+
+    var chartView: some View {
+        GeometryReader { geo in
+            let sorted = sortedItems
+            let leftM: CGFloat = categoryLabelOn ? 68 : 6
+            let rightM: CGFloat = CGFloat(chartPadding)
+            let topM: CGFloat = 4
+            let botM: CGFloat = (showXAxis && axisLabels) ? 22 : (showXAxis ? 10 : 4)
+            let chartW = geo.size.width - leftM - rightM
+            let chartH = geo.size.height - topM - botM
+
+            let n = max(1, sorted.count)
+            let gap = CGFloat(barSpacing) * CGFloat(max(0, n - 1))
+            let bH = min(CGFloat(barHeight), max(6, (chartH - gap) / CGFloat(n)))
+            let totalContentH = bH * CGFloat(n) + gap
+            let startY = topM + max(0, (chartH - totalContentH) / 2)
+
+            ZStack(alignment: .topLeading) {
+
+                // Vertical grid lines
+                if axisGrid {
+                    ForEach(0...4, id: \.self) { i in
+                        let xFrac = CGFloat(i) / 4
+                        let x = leftM + chartW * xFrac
+                        Path { p in
+                            p.move(to: CGPoint(x: x, y: topM))
+                            p.addLine(to: CGPoint(x: x, y: topM + chartH))
+                        }
+                        .stroke(Color.primary.opacity(gridOpacity), style: StrokeStyle(lineWidth: 0.5, dash: [4, 4]))
+                    }
+                }
+
+                // X tick labels
+                if showXAxis && axisLabels {
+                    ForEach(0...4, id: \.self) { i in
+                        let xFrac = CGFloat(i) / 4
+                        let val: Double = {
+                            let v = effectiveXMin + (effectiveXMax - effectiveXMin) * Double(xFrac)
+                            return rangeDirection == .leftToRight ? v : effectiveXMax - (v - effectiveXMin)
+                        }()
+                        let x = leftM + chartW * xFrac
+                        Text(formattedValue(val))
+                            .font(.system(size: 9, weight: .medium, design: .rounded))
+                            .foregroundStyle(.secondary)
+                            .frame(width: 36, alignment: .center)
+                            .position(x: x, y: topM + chartH + botM / 2)
+                    }
+                }
+
+                // Y axis
+                if showYAxis {
+                    Path { p in
+                        p.move(to: CGPoint(x: leftM, y: topM))
+                        p.addLine(to: CGPoint(x: leftM, y: topM + chartH))
+                    }
+                    .stroke(Color.primary.opacity(0.25), lineWidth: 0.75)
+                }
+
+                // X axis
+                if showXAxis {
+                    Path { p in
+                        p.move(to: CGPoint(x: leftM, y: topM + chartH))
+                        p.addLine(to: CGPoint(x: leftM + chartW, y: topM + chartH))
+                    }
+                    .stroke(Color.primary.opacity(0.25), lineWidth: 0.75)
+                }
+
+                // Rows
+                VStack(alignment: .leading, spacing: CGFloat(barSpacing)) {
+                    ForEach(sorted) { item in
+                        rangeRow(item: item, bH: bH, chartW: chartW, leftM: leftM)
+                    }
+                }
+                .offset(x: 0, y: startY)
+                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: sorted.map { $0.minValue + $0.maxValue })
+            }
+        }
+    }
+
+    @ViewBuilder
+    func rangeRow(item: RangeBarItem, bH: CGFloat, chartW: CGFloat, leftM: CGFloat) -> some View {
+        let lo = min(item.minValue, item.maxValue)
+        let hi = max(item.minValue, item.maxValue)
+        let xLo = xRatio(for: rangeDirection == .leftToRight ? lo : hi)
+        let xHi = xRatio(for: rangeDirection == .leftToRight ? hi : lo)
+        let barStart = chartW * min(xLo, xHi)
+        let barEnd   = chartW * max(xLo, xHi)
+        let barW     = max(4, barEnd - barStart)
+        let pad      = CGFloat(rangePadding)
+        let barShape = RoundedRectangle(cornerRadius: CGFloat(cornerRadius), style: .continuous)
+        let isHighlighted = highlightedID == item.id
+        let isDimmed = hoverHighlight && highlightedID != nil && !isHighlighted
+
+        HStack(spacing: 0) {
+
+            // Category label zone
+            if categoryLabelOn {
+                Text(item.label)
+                    .font(.system(size: 10, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .frame(width: leftM - 6, alignment: .trailing)
+                    .padding(.trailing, 6)
+            } else {
+                Color.clear.frame(width: leftM)
+            }
+
+            // Bar zone
+            ZStack(alignment: .leading) {
+                Color.clear.frame(width: chartW, height: bH)
+
+                // Floating style: show a thin track behind
+                if rangeStyle == .floatingBar {
+                    let trackShape = RoundedRectangle(cornerRadius: CGFloat(cornerRadius) * 0.5, style: .continuous)
+                    trackShape
+                        .fill(item.color.opacity(0.15))
+                        .frame(width: chartW, height: max(2, bH * 0.25))
+                        .offset(y: (bH - max(2, bH * 0.25)) / 2)
+                }
+
+                // Range bar
+                ZStack {
+                    if gradientFill {
+                        barShape.fill(LinearGradient(
+                            colors: [item.color.opacity(barOpacity), item.color.opacity(barOpacity * 0.55)],
+                            startPoint: .leading, endPoint: .trailing
+                        )).glassEffect(.clear, in: barShape)
+                    } else {
+                        barShape.fill(item.color.opacity(barOpacity)).glassEffect(.clear, in: barShape)
+                    }
+                    barShape.stroke(Color.white.opacity(0.25), lineWidth: 0.4)
+                    barShape.stroke(Color.white, lineWidth: 8)
+                        .blur(radius: 4).opacity(0.25).clipShape(barShape)
+
+                    // Inside labels
+                    if valueLabelOn && labelPosition == .inside && barW > 48 {
+                        HStack {
+                            if labelType == .min || labelType == .both {
+                                Text(formattedValue(item.minValue))
+                                    .font(.system(size: 9, weight: .bold, design: .rounded))
+                                    .foregroundStyle(.white.opacity(0.9))
+                                    .padding(.leading, 6)
+                            }
+                            Spacer()
+                            if labelType == .max || labelType == .both {
+                                Text(formattedValue(item.maxValue))
+                                    .font(.system(size: 9, weight: .bold, design: .rounded))
+                                    .foregroundStyle(.white)
+                                    .padding(.trailing, 6)
+                            }
+                        }
+                    }
+                }
+                .frame(width: barW - pad * 2, height: bH)
+                .offset(x: barStart + pad)
+                .scaleEffect(x: isHighlighted ? 1.02 : 1.0, y: isHighlighted ? 1.08 : 1.0, anchor: .center)
+
+                // Min-Max endpoint indicators
+                if minMaxIndicator {
+                    let dotD: CGFloat = min(bH * 0.55, 10)
+                    Circle()
+                        .fill(Color.white.opacity(0.9))
+                        .frame(width: dotD, height: dotD)
+                        .offset(x: barStart + pad - dotD / 2, y: (bH - dotD) / 2)
+                    Circle()
+                        .fill(Color.white.opacity(0.9))
+                        .frame(width: dotD, height: dotD)
+                        .offset(x: barStart + barW - pad - dotD / 2, y: (bH - dotD) / 2)
+                }
+
+                // Outside labels
+                if valueLabelOn && labelPosition == .outside {
+                    if labelType == .min || labelType == .both {
+                        Text(formattedValue(item.minValue))
+                            .font(.system(size: 9, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
+                            .offset(x: max(0, barStart + pad - 28), y: (bH - 11) / 2)
+                    }
+                    if labelType == .max || labelType == .both {
+                        Text(formattedValue(item.maxValue))
+                            .font(.system(size: 9, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
+                            .offset(x: barStart + barW - pad + 4, y: (bH - 11) / 2)
+                    }
+                }
+            }
+            .opacity(isDimmed ? 0.4 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isDimmed)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHighlighted)
+            .onTapGesture {
+                if hoverHighlight {
+                    withAnimation { highlightedID = (highlightedID == item.id) ? nil : item.id }
+                }
+            }
+        }
+        .frame(height: bH)
+    }
+
+    // MARK: - Settings: Geometry
+
+    var geometrySettingsView: some View {
+        settingsSection {
+            HStack(spacing: 10) {
+                settingsLabel("Bar H")
+                Slider(value: $barHeight, in: 10...80, step: 2)
+                Text("\(Int(barHeight))pt")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary).frame(width: 36, alignment: .trailing)
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Spacing")
+                Slider(value: $barSpacing, in: 0...40, step: 1)
+                Text("\(Int(barSpacing))pt")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary).frame(width: 36, alignment: .trailing)
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Padding")
+                Slider(value: $chartPadding, in: 0...60, step: 2)
+                Text("\(Int(chartPadding))pt")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary).frame(width: 36, alignment: .trailing)
+            }
+        }
+    }
+
+    // MARK: - Settings: Axis
+
+    var axisSettingsView: some View {
+        settingsSection {
+            HStack(spacing: 10) {
+                settingsLabel("X Axis")
+                Toggle("", isOn: $showXAxis).labelsHidden().scaleEffect(0.8)
+                Text("Show X axis").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Y Axis")
+                Toggle("", isOn: $showYAxis).labelsHidden().scaleEffect(0.8)
+                Text("Show Y axis").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Labels")
+                Toggle("", isOn: $axisLabels).labelsHidden().scaleEffect(0.8)
+                Text("Axis tick labels").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Grid")
+                Toggle("", isOn: $axisGrid).labelsHidden().scaleEffect(0.8)
+                Text("Show grid lines").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+            if axisGrid {
+                HStack(spacing: 10) {
+                    settingsLabel("Grid Opc")
+                    Slider(value: $gridOpacity, in: 0...1, step: 0.05)
+                    Text("\(Int(gridOpacity * 100))%")
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .foregroundStyle(.secondary).frame(width: 36, alignment: .trailing)
+                }
+            }
+        }
+    }
+
+    // MARK: - Settings: Scaling
+
+    var scalingSettingsView: some View {
+        settingsSection {
+            HStack(spacing: 10) {
+                settingsLabel("Auto")
+                Toggle("", isOn: $autoScale).labelsHidden().scaleEffect(0.8)
+                Text("Auto scale X axis").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+            if !autoScale {
+                HStack(spacing: 10) {
+                    settingsLabel("X Min")
+                    TextField("0", value: $xAxisMin, format: .number)
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        #if os(iOS)
+                        .keyboardType(.numbersAndPunctuation)
+                        #endif
+                        .multilineTextAlignment(.trailing)
+                        .frame(maxWidth: .infinity)
+                }
+                HStack(spacing: 10) {
+                    settingsLabel("X Max")
+                    TextField("100", value: $xAxisMax, format: .number)
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        #if os(iOS)
+                        .keyboardType(.numbersAndPunctuation)
+                        #endif
+                        .multilineTextAlignment(.trailing)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Format")
+                HStack(spacing: 4) {
+                    ForEach(ValueFormat.allCases, id: \.self) { f in
+                        pillButton(f.rawValue, isSelected: valueFormat == f) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { valueFormat = f }
+                        }
+                    }
+                }
+                Spacer()
+            }
+        }
+    }
+
+    // MARK: - Settings: Range Controls
+
+    var rangeControlsView: some View {
+        settingsSection {
+            HStack(spacing: 10) {
+                settingsLabel("Style")
+                HStack(spacing: 4) {
+                    ForEach(RangeStyle.allCases, id: \.self) { s in
+                        pillButton(s.rawValue, isSelected: rangeStyle == s) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { rangeStyle = s }
+                        }
+                    }
+                }
+                Spacer()
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Direction")
+                HStack(spacing: 4) {
+                    ForEach(RangeDirection.allCases, id: \.self) { d in
+                        pillButton(d.rawValue, isSelected: rangeDirection == d) {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { rangeDirection = d }
+                        }
+                    }
+                }
+                Spacer()
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Endpoints")
+                Toggle("", isOn: $minMaxIndicator).labelsHidden().scaleEffect(0.8)
+                Text("Show min/max dots").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Inset")
+                Slider(value: $rangePadding, in: 0...20, step: 1)
+                Text("\(Int(rangePadding))pt")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary).frame(width: 36, alignment: .trailing)
+            }
+        }
+    }
+
+    // MARK: - Settings: Styling
+
+    var stylingSettingsView: some View {
+        settingsSection {
+            HStack(spacing: 10) {
+                settingsLabel("Radius")
+                Slider(value: $cornerRadius, in: 0...20, step: 1)
+                Text("\(Int(cornerRadius))pt")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary).frame(width: 36, alignment: .trailing)
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Opacity")
+                Slider(value: $barOpacity, in: 0...1, step: 0.05)
+                Text("\(Int(barOpacity * 100))%")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary).frame(width: 36, alignment: .trailing)
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Gradient")
+                Toggle("", isOn: $gradientFill).labelsHidden().scaleEffect(0.8)
+                Text("Gradient fill").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Shadow")
+                HStack(spacing: 4) {
+                    pillButton("Soft", isSelected: shadowEnabled) {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { shadowEnabled = true }
+                    }
+                    pillButton("None", isSelected: !shadowEnabled) {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { shadowEnabled = false }
+                    }
+                }
+                Spacer()
+            }
+        }
+    }
+
+    // MARK: - Settings: Labels
+
+    var labelSettingsView: some View {
+        settingsSection {
+            HStack(spacing: 10) {
+                settingsLabel("Values")
+                Toggle("", isOn: $valueLabelOn).labelsHidden().scaleEffect(0.8)
+                if valueLabelOn {
+                    HStack(spacing: 4) {
+                        ForEach(LabelType.allCases, id: \.self) { t in
+                            pillButton(t.rawValue, isSelected: labelType == t) {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { labelType = t }
+                            }
+                        }
+                    }
+                } else {
+                    Text("Labels off").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+            if valueLabelOn {
+                HStack(spacing: 10) {
+                    settingsLabel("Position")
+                    HStack(spacing: 4) {
+                        ForEach(LabelPosition.allCases, id: \.self) { p in
+                            pillButton(p.rawValue, isSelected: labelPosition == p) {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { labelPosition = p }
+                            }
+                        }
+                    }
+                    Spacer()
+                }
+            }
+            HStack(spacing: 10) {
+                settingsLabel("Category")
+                Toggle("", isOn: $categoryLabelOn).labelsHidden().scaleEffect(0.8)
+                Text("Category labels").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+        }
+    }
+
+    // MARK: - Settings: Interaction
+
+    var interactionSettingsView: some View {
+        settingsSection {
+            HStack(spacing: 10) {
+                settingsLabel("Highlight")
+                Toggle("", isOn: $hoverHighlight).labelsHidden().scaleEffect(0.8)
+                Text("Tap to highlight bar").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundStyle(.secondary)
+                Spacer()
+            }
+        }
+    }
+
+    // MARK: - Settings: Sorting
+
+    var sortingSettingsView: some View {
+        settingsSection {
+            HStack(spacing: 10) {
+                settingsLabel("Sort")
+                HStack(spacing: 4) {
+                    ForEach(SortOrder.allCases, id: \.self) { o in
+                        pillButton(o.rawValue, isSelected: sortOrder == o) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { sortOrder = o }
+                        }
+                    }
+                }
+                Spacer()
+            }
+            Text("Sorts by range midpoint")
+                .font(.system(size: 10, weight: .regular, design: .rounded))
+                .foregroundStyle(.tertiary)
+        }
+    }
+
+    // MARK: - Item List
+
+    var itemListView: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                itemRow(index: index, item: item)
+            }
+            Divider().padding(.horizontal, 20)
+            Button { addItem() } label: {
+                Text("+ Add New Item")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func itemRow(index: Int, item: RangeBarItem) -> some View {
+        HStack(spacing: 10) {
+            Button {
+                #if os(iOS)
+                let coord = ColorPickerCoordinator { color in items[index].color = color }
+                pickerCoordinator = coord
+                let vc = UIColorPickerViewController()
+                vc.selectedColor = UIColor(items[index].color)
+                vc.supportsAlpha = false
+                vc.delegate = coord
+                topViewController()?.present(vc, animated: true)
+                #endif
+            } label: {
+                Circle()
+                    .fill(items[index].color)
+                    .frame(width: 26, height: 26)
+                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                    .shadow(color: .black.opacity(0.18), radius: 4, y: 2)
+            }
+
+            Text(item.label)
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .lineLimit(1)
+
+            Spacer()
+
+            // Min value
+            VStack(alignment: .trailing, spacing: 1) {
+                Text("min")
+                    .font(.system(size: 9, weight: .medium, design: .rounded))
+                    .foregroundStyle(.tertiary)
+                if editingID == item.id && editingField == .min {
+                    TextField("0", text: $editingText)
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        #if os(iOS)
+                        .keyboardType(.numbersAndPunctuation)
+                        #endif
+                        .multilineTextAlignment(.trailing)
+                        .frame(width: 42)
+                        .onChange(of: editingText) { _, val in
+                            if let v = Double(val) { items[index].minValue = v }
+                        }
+                } else {
+                    Button {
+                        editingID = item.id; editingField = .min
+                        editingText = "\(Int(item.minValue))"
+                    } label: {
+                        Text("\(Int(item.minValue))")
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .underline(color: .primary.opacity(0.2))
+                    }
+                    .foregroundStyle(.secondary)
+                }
+            }
+            .frame(width: 42, alignment: .trailing)
+
+            Text("–")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(.secondary)
+
+            // Max value
+            VStack(alignment: .trailing, spacing: 1) {
+                Text("max")
+                    .font(.system(size: 9, weight: .medium, design: .rounded))
+                    .foregroundStyle(.tertiary)
+                if editingID == item.id && editingField == .max {
+                    TextField("0", text: $editingText)
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        #if os(iOS)
+                        .keyboardType(.numbersAndPunctuation)
+                        #endif
+                        .multilineTextAlignment(.trailing)
+                        .frame(width: 42)
+                        .onChange(of: editingText) { _, val in
+                            if let v = Double(val) { items[index].maxValue = v }
+                        }
+                } else {
+                    Button {
+                        editingID = item.id; editingField = .max
+                        editingText = "\(Int(item.maxValue))"
+                    } label: {
+                        Text("\(Int(item.maxValue))")
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .underline(color: .primary.opacity(0.2))
+                    }
+                    .foregroundStyle(.primary)
+                }
+            }
+            .frame(width: 42, alignment: .trailing)
+        }
+        .padding(.horizontal, 20).padding(.vertical, 12)
+        if index < items.count - 1 { Divider().padding(.horizontal, 20) }
+    }
+
+    // MARK: - UI Helpers
+
+    func settingsSection<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(spacing: 10) { content() }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color.black.opacity(0.04), in: .rect(cornerRadius: 14, style: .continuous))
+            .padding(.horizontal, 4)
+    }
+
+    func settingsLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 12, weight: .medium, design: .rounded))
+            .foregroundStyle(.secondary)
+            .frame(width: 62, alignment: .leading)
+    }
+
+    func pillButton(_ label: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(label)
+                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                .padding(.horizontal, 12).padding(.vertical, 5)
+                .background(isSelected ? Color.black.opacity(0.1) : Color.clear, in: .capsule)
+        }
+        .foregroundStyle(isSelected ? .primary : .secondary)
+    }
+
+    // MARK: - Logic
+
+    func addItem() {
+        let colorIdx = items.count % Self.colorPalette.count
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+            items.append(RangeBarItem(
+                label: "Item \(items.count + 1)",
+                minValue: 20,
+                maxValue: 70,
+                color: Self.colorPalette[colorIdx]
+            ))
+        }
+    }
+}
+
+#Preview {
+    ScrollView {
+        RangeBarCard(
+            title: "Range Bar Chart",
+            categories: ["Range Bar"],
+            items: [
+                RangeBarItem(label: "Design",  minValue: 10, maxValue: 60, color: AnalyticsCard.colorPalette[0]),
+                RangeBarItem(label: "Dev",     minValue: 30, maxValue: 90, color: AnalyticsCard.colorPalette[1]),
+                RangeBarItem(label: "QA",      minValue: 55, maxValue: 85, color: AnalyticsCard.colorPalette[2]),
+                RangeBarItem(label: "DevOps",  minValue: 20, maxValue: 50, color: AnalyticsCard.colorPalette[3]),
+                RangeBarItem(label: "PM",      minValue: 5,  maxValue: 40, color: AnalyticsCard.colorPalette[4]),
+            ]
+        )
+        .padding(.top, 20)
+    }
+}

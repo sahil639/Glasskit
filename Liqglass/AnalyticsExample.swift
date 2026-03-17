@@ -451,7 +451,7 @@ struct AnalyticsView: View {
 
     let filters: [(label: String, count: Int)] = [
         ("All", 36), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Gantt Chart", 5)
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -570,6 +570,20 @@ struct AnalyticsView: View {
                             FloatingBarItem(label: "Apr", startValue: 0, endValue: -35, color: AnalyticsCard.colorPalette[3]),
                             FloatingBarItem(label: "May", startValue: 0, endValue:  58, color: AnalyticsCard.colorPalette[4]),
                             FloatingBarItem(label: "Jun", startValue: 0, endValue:  88, color: AnalyticsCard.colorPalette[5]),
+                        ]
+                    )
+                }
+                let rangeBarCategories = ["Range Bar", "Bar Chart"]
+                if selectedFilter == "All" || rangeBarCategories.contains(selectedFilter) {
+                    RangeBarCard(
+                        title: "Range Bar Chart",
+                        categories: rangeBarCategories,
+                        items: [
+                            RangeBarItem(label: "Design",  minValue: 10, maxValue: 60, color: AnalyticsCard.colorPalette[0]),
+                            RangeBarItem(label: "Dev",     minValue: 30, maxValue: 90, color: AnalyticsCard.colorPalette[1]),
+                            RangeBarItem(label: "QA",      minValue: 55, maxValue: 85, color: AnalyticsCard.colorPalette[2]),
+                            RangeBarItem(label: "DevOps",  minValue: 20, maxValue: 50, color: AnalyticsCard.colorPalette[3]),
+                            RangeBarItem(label: "PM",      minValue: 5,  maxValue: 40, color: AnalyticsCard.colorPalette[4]),
                         ]
                     )
                 }
