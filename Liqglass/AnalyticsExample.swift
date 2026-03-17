@@ -451,7 +451,7 @@ struct AnalyticsView: View {
 
     let filters: [(label: String, count: Int)] = [
         ("All", 36), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Gantt Chart", 5)
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -604,6 +604,25 @@ struct AnalyticsView: View {
                             StackedCategory(label: "Apr", values: [25, 60, 10]),
                             StackedCategory(label: "May", values: [35, 40, 30]),
                             StackedCategory(label: "Jun", values: [50, 30, 20]),
+                        ]
+                    )
+                }
+                let groupedBarCategories = ["Grouped Bar", "Bar Chart"]
+                if selectedFilter == "All" || groupedBarCategories.contains(selectedFilter) {
+                    GroupedBarCard(
+                        title: "Grouped Bar Chart",
+                        categories: groupedBarCategories,
+                        series: [
+                            GroupedSeries(name: "2023", color: AnalyticsCard.colorPalette[0]),
+                            GroupedSeries(name: "2024", color: AnalyticsCard.colorPalette[1]),
+                            GroupedSeries(name: "2025", color: AnalyticsCard.colorPalette[2]),
+                        ],
+                        cats: [
+                            GroupedCategory(label: "Jan", values: [42, 58, 35]),
+                            GroupedCategory(label: "Feb", values: [55, 40, 70]),
+                            GroupedCategory(label: "Mar", values: [30, 75, 50]),
+                            GroupedCategory(label: "Apr", values: [68, 45, 60]),
+                            GroupedCategory(label: "May", values: [48, 62, 80]),
                         ]
                     )
                 }
