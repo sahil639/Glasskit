@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 57), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Gantt Chart", 5)
+        ("All", 64), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -668,6 +668,22 @@ struct AnalyticsView: View {
                             AnalyticsDataItem(label: "May", percentage: 55, color: AnalyticsCard.colorPalette[0]),
                             AnalyticsDataItem(label: "Jun", percentage: 90, color: AnalyticsCard.colorPalette[0]),
                             AnalyticsDataItem(label: "Jul", percentage: 90, color: AnalyticsCard.colorPalette[0]),
+                        ]
+                    )
+                }
+                let splineCategories = ["Spline", "Line Chart"]
+                if selectedFilter == "All" || splineCategories.contains(selectedFilter) {
+                    SplineCurveChartCard(
+                        title: "Spline Curve Chart",
+                        categories: splineCategories,
+                        items: [
+                            AnalyticsDataItem(label: "Jan", percentage: 38, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Feb", percentage: 72, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Mar", percentage: 45, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Apr", percentage: 88, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "May", percentage: 60, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Jun", percentage: 95, color: AnalyticsCard.colorPalette[0]),
+                            AnalyticsDataItem(label: "Jul", percentage: 78, color: AnalyticsCard.colorPalette[0]),
                         ]
                     )
                 }
