@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 71), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Gantt Chart", 5)
+        ("All", 78), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -701,6 +701,19 @@ struct AnalyticsView: View {
                             AnalyticsDataItem(label: "Jun", percentage: 89, color: AnalyticsCard.colorPalette[0]),
                             AnalyticsDataItem(label: "Jul", percentage: 74, color: AnalyticsCard.colorPalette[0]),
                         ]
+                    )
+                }
+                let stackedAreaCategories = ["Stacked Area", "Line Chart"]
+                if selectedFilter == "All" || stackedAreaCategories.contains(selectedFilter) {
+                    StackedAreaChartCard(
+                        title: "Stacked Area Chart",
+                        categories: stackedAreaCategories,
+                        series: [
+                            MultiLineSeries(name: "Design", color: AnalyticsCard.colorPalette[0], values: [30, 45, 25, 55, 40, 60, 50]),
+                            MultiLineSeries(name: "Dev",    color: AnalyticsCard.colorPalette[1], values: [20, 30, 45, 35, 55, 40, 60]),
+                            MultiLineSeries(name: "QA",     color: AnalyticsCard.colorPalette[2], values: [10, 15, 20, 25, 15, 30, 20]),
+                        ],
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]
                     )
                 }
                 let multiRingCategories = ["Multi Ring", "Pie Chart"]
