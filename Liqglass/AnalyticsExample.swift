@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 92), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Gantt Chart", 5)
+        ("All", 100), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -745,6 +745,23 @@ struct AnalyticsView: View {
                             AnalyticsDataItem(label: "5", percentage: 38, color: AnalyticsCard.colorPalette[0]),
                             AnalyticsDataItem(label: "6", percentage: 93, color: AnalyticsCard.colorPalette[0]),
                             AnalyticsDataItem(label: "7", percentage: 77, color: AnalyticsCard.colorPalette[0]),
+                        ]
+                    )
+                }
+                let scatterCategories = ["Scatter", "Plot"]
+                if selectedFilter == "All" || scatterCategories.contains(selectedFilter) {
+                    ScatterPlotCard(
+                        title: "Scatter Plot",
+                        categories: scatterCategories,
+                        points: [
+                            ScatterDataPoint(label: "A", x: 12, y: 18, color: AnalyticsCard.colorPalette[0]),
+                            ScatterDataPoint(label: "B", x: 25, y: 32, color: AnalyticsCard.colorPalette[1]),
+                            ScatterDataPoint(label: "C", x: 34, y: 28, color: AnalyticsCard.colorPalette[2]),
+                            ScatterDataPoint(label: "D", x: 45, y: 55, color: AnalyticsCard.colorPalette[3]),
+                            ScatterDataPoint(label: "E", x: 52, y: 48, color: AnalyticsCard.colorPalette[4]),
+                            ScatterDataPoint(label: "F", x: 63, y: 70, color: AnalyticsCard.colorPalette[5]),
+                            ScatterDataPoint(label: "G", x: 71, y: 65, color: AnalyticsCard.colorPalette[0]),
+                            ScatterDataPoint(label: "H", x: 82, y: 88, color: AnalyticsCard.colorPalette[1]),
                         ]
                     )
                 }
