@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 100), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Gantt Chart", 5)
+        ("All", 107), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -762,6 +762,22 @@ struct AnalyticsView: View {
                             ScatterDataPoint(label: "F", x: 63, y: 70, color: AnalyticsCard.colorPalette[5]),
                             ScatterDataPoint(label: "G", x: 71, y: 65, color: AnalyticsCard.colorPalette[0]),
                             ScatterDataPoint(label: "H", x: 82, y: 88, color: AnalyticsCard.colorPalette[1]),
+                        ]
+                    )
+                }
+                let bubbleCategories = ["Bubble", "Plot"]
+                if selectedFilter == "All" || bubbleCategories.contains(selectedFilter) {
+                    BubbleChartCard(
+                        title: "Bubble Chart",
+                        categories: bubbleCategories,
+                        points: [
+                            BubbleDataPoint(label: "A", x: 20, y: 30, size: 25, color: AnalyticsCard.colorPalette[0]),
+                            BubbleDataPoint(label: "B", x: 40, y: 55, size: 65, color: AnalyticsCard.colorPalette[1]),
+                            BubbleDataPoint(label: "C", x: 60, y: 25, size: 40, color: AnalyticsCard.colorPalette[2]),
+                            BubbleDataPoint(label: "D", x: 30, y: 70, size: 80, color: AnalyticsCard.colorPalette[3]),
+                            BubbleDataPoint(label: "E", x: 75, y: 60, size: 30, color: AnalyticsCard.colorPalette[4]),
+                            BubbleDataPoint(label: "F", x: 55, y: 80, size: 55, color: AnalyticsCard.colorPalette[5]),
+                            BubbleDataPoint(label: "G", x: 85, y: 40, size: 20, color: AnalyticsCard.colorPalette[0]),
                         ]
                     )
                 }
