@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 127), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Timeline", 6), ("Roadmap", 6), ("Histogram", 8), ("Gantt Chart", 5)
+        ("All", 154), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Timeline", 6), ("Roadmap", 6), ("Histogram", 8), ("Density", 9), ("Tree", 9), ("Treemap", 9), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -826,6 +826,74 @@ struct AnalyticsView: View {
                             38, 39, 40, 40, 41, 42, 43, 44, 45, 46,
                             47, 48, 48, 50, 51, 52, 54, 55, 58, 62
                         ].map { HistogramValue(value: Double($0)) }
+                    )
+                }
+                let densityCategories = ["Density", "Distribution"]
+                if selectedFilter == "All" || densityCategories.contains(selectedFilter) {
+                    DensityCurveChartCard(
+                        title: "Density Curve Chart",
+                        categories: densityCategories,
+                        series: [
+                            DensitySeries(name: "Group A",
+                                          values: [22, 25, 28, 30, 31, 33, 35, 36, 38, 40, 41, 43, 45],
+                                          color: AnalyticsCard.colorPalette[0]),
+                            DensitySeries(name: "Group B",
+                                          values: [38, 42, 44, 46, 48, 50, 51, 53, 55, 58, 60, 62],
+                                          color: AnalyticsCard.colorPalette[1]),
+                            DensitySeries(name: "Group C",
+                                          values: [28, 32, 35, 37, 38, 39, 40, 41, 42, 44, 46],
+                                          color: AnalyticsCard.colorPalette[2]),
+                        ]
+                    )
+                }
+                let treeCategories = ["Tree", "Hierarchy"]
+                if selectedFilter == "All" || treeCategories.contains(selectedFilter) {
+                    TreeDiagramCard(
+                        title: "Tree Diagram",
+                        categories: treeCategories,
+                        root: TreeNode(
+                            label: "Root",
+                            value: 100,
+                            color: AnalyticsCard.colorPalette[0],
+                            children: [
+                                TreeNode(label: "Branch A", value: 42, color: AnalyticsCard.colorPalette[1], children: [
+                                    TreeNode(label: "Leaf A1", value: 18, color: AnalyticsCard.colorPalette[3], children: []),
+                                    TreeNode(label: "Leaf A2", value: 24, color: AnalyticsCard.colorPalette[4], children: []),
+                                ]),
+                                TreeNode(label: "Branch B", value: 35, color: AnalyticsCard.colorPalette[2], children: [
+                                    TreeNode(label: "Leaf B1", value: 20, color: AnalyticsCard.colorPalette[5], children: []),
+                                    TreeNode(label: "Leaf B2", value: 15, color: AnalyticsCard.colorPalette[0], children: []),
+                                ]),
+                                TreeNode(label: "Branch C", value: 23, color: AnalyticsCard.colorPalette[3], children: [
+                                    TreeNode(label: "Leaf C1", value: 23, color: AnalyticsCard.colorPalette[1], children: []),
+                                ]),
+                            ]
+                        )
+                    )
+                }
+                let treemapCategories = ["Treemap", "Hierarchy"]
+                if selectedFilter == "All" || treemapCategories.contains(selectedFilter) {
+                    TreemapChartCard(
+                        title: "Treemap Chart",
+                        categories: treemapCategories,
+                        items: [
+                            TreemapItem(label: "Design",    value: 42, color: AnalyticsCard.colorPalette[0], children: [
+                                TreemapItem(label: "UI",      value: 24, color: AnalyticsCard.colorPalette[0], children: []),
+                                TreemapItem(label: "UX",      value: 18, color: AnalyticsCard.colorPalette[0].opacity(0.7), children: []),
+                            ]),
+                            TreemapItem(label: "Engineering", value: 65, color: AnalyticsCard.colorPalette[1], children: [
+                                TreemapItem(label: "iOS",     value: 30, color: AnalyticsCard.colorPalette[1], children: []),
+                                TreemapItem(label: "Backend", value: 25, color: AnalyticsCard.colorPalette[1].opacity(0.75), children: []),
+                                TreemapItem(label: "Web",     value: 10, color: AnalyticsCard.colorPalette[1].opacity(0.55), children: []),
+                            ]),
+                            TreemapItem(label: "Marketing", value: 30, color: AnalyticsCard.colorPalette[2], children: [
+                                TreemapItem(label: "Social",  value: 18, color: AnalyticsCard.colorPalette[2], children: []),
+                                TreemapItem(label: "Ads",     value: 12, color: AnalyticsCard.colorPalette[2].opacity(0.7), children: []),
+                            ]),
+                            TreemapItem(label: "Research",  value: 20, color: AnalyticsCard.colorPalette[3], children: []),
+                            TreemapItem(label: "Sales",     value: 18, color: AnalyticsCard.colorPalette[4], children: []),
+                            TreemapItem(label: "Support",   value: 12, color: AnalyticsCard.colorPalette[5], children: []),
+                        ]
                     )
                 }
                 let multiRingCategories = ["Multi Ring", "Pie Chart"]
