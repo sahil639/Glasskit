@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 119), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Timeline", 6), ("Roadmap", 6), ("Gantt Chart", 5)
+        ("All", 127), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Timeline", 6), ("Roadmap", 6), ("Histogram", 8), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -814,6 +814,18 @@ struct AnalyticsView: View {
                             RoadmapLane(name: "Design",      color: AnalyticsCard.colorPalette[1]),
                             RoadmapLane(name: "Engineering", color: AnalyticsCard.colorPalette[2]),
                         ]
+                    )
+                }
+                let histogramCategories = ["Histogram", "Distribution"]
+                if selectedFilter == "All" || histogramCategories.contains(selectedFilter) {
+                    HistogramChartCard(
+                        title: "Histogram Chart",
+                        categories: histogramCategories,
+                        rawValues: [
+                            18, 22, 25, 28, 30, 30, 32, 33, 35, 36,
+                            38, 39, 40, 40, 41, 42, 43, 44, 45, 46,
+                            47, 48, 48, 50, 51, 52, 54, 55, 58, 62
+                        ].map { HistogramValue(value: Double($0)) }
                     )
                 }
                 let multiRingCategories = ["Multi Ring", "Pie Chart"]
