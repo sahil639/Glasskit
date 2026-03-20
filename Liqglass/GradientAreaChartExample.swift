@@ -689,7 +689,7 @@ struct GradientAreaChartCard: View {
                     if gradientStops.count > 2 {
                         Button {
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
-                                gradientStops.remove(at: idx)
+                                gradientStops.removeSubrange(idx...idx)
                             }
                         } label: {
                             Image(systemName: "minus.circle.fill")

@@ -377,8 +377,8 @@ struct StackedBarCard: View {
         let heights = segmentHeights(for: cat, chartH: chartH)
         let r = CGFloat(cornerRadius)
         let clipShape = UnevenRoundedRectangle(
-            topLeadingRadius: r, topTrailingRadius: r,
-            bottomLeadingRadius: 0, bottomTrailingRadius: 0,
+            topLeadingRadius: r, bottomLeadingRadius: 0,
+            bottomTrailingRadius: 0, topTrailingRadius: r,
             style: .continuous
         )
 
@@ -842,10 +842,10 @@ struct StackedBarCard: View {
                     if series.count > 1 {
                         Button {
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                series.remove(at: si)
+                                series.removeSubrange(si...si)
                                 for ci in cats.indices {
                                     if si < cats[ci].values.count {
-                                        cats[ci].values.remove(at: si)
+                                        cats[ci].values.removeSubrange(si...si)
                                     }
                                 }
                             }
@@ -897,7 +897,7 @@ struct StackedBarCard: View {
                 if cats.count > 1 {
                     Button {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                            cats.remove(at: ci)
+                            cats.removeSubrange(ci...ci)
                         }
                     } label: {
                         Image(systemName: "minus.circle.fill")

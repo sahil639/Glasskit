@@ -927,7 +927,7 @@ struct MultiLineChartCard: View {
                     if series.count > 1 {
                         Button {
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                                series.remove(at: si)
+                                series.removeSubrange(si...si)
                             }
                         } label: {
                             Image(systemName: "minus.circle.fill")

@@ -733,9 +733,9 @@ struct GroupedBarCard: View {
                     if series.count > 1 {
                         Button {
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                series.remove(at: si)
+                                series.removeSubrange(si...si)
                                 for ci in cats.indices {
-                                    if si < cats[ci].values.count { cats[ci].values.remove(at: si) }
+                                    if si < cats[ci].values.count { cats[ci].values.removeSubrange(si...si) }
                                 }
                             }
                         } label: {
@@ -777,7 +777,7 @@ struct GroupedBarCard: View {
                 Spacer()
                 if cats.count > 1 {
                     Button {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { cats.remove(at: ci) }
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { cats.removeSubrange(ci...ci) }
                     } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.system(size: 16))

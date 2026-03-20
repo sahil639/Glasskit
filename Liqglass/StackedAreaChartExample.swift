@@ -959,7 +959,7 @@ struct StackedAreaChartCard: View {
                     Spacer()
                     if series.count > 1 {
                         Button {
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) { series.remove(at: si) }
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) { series.removeSubrange(si...si) }
                         } label: {
                             Image(systemName: "minus.circle.fill").foregroundStyle(.red.opacity(0.7)).font(.system(size: 18))
                         }
