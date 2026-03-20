@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 154), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Timeline", 6), ("Roadmap", 6), ("Histogram", 8), ("Density", 9), ("Tree", 9), ("Treemap", 9), ("Gantt Chart", 5)
+        ("All", 194), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Timeline", 6), ("Roadmap", 6), ("Histogram", 8), ("Density", 9), ("Tree", 9), ("Treemap", 9), ("Network", 10), ("Sankey", 10), ("Flow Chart", 10), ("Circle Pack", 10), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -893,6 +893,112 @@ struct AnalyticsView: View {
                             TreemapItem(label: "Research",  value: 20, color: AnalyticsCard.colorPalette[3], children: []),
                             TreemapItem(label: "Sales",     value: 18, color: AnalyticsCard.colorPalette[4], children: []),
                             TreemapItem(label: "Support",   value: 12, color: AnalyticsCard.colorPalette[5], children: []),
+                        ]
+                    )
+                }
+                let networkCategories = ["Network", "Graph"]
+                if selectedFilter == "All" || networkCategories.contains(selectedFilter) {
+                    let nn1 = NetworkNode(nodeID: "n1", label: "iOS",      value: 85, category: "Mobile",  color: AnalyticsCard.colorPalette[0])
+                    let nn2 = NetworkNode(nodeID: "n2", label: "Android",  value: 72, category: "Mobile",  color: AnalyticsCard.colorPalette[0])
+                    let nn3 = NetworkNode(nodeID: "n3", label: "Backend",  value: 90, category: "Server",  color: AnalyticsCard.colorPalette[1])
+                    let nn4 = NetworkNode(nodeID: "n4", label: "Database", value: 78, category: "Server",  color: AnalyticsCard.colorPalette[1])
+                    let nn5 = NetworkNode(nodeID: "n5", label: "Auth",     value: 60, category: "Server",  color: AnalyticsCard.colorPalette[1])
+                    let nn6 = NetworkNode(nodeID: "n6", label: "API",      value: 95, category: "Gateway", color: AnalyticsCard.colorPalette[2])
+                    let nn7 = NetworkNode(nodeID: "n7", label: "CDN",      value: 55, category: "Gateway", color: AnalyticsCard.colorPalette[2])
+                    let nn8 = NetworkNode(nodeID: "n8", label: "Cache",    value: 48, category: "Gateway", color: AnalyticsCard.colorPalette[2])
+                    NetworkGraphCard(
+                        title: "Network Graph",
+                        categories: networkCategories,
+                        nodes: [nn1, nn2, nn3, nn4, nn5, nn6, nn7, nn8],
+                        edges: [
+                            NetworkEdge(sourceID: nn1.id, targetID: nn6.id, weight: 1.5, edgeLabel: ""),
+                            NetworkEdge(sourceID: nn2.id, targetID: nn6.id, weight: 1.5, edgeLabel: ""),
+                            NetworkEdge(sourceID: nn6.id, targetID: nn3.id, weight: 2.0, edgeLabel: ""),
+                            NetworkEdge(sourceID: nn6.id, targetID: nn5.id, weight: 1.0, edgeLabel: ""),
+                            NetworkEdge(sourceID: nn6.id, targetID: nn7.id, weight: 1.0, edgeLabel: ""),
+                            NetworkEdge(sourceID: nn6.id, targetID: nn8.id, weight: 1.0, edgeLabel: ""),
+                            NetworkEdge(sourceID: nn3.id, targetID: nn4.id, weight: 1.8, edgeLabel: ""),
+                            NetworkEdge(sourceID: nn5.id, targetID: nn3.id, weight: 1.2, edgeLabel: ""),
+                        ]
+                    )
+                }
+                let sankeyCategories = ["Sankey", "Flow"]
+                if selectedFilter == "All" || sankeyCategories.contains(selectedFilter) {
+                    let sn1 = SankeyNode(nodeID: "s1", label: "Visits",    category: "Source",  color: AnalyticsCard.colorPalette[0])
+                    let sn2 = SankeyNode(nodeID: "s2", label: "Organic",   category: "Channel", color: AnalyticsCard.colorPalette[1])
+                    let sn3 = SankeyNode(nodeID: "s3", label: "Paid",      category: "Channel", color: AnalyticsCard.colorPalette[2])
+                    let sn4 = SankeyNode(nodeID: "s4", label: "Direct",    category: "Channel", color: AnalyticsCard.colorPalette[3])
+                    let sn5 = SankeyNode(nodeID: "s5", label: "Sign Up",   category: "Action",  color: AnalyticsCard.colorPalette[4])
+                    let sn6 = SankeyNode(nodeID: "s6", label: "Purchase",  category: "Action",  color: AnalyticsCard.colorPalette[5])
+                    let sn7 = SankeyNode(nodeID: "s7", label: "Bounce",    category: "Action",  color: AnalyticsCard.colorPalette[0])
+                    SankeyDiagramCard(
+                        title: "Sankey Diagram",
+                        categories: sankeyCategories,
+                        nodes: [sn1, sn2, sn3, sn4, sn5, sn6, sn7],
+                        flows: [
+                            SankeyFlow(sourceID: sn1.id, targetID: sn2.id, value: 40),
+                            SankeyFlow(sourceID: sn1.id, targetID: sn3.id, value: 35),
+                            SankeyFlow(sourceID: sn1.id, targetID: sn4.id, value: 25),
+                            SankeyFlow(sourceID: sn2.id, targetID: sn5.id, value: 18),
+                            SankeyFlow(sourceID: sn2.id, targetID: sn6.id, value: 12),
+                            SankeyFlow(sourceID: sn2.id, targetID: sn7.id, value: 10),
+                            SankeyFlow(sourceID: sn3.id, targetID: sn5.id, value: 20),
+                            SankeyFlow(sourceID: sn3.id, targetID: sn6.id, value: 15),
+                            SankeyFlow(sourceID: sn4.id, targetID: sn5.id, value: 8),
+                            SankeyFlow(sourceID: sn4.id, targetID: sn7.id, value: 17),
+                        ]
+                    )
+                }
+                let flowChartCategories = ["Flow Chart", "Process"]
+                if selectedFilter == "All" || flowChartCategories.contains(selectedFilter) {
+                    let fn1 = FCNode(label: "Start",      nodeType: .startEnd, category: "Flow", color: AnalyticsCard.colorPalette[4])
+                    let fn2 = FCNode(label: "User Input", nodeType: .process,  category: "Flow", color: AnalyticsCard.colorPalette[0])
+                    let fn3 = FCNode(label: "Validate?",  nodeType: .decision, category: "Flow", color: AnalyticsCard.colorPalette[2])
+                    let fn4 = FCNode(label: "Process",    nodeType: .process,  category: "Flow", color: AnalyticsCard.colorPalette[1])
+                    let fn5 = FCNode(label: "Error",      nodeType: .process,  category: "Flow", color: AnalyticsCard.colorPalette[5])
+                    let fn6 = FCNode(label: "Output",     nodeType: .process,  category: "Flow", color: AnalyticsCard.colorPalette[3])
+                    let fn7 = FCNode(label: "End",        nodeType: .startEnd, category: "Flow", color: AnalyticsCard.colorPalette[4])
+                    FlowChartCard(
+                        title: "Flow Chart",
+                        categories: flowChartCategories,
+                        nodes: [fn1, fn2, fn3, fn4, fn5, fn6, fn7],
+                        connections: [
+                            FCConnection(sourceID: fn1.id, targetID: fn2.id, connLabel: ""),
+                            FCConnection(sourceID: fn2.id, targetID: fn3.id, connLabel: ""),
+                            FCConnection(sourceID: fn3.id, targetID: fn4.id, connLabel: "Yes"),
+                            FCConnection(sourceID: fn3.id, targetID: fn5.id, connLabel: "No"),
+                            FCConnection(sourceID: fn4.id, targetID: fn6.id, connLabel: ""),
+                            FCConnection(sourceID: fn5.id, targetID: fn2.id, connLabel: "Retry"),
+                            FCConnection(sourceID: fn6.id, targetID: fn7.id, connLabel: ""),
+                        ]
+                    )
+                }
+                let circlePackCategories = ["Circle Pack", "Hierarchy"]
+                if selectedFilter == "All" || circlePackCategories.contains(selectedFilter) {
+                    CirclePackingCard(
+                        title: "Circle Packing",
+                        categories: circlePackCategories,
+                        groups: [
+                            CirclePackGroup(name: "Design",   color: AnalyticsCard.colorPalette[0], items: [
+                                CirclePackItem(label: "UI",       value: 42, parentGroupID: nil, color: AnalyticsCard.colorPalette[0]),
+                                CirclePackItem(label: "UX",       value: 28, parentGroupID: nil, color: AnalyticsCard.colorPalette[0]),
+                                CirclePackItem(label: "Brand",    value: 18, parentGroupID: nil, color: AnalyticsCard.colorPalette[0]),
+                            ]),
+                            CirclePackGroup(name: "Engineering", color: AnalyticsCard.colorPalette[1], items: [
+                                CirclePackItem(label: "iOS",      value: 55, parentGroupID: nil, color: AnalyticsCard.colorPalette[1]),
+                                CirclePackItem(label: "Backend",  value: 48, parentGroupID: nil, color: AnalyticsCard.colorPalette[1]),
+                                CirclePackItem(label: "Web",      value: 32, parentGroupID: nil, color: AnalyticsCard.colorPalette[1]),
+                                CirclePackItem(label: "DevOps",   value: 20, parentGroupID: nil, color: AnalyticsCard.colorPalette[1]),
+                            ]),
+                            CirclePackGroup(name: "Marketing", color: AnalyticsCard.colorPalette[2], items: [
+                                CirclePackItem(label: "Social",   value: 35, parentGroupID: nil, color: AnalyticsCard.colorPalette[2]),
+                                CirclePackItem(label: "Ads",      value: 28, parentGroupID: nil, color: AnalyticsCard.colorPalette[2]),
+                                CirclePackItem(label: "SEO",      value: 22, parentGroupID: nil, color: AnalyticsCard.colorPalette[2]),
+                            ]),
+                            CirclePackGroup(name: "Research", color: AnalyticsCard.colorPalette[3], items: [
+                                CirclePackItem(label: "Analysis", value: 30, parentGroupID: nil, color: AnalyticsCard.colorPalette[3]),
+                                CirclePackItem(label: "Testing",  value: 25, parentGroupID: nil, color: AnalyticsCard.colorPalette[3]),
+                            ]),
                         ]
                     )
                 }
