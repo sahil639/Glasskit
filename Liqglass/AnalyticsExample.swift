@@ -450,8 +450,8 @@ struct AnalyticsView: View {
     @Namespace private var filterNamespace
 
     let filters: [(label: String, count: Int)] = [
-        ("All", 107), ("Pie Chart", 12), ("Half Donut", 6),
-        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Gantt Chart", 5)
+        ("All", 119), ("Pie Chart", 12), ("Half Donut", 6),
+        ("Multi Ring", 4), ("Radial", 3), ("Polar Area", 3), ("Bar Chart", 8), ("Dumbbell", 5), ("Lollipop", 5), ("Floating Bar", 6), ("Range Bar", 5), ("Stacked Bar", 6), ("Grouped Bar", 5), ("Line Chart", 7), ("Multi-Line", 7), ("Step Line", 7), ("Spline", 7), ("Area Line", 7), ("Stacked Area", 7), ("Gradient Area", 7), ("Sparkline", 7), ("Scatter", 8), ("Bubble", 7), ("Timeline", 6), ("Roadmap", 6), ("Gantt Chart", 5)
     ]
 
     var body: some View {
@@ -778,6 +778,41 @@ struct AnalyticsView: View {
                             BubbleDataPoint(label: "E", x: 75, y: 60, size: 30, color: AnalyticsCard.colorPalette[4]),
                             BubbleDataPoint(label: "F", x: 55, y: 80, size: 55, color: AnalyticsCard.colorPalette[5]),
                             BubbleDataPoint(label: "G", x: 85, y: 40, size: 20, color: AnalyticsCard.colorPalette[0]),
+                        ]
+                    )
+                }
+                let milestoneCategories = ["Timeline", "Milestone"]
+                if selectedFilter == "All" || milestoneCategories.contains(selectedFilter) {
+                    MilestoneTimelineCard(
+                        title: "Milestone Timeline",
+                        categories: milestoneCategories,
+                        items: [
+                            MilestoneItem(label: "Kickoff",  dateLabel: "Jan", position: 0,   description: "Project begins",    category: "Planning", status: .completed, color: AnalyticsCard.colorPalette[0]),
+                            MilestoneItem(label: "Design",   dateLabel: "Feb", position: 18,  description: "UI/UX finalised",   category: "Design",   status: .completed, color: AnalyticsCard.colorPalette[1]),
+                            MilestoneItem(label: "Alpha",    dateLabel: "Apr", position: 36,  description: "Internal testing",  category: "Dev",      status: .completed, color: AnalyticsCard.colorPalette[2]),
+                            MilestoneItem(label: "Beta",     dateLabel: "Jun", position: 55,  description: "Public beta",       category: "Dev",      status: .active,    color: AnalyticsCard.colorPalette[3]),
+                            MilestoneItem(label: "Launch",   dateLabel: "Sep", position: 76,  description: "App Store release", category: "Release",  status: .upcoming,  color: AnalyticsCard.colorPalette[4]),
+                            MilestoneItem(label: "v2.0",     dateLabel: "Dec", position: 100, description: "Major update",      category: "Release",  status: .upcoming,  color: AnalyticsCard.colorPalette[5]),
+                        ]
+                    )
+                }
+                let roadmapCategories = ["Roadmap", "Project"]
+                if selectedFilter == "All" || roadmapCategories.contains(selectedFilter) {
+                    ProjectRoadmapCard(
+                        title: "Project Roadmap",
+                        categories: roadmapCategories,
+                        tasks: [
+                            RoadmapTask(name: "Research",   startPos: 0,  endPos: 20, lane: 0, progress: 100, description: "Market analysis",    taskType: .fixed,      status: .completed, color: AnalyticsCard.colorPalette[0]),
+                            RoadmapTask(name: "Wireframes", startPos: 15, endPos: 38, lane: 1, progress: 100, description: "UX designs",         taskType: .fixed,      status: .completed, color: AnalyticsCard.colorPalette[1]),
+                            RoadmapTask(name: "Backend",    startPos: 20, endPos: 65, lane: 2, progress: 70,  description: "API development",    taskType: .continuous, status: .active,    color: AnalyticsCard.colorPalette[2]),
+                            RoadmapTask(name: "iOS App",    startPos: 35, endPos: 75, lane: 1, progress: 45,  description: "SwiftUI screens",    taskType: .fixed,      status: .active,    color: AnalyticsCard.colorPalette[3]),
+                            RoadmapTask(name: "Launch",     startPos: 75, endPos: 78, lane: 0, progress: 0,   description: "App Store release",  taskType: .milestone,  status: .upcoming,  color: AnalyticsCard.colorPalette[4]),
+                            RoadmapTask(name: "Marketing",  startPos: 65, endPos: 100,lane: 2, progress: 10,  description: "Campaign rollout",   taskType: .fixed,      status: .upcoming,  color: AnalyticsCard.colorPalette[5]),
+                        ],
+                        lanes: [
+                            RoadmapLane(name: "Strategy",    color: AnalyticsCard.colorPalette[0]),
+                            RoadmapLane(name: "Design",      color: AnalyticsCard.colorPalette[1]),
+                            RoadmapLane(name: "Engineering", color: AnalyticsCard.colorPalette[2]),
                         ]
                     )
                 }
