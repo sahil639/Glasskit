@@ -24,7 +24,7 @@ struct TreeNode: Identifiable {
 
 // MARK: - Layout Result
 
-private struct LayoutNode {
+struct LayoutNode {
     var id: UUID
     var label: String
     var value: Double
@@ -605,7 +605,7 @@ struct TreeDiagramCard: View {
 
         if !node.isCollapsed {
             ForEach(node.children) { child in
-                nodeRow(node: child, depth: depth + 1, parentLabel: node.label)
+                AnyView(nodeRow(node: child, depth: depth + 1, parentLabel: node.label))
             }
         }
     }

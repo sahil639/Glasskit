@@ -118,15 +118,15 @@ struct HistogramChartCard: View {
 
     var effectiveNumBins: Int {
         if autoBinning {
-            let n = max(2, values.count)
-            return max(5, min(50, Int(ceil(log2(Double(n)) + 1))))
+            let n = Swift.max(2, values.count)
+            return Swift.max(5, Swift.min(50, Int(ceil(log2(Double(n)) + 1))))
         }
-        return max(2, Int(numBins))
+        return Swift.max(2, Int(numBins))
     }
 
     var dataMin: Double { values.min() ?? 0 }
     var dataMax: Double { values.max() ?? 100 }
-    var dataRange: Double { max(dataMax - dataMin, 1e-9) }
+    var dataRange: Double { Swift.max(dataMax - dataMin, 1e-9) }
 
     var effectiveXMin: Double { autoScale ? dataMin - dataRange * 0.04 : xMinManual }
     var effectiveXMax: Double { autoScale ? dataMax + dataRange * 0.04 : xMaxManual }
@@ -1100,7 +1100,7 @@ private extension Array where Element == Double {
         guard count > 1 else { return 1 }
         let mean = reduce(0, +) / Double(count)
         let variance = reduce(0.0) { $0 + ($1 - mean) * ($1 - mean) } / Double(count - 1)
-        return sqrt(max(variance, 1e-9))
+        return sqrt(Swift.max(variance, 1e-9))
     }
 }
 

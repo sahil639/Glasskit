@@ -1340,29 +1340,34 @@ struct FolderExample: View {
         }
     }
 
-    private var folderEntries: [(id: String, section: AnyView)] {
-        [
-            ("folder1", AnyView(folder1Section)),
-            ("folder2", AnyView(folder2Section)),
-            ("folder3", AnyView(folder3Section)),
-            ("folder4", AnyView(folder4Section)),
-            ("folder5", AnyView(folder5Section)),
-            ("folder6", AnyView(folder6Section)),
-            ("folder7", AnyView(folder7Section)),
-            ("folder8", AnyView(folder8Section)),
-            ("folder9", AnyView(folder9Section)),
-            ("folder10", AnyView(folder10Section)),
-            ("folder11", AnyView(folder11Section)),
-            ("folder12", AnyView(folder12Section)),
-            ("folder13", AnyView(folder13Section)),
-            ("folder14", AnyView(folder14Section))
-        ]
+    private let folderIDs = ["folder1","folder2","folder3","folder4","folder5","folder6",
+                              "folder7","folder8","folder9","folder10","folder11","folder12",
+                              "folder13","folder14"]
+
+    @ViewBuilder
+    private func section(for id: String) -> some View {
+        switch id {
+        case "folder1":  folder1Section
+        case "folder2":  folder2Section
+        case "folder3":  folder3Section
+        case "folder4":  folder4Section
+        case "folder5":  folder5Section
+        case "folder6":  folder6Section
+        case "folder7":  folder7Section
+        case "folder8":  folder8Section
+        case "folder9":  folder9Section
+        case "folder10": folder10Section
+        case "folder11": folder11Section
+        case "folder12": folder12Section
+        case "folder13": folder13Section
+        default:         folder14Section
+        }
     }
 
     var body: some View {
         ScrollView {
             if favoritesOnly {
-                let favorited = folderEntries.filter { favoritesManager.isFavorited($0.id) }
+                let favorited = folderIDs.filter { favoritesManager.isFavorited($0) }
                 if favorited.isEmpty {
                     VStack(spacing: 12) {
                         Image(systemName: "heart.slash")
@@ -1375,22 +1380,22 @@ struct FolderExample: View {
                     .frame(maxWidth: .infinity)
                     .padding(.top, 120)
                 } else {
-                    ForEach(favorited, id: \.id) { entry in
-                        entry.section
+                    ForEach(favorited, id: \.self) { id in
+                        section(for: id)
                     }
                 }
             } else {
-                // folder1Section
-                // folder2Section
-                // folder3Section
-                // folder4Section
-                // folder5Section
-                // folder6Section
-                // folder7Section
-                // folder8Section
-                // folder9Section
-                // folder10Section
-                // folder11Section
+                folder1Section
+                folder2Section
+                folder3Section
+                folder4Section
+                folder5Section
+                folder6Section
+                folder7Section
+                folder8Section
+                folder9Section
+                folder10Section
+                folder11Section
                 folder12Section
                 folder13Section
                 folder14Section

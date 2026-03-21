@@ -39,7 +39,7 @@ struct SharedToolbar: ToolbarContent {
     let title: String
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
+        ToolbarItem(placement: .topBarLeading) {
             Button { } label: {
                 Image(systemName: "heart")
                     .font(.system(size: 15, weight: .medium))
@@ -51,7 +51,7 @@ struct SharedToolbar: ToolbarContent {
             Text(title)
                 .font(.system(size: 18, weight: .bold, design: .rounded))
         }
-        ToolbarItem(placement: .navigationBarTrailing) {
+        ToolbarItem(placement: .topBarTrailing) {
             Button { } label: {
                 Image("profile_avatar")
                     .resizable()
@@ -347,7 +347,8 @@ struct ContentView: View {
     }
 }
 
+
+
 #Preview {
     ContentView()
-        .environment(FavoritesManager())
 }

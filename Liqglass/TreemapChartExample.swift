@@ -23,7 +23,7 @@ struct TreemapItem: Identifiable {
 
 // MARK: - Layout Result
 
-private struct TreemapRect {
+struct TreemapRect {
     var id: UUID
     var label: String
     var value: Double

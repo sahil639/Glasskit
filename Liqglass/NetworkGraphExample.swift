@@ -275,8 +275,9 @@ struct NetworkGraphCard: View {
             // Integrate
             for n in nodes {
                 guard let f = forces[n.id] else { continue }
-                vel[n.id]?.width = (vel[n.id]?.width ?? 0) * damp + f.width
-                vel[n.id]?.height = (vel[n.id]?.height ?? 0) * damp + f.height
+                let vw = (vel[n.id]?.width ?? 0) * damp + f.width
+                let vh = (vel[n.id]?.height ?? 0) * damp + f.height
+                vel[n.id] = CGSize(width: vw, height: vh)
                 if let v = vel[n.id], let p = pos[n.id] {
                     pos[n.id] = CGPoint(x: p.x + v.width, y: p.y + v.height)
                 }

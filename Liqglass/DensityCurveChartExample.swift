@@ -98,18 +98,18 @@ struct DensityCurveChartCard: View {
     var allValues: [Double] { series.flatMap { $0.values } }
     var dataMin: Double { allValues.min() ?? 0 }
     var dataMax: Double { allValues.max() ?? 100 }
-    var dataRange: Double { max(dataMax - dataMin, 1e-9) }
+    var dataRange: Double { Swift.max(dataMax - dataMin, 1e-9) }
 
     var effectiveXMin: Double { autoScale ? dataMin - dataRange * 0.12 : xMinManual }
     var effectiveXMax: Double { autoScale ? dataMax + dataRange * 0.12 : xMaxManual }
-    var effectiveXRange: Double { max(effectiveXMax - effectiveXMin, 1e-9) }
+    var effectiveXRange: Double { Swift.max(effectiveXMax - effectiveXMin, 1e-9) }
 
     func bandwidth(for s: DensitySeries) -> Double {
-        if bandwidthMode == .manual { return max(0.01, manualBandwidth) }
+        if bandwidthMode == .manual { return Swift.max(0.01, manualBandwidth) }
         guard s.values.count >= 2 else { return 1.0 }
         let n = Double(s.values.count)
         let std = s.values.densityStandardDeviation()
-        return max(0.01, 1.06 * std * pow(n, -0.2))
+        return Swift.max(0.01, 1.06 * std * pow(n, -0.2))
     }
 
     func kde(at x: Double, for s: DensitySeries) -> Double {
@@ -931,7 +931,7 @@ private extension Array where Element == Double {
         guard count >= 2 else { return 1 }
         let mean = reduce(0, +) / Double(count)
         let variance = map { ($0 - mean) * ($0 - mean) }.reduce(0, +) / Double(count - 1)
-        return sqrt(max(0, variance))
+        return sqrt(Swift.max(0, variance))
     }
 }
 
