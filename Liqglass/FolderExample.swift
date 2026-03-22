@@ -1385,20 +1385,22 @@ struct FolderExample: View {
                     }
                 }
             } else {
-                folder1Section
-                folder2Section
-                folder3Section
-                folder4Section
-                folder5Section
-                folder6Section
-                folder7Section
-                folder8Section
-                folder9Section
-                folder10Section
-                folder11Section
-                folder12Section
-                folder13Section
-                folder14Section
+                LazyVStack(spacing: 0) {
+                    folder1Section
+                    folder2Section
+                    folder3Section
+                    folder4Section
+                    folder5Section
+                    folder6Section
+                    folder7Section
+                    folder8Section
+                    folder9Section
+                    folder10Section
+                    folder11Section
+                    folder12Section
+                    folder13Section
+                    folder14Section
+                }
             }
         }
         .onAppear {
@@ -2522,6 +2524,10 @@ struct FolderExample: View {
 }
 
 #Preview {
-    FolderExample()
-        .environment(FavoritesManager())
+    NavigationStack {
+        FolderExample()
+            .toolbarTitleDisplayMode(.inline)
+    }
+    .environment(FavoritesManager())
+    .transaction { $0.animation = nil }
 }
