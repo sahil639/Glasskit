@@ -199,11 +199,11 @@ struct HomeView: View {
     }
 }
 
-// MARK: - Favorites View
+// MARK: - Feedback View
 
-struct FavoritesView: View {
+struct FeedbackView: View {
     var body: some View {
-        FolderExample(favoritesOnly: true)
+        Text("Hello World")
     }
 }
 
@@ -324,11 +324,11 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Favourites", systemImage: "heart.fill") {
+            Tab("Feedback", systemImage: "bubble.left.and.bubble.right.fill") {
                 NavigationStack {
-                    FavoritesView()
+                    FeedbackView()
                         .toolbarTitleDisplayMode(.inline)
-                        .toolbar { SharedToolbar(title: "Favourites") }
+                        .toolbar { SharedToolbar(title: "Feedback") }
                 }
             }
 
