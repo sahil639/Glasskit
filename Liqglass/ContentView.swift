@@ -75,13 +75,13 @@ let allDesigns: [DesignItem] = {
 
 struct SharedToolbar: ToolbarContent {
     let title: String
-    var onSearchTap: (() -> Void)? = nil
     var onFavoritesTap: (() -> Void)? = nil
+    var onProfileTap: (() -> Void)? = nil
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
-            Button { onSearchTap?() } label: {
-                Image(systemName: "magnifyingglass")
+            Button { onFavoritesTap?() } label: {
+                Image(systemName: "heart")
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(.primary)
                     .frame(width: 38, height: 38)
@@ -92,11 +92,12 @@ struct SharedToolbar: ToolbarContent {
                 .font(.system(size: 18, weight: .bold, design: .rounded))
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button { onFavoritesTap?() } label: {
-                Image(systemName: "heart")
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(.primary)
-                    .frame(width: 38, height: 38)
+            Button { onProfileTap?() } label: {
+                Image("profile_avatar")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 34, height: 34)
+                    .clipShape(.circle)
             }
         }
     }
@@ -266,179 +267,68 @@ struct FeedbackView: View {
     }
 }
 
-// MARK: - Search Overlay
 
-struct SearchOverlay: View {
-    @Binding var isPresented: Bool
-    var onNavigate: (LibraryDestination) -> Void
+// MARK: - GitHub Redirect View
 
-    @FocusState private var isSearchFocused: Bool
-    @State private var searchText = ""
-
-    var filteredDesigns: [DesignItem] {
-        guard !searchText.isEmpty else { return allDesigns }
-        return allDesigns.filter {
-            $0.name.localizedCaseInsensitiveContains(searchText) ||
-            $0.tag.localizedCaseInsensitiveContains(searchText)
-        }
-    }
-
+struct GitHubRedirectView: View {
     var body: some View {
-        ZStack(alignment: .top) {
-            Color.black.opacity(0.001)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    searchText = ""
-                    isPresented = false
+        EmptyView()
+            .onAppear {
+                if let url = URL(string: "https://github.com/sahil639/Glasskit") {
+                    UIApplication.shared.open(url)
                 }
-
-            VStack(spacing: 0) {
-                // Search bar
-                HStack(spacing: 10) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 15))
-                            .foregroundStyle(.secondary)
-                        TextField("Search designs...", text: $searchText)
-                            .focused($isSearchFocused)
-                            .font(.system(size: 16))
-                            .submitLabel(.search)
-                    }
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 11)
-                    .glassEffect(.regular, in: .capsule)
-
-                    Button {
-                        searchText = ""
-                        isPresented = false
-                    } label: {
-                        Text("Cancel")
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(.primary)
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                .padding(.bottom, 8)
-
-                // Results
-                List(filteredDesigns) { item in
-                    Button {
-                        isPresented = false
-                        onNavigate(item.destination)
-                    } label: {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(item.name)
-                                    .font(.system(size: 15, weight: .semibold, design: .rounded))
-                                    .foregroundStyle(.primary)
-                                Text(item.tag)
-                                    .font(.system(size: 12, weight: .medium, design: .rounded))
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 12))
-                                .foregroundStyle(.tertiary)
-                        }
-                    }
-                }
-                .listStyle(.plain)
             }
-            .background(.regularMaterial)
-            .ignoresSafeArea(edges: .bottom)
-        }
-        .ignoresSafeArea()
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                isSearchFocused = true
-            }
-        }
     }
 }
 
 // MARK: - Content View
 
 struct ContentView: View {
-    @State private var selectedTab = 0
-    @State private var showSearch = false
     @State private var showFavorites = false
-    @State private var libraryPath = NavigationPath()
+    @State private var showProfile = false
+
+    private func toolbar(title: String) -> some ToolbarContent {
+        SharedToolbar(
+            title: title,
+            onFavoritesTap: { showFavorites = true },
+            onProfileTap: { showProfile = true }
+        )
+    }
 
     var body: some View {
-        ZStack {
-            TabView(selection: $selectedTab) {
-                Tab("Library", systemImage: "books.vertical.fill", value: 0) {
-                    NavigationStack(path: $libraryPath) {
-                        LibraryView()
-                            .toolbarTitleDisplayMode(.inline)
-                            .toolbar {
-                                SharedToolbar(
-                                    title: "Library",
-                                    onSearchTap: {
-                                        withAnimation(.easeInOut(duration: 0.2)) { showSearch = true }
-                                    },
-                                    onFavoritesTap: { showFavorites = true }
-                                )
-                            }
-                    }
-                }
-
-                Tab("Foundry", systemImage: "hammer.fill", value: 1) {
-                    NavigationStack {
-                        FeedbackView()
-                            .toolbarTitleDisplayMode(.inline)
-                            .toolbar {
-                                SharedToolbar(
-                                    title: "Foundry",
-                                    onSearchTap: {
-                                        withAnimation(.easeInOut(duration: 0.2)) { showSearch = true }
-                                    },
-                                    onFavoritesTap: { showFavorites = true }
-                                )
-                            }
-                    }
-                }
-
-                Tab("Feedback", systemImage: "bubble.left.and.bubble.right.fill", value: 2) {
-                    NavigationStack {
-                        FeedbackView()
-                            .toolbarTitleDisplayMode(.inline)
-                            .toolbar {
-                                SharedToolbar(
-                                    title: "Feedback",
-                                    onSearchTap: {
-                                        withAnimation(.easeInOut(duration: 0.2)) { showSearch = true }
-                                    },
-                                    onFavoritesTap: { showFavorites = true }
-                                )
-                            }
-                    }
-                }
-
-                Tab("GitHub", systemImage: "chevron.left.forwardslash.chevron.right", value: 3) {
-                    EmptyView()
-                }
-            }
-            .onChange(of: selectedTab) { _, new in
-                if new == 3 {
-                    if let url = URL(string: "https://github.com/sahil639/Glasskit") {
-                        UIApplication.shared.open(url)
-                    }
-                    selectedTab = 0
+        TabView {
+            Tab("Library", systemImage: "books.vertical.fill") {
+                NavigationStack {
+                    LibraryView()
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { toolbar(title: "Library") }
                 }
             }
 
-            if showSearch {
-                SearchOverlay(isPresented: $showSearch) { destination in
-                    selectedTab = 0
-                    libraryPath.append(destination)
+            Tab("Foundry", systemImage: "hammer.fill") {
+                NavigationStack {
+                    FeedbackView()
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { toolbar(title: "Foundry") }
                 }
-                .zIndex(1)
-                .transition(.opacity)
+            }
+
+            Tab("Feedback", systemImage: "bubble.left.and.bubble.right.fill") {
+                NavigationStack {
+                    FeedbackView()
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { toolbar(title: "Feedback") }
+                }
+            }
+
+            Tab("GitHub", systemImage: "chevron.left.forwardslash.chevron.right") {
+                GitHubRedirectView()
+            }
+
+            Tab(role: .search) {
+                SearchView()
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: showSearch)
         .sheet(isPresented: $showFavorites) {
             NavigationStack {
                 FolderExample(favoritesOnly: true)
@@ -447,6 +337,18 @@ struct ContentView: View {
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button("Done") { showFavorites = false }
+                        }
+                    }
+            }
+        }
+        .sheet(isPresented: $showProfile) {
+            NavigationStack {
+                Text("Hello World")
+                    .navigationTitle("Profile")
+                    .toolbarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Done") { showProfile = false }
                         }
                     }
             }
