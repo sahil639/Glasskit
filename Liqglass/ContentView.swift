@@ -408,16 +408,20 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Feedback", systemImage: "bubble.left.and.bubble.right.fill") {
+            Tab("Map", systemImage: "map.fill") {
                 NavigationStack {
                     FeedbackView()
                         .toolbarTitleDisplayMode(.inline)
-                        .toolbar { toolbar(title: "Feedback") }
+                        .toolbar { toolbar(title: "Map") }
                 }
             }
 
-            Tab("GitHub", systemImage: "chevron.left.forwardslash.chevron.right") {
-                GitHubRedirectView()
+            Tab("Labs", systemImage: "flask.fill") {
+                NavigationStack {
+                    FeedbackView()
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { toolbar(title: "Labs") }
+                }
             }
 
             Tab(role: .search) {
