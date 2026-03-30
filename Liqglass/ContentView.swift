@@ -208,6 +208,18 @@ struct LibraryView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
+                // TODO: Dynamic content container (200px height)
+                Color(uiColor: .systemGray4)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 200)
+                    .clipShape(.rect(cornerRadius: 16, style: .continuous))
+
+                // TODO: Secondary action bar (135px height)
+                Color.blue.opacity(0.18)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 135)
+                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
+
                 // Card grid
                 LazyVGrid(columns: [
                     GridItem(.flexible(), spacing: 12),
@@ -220,18 +232,6 @@ struct LibraryView: View {
                         .buttonStyle(.plain)
                     }
                 }
-
-                // TODO: Dynamic content container (145px height)
-                Color(uiColor: .systemGray4)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 145)
-                    .clipShape(.rect(cornerRadius: 16, style: .continuous))
-
-                // TODO: Secondary action bar (48px height)
-                Color.blue.opacity(0.18)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .clipShape(.rect(cornerRadius: 12, style: .continuous))
             }
             .padding(.horizontal, 20)
             .padding(.top, 16)
