@@ -222,7 +222,7 @@ struct LibraryView: View {
                 }
 
                 // TODO: Dynamic content container (145px height)
-                Color(uiColor: .systemGray5)
+                Color(uiColor: .systemGray4)
                     .frame(maxWidth: .infinity)
                     .frame(height: 145)
                     .clipShape(.rect(cornerRadius: 16, style: .continuous))
@@ -259,6 +259,99 @@ struct LibraryView: View {
     }
 }
 
+// MARK: - Search View
+
+struct SearchView: View {
+    @FocusState private var isSearchFocused: Bool
+    @State private var searchText = ""
+    @State private var selectedFilter = "All"
+    @Namespace private var filterNamespace
+
+    let filters: [(label: String, count: Int)] = [
+        ("All", 24), ("Pie Chart", 12), ("Gantt Chart", 5),
+        ("Histogram", 2), ("Diagrams", 4)
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 10) {
+                HStack(spacing: 8) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 15))
+                        .foregroundStyle(.secondary)
+                    TextField("Search", text: $searchText)
+                        .focused($isSearchFocused)
+                        .font(.system(size: 16))
+                        .submitLabel(.search)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 11)
+                .glassEffect(.regular, in: .capsule)
+
+                Button {
+                    isSearchFocused = false
+                    searchText = ""
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color.primary.opacity(0.65))
+                        .frame(width: 44, height: 44)
+                }
+                .glassEffect(.regular, in: .circle)
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(filters, id: \.label) { filter in
+                        let isSelected = selectedFilter == filter.label
+                        Button {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                selectedFilter = filter.label
+                            }
+                        } label: {
+                            HStack(spacing: 6) {
+                                Text(filter.label)
+                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(isSelected ? Color.primary : Color.primary.opacity(0.5))
+                                Text("\(filter.count)")
+                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.blue, in: .capsule)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background {
+                                if isSelected {
+                                    Capsule()
+                                        .fill(Color.primary.opacity(0.08))
+                                        .matchedGeometryEffect(id: "searchFilterPill", in: filterNamespace)
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 6)
+            }
+            .padding(.top, 16)
+
+            Spacer()
+        }
+        #if os(iOS)
+        .toolbar(.hidden, for: .tabBar)
+        #endif
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                withAnimation { isSearchFocused = true }
+            }
+        }
+    }
+}
+
 // MARK: - Feedback View
 
 struct FeedbackView: View {
@@ -275,7 +368,9 @@ struct GitHubRedirectView: View {
         EmptyView()
             .onAppear {
                 if let url = URL(string: "https://github.com/sahil639/Glasskit") {
+                    #if os(iOS)
                     UIApplication.shared.open(url)
+                    #endif
                 }
             }
     }
