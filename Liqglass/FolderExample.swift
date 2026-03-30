@@ -1380,12 +1380,14 @@ struct FolderExample: View {
                     .frame(maxWidth: .infinity)
                     .padding(.top, 120)
                 } else {
-                    ForEach(favorited, id: \.self) { id in
-                        section(for: id)
+                    LazyVStack(spacing: 12) {
+                        ForEach(favorited, id: \.self) { id in
+                            section(for: id)
+                        }
                     }
                 }
             } else {
-                LazyVStack(spacing: 0) {
+                LazyVStack(spacing: 12) {
                     folder1Section
                     folder2Section
                     folder3Section
