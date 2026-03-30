@@ -274,22 +274,38 @@ struct SearchView: View {
 
     var body: some View {
         List(results) { item in
-            HStack {
-                Text(item.name)
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
-                Text("·")
-                    .foregroundStyle(.secondary)
-                Text(item.tag)
-                    .font(.system(size: 14, design: .rounded))
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12))
-                    .foregroundStyle(.tertiary)
+            NavigationLink(value: item.destination) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(item.name)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    Text(item.tag)
+                        .font(.system(size: 12, design: .rounded))
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .listStyle(.plain)
         .searchable(text: $searchText, prompt: "Search designs")
+        .navigationDestination(for: LibraryDestination.self) { dest in
+            switch dest {
+            case .folders:
+                FolderExample()
+                    .navigationTitle("Glass Folders")
+                    .toolbarTitleDisplayMode(.inline)
+            case .analytics:
+                AnalyticsView()
+                    .navigationTitle("Analytics")
+                    .toolbarTitleDisplayMode(.inline)
+            case .clock:
+                FeedbackView()
+                    .navigationTitle("Clock")
+                    .toolbarTitleDisplayMode(.inline)
+            case .badges:
+                FeedbackView()
+                    .navigationTitle("Badges")
+                    .toolbarTitleDisplayMode(.inline)
+            }
+        }
     }
 }
 
@@ -366,7 +382,11 @@ struct ContentView: View {
             }
 
             Tab(role: .search) {
-                SearchView()
+                NavigationStack {
+                    SearchView()
+                        .navigationTitle("Search")
+                        .toolbarTitleDisplayMode(.inline)
+                }
             }
         }
         .sheet(isPresented: $showFavorites) {
