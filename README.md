@@ -1,36 +1,33 @@
 # Glasskit
 
-A SwiftUI design toolkit showcasing Liquid Glass material templates and assets for iOS 26.
+Liquid glass components for iOS. Open source and free.
 
-## About
+> Built with SwiftUI. Copy-paste ready. No login required.
 
-Glasskit provides a collection of unique folder UI designs built with Apple's new Liquid Glass material system introduced in iOS 26. Each design demonstrates different approaches to layering glass effects, custom shapes, photo cards, and decorative stickers — ready to use as inspiration or drop into your own projects.
+🌐 [glasskit.framer.website](https://glasskit.framer.website)
 
-## Designs
+---
 
-| Design | Description |
-|--------|-------------|
-| **Folder 1** | Classic glass folder with stacked photo cards and smooth animation |
-| **Sticker Folder** | Decorative folder with cat and Japanese sticker overlays |
-| **Saigon** | Rounded folder with title label and version badge |
-| **Signature Folder** | Compact folder with signature and Shiba Inu sticker |
-| **Folder 5** | Wide-body folder with rounded background container |
+## Components
 
-## Built With
+### Available now
+- **Glass Folders** — Layered, blurred glass folders with photos bleeding through the frosted surface
+- **Glass Analytics** — Charts and data visuals wrapped in liquid glass. Bar, pie, half donut and more
 
-- **SwiftUI** — declarative UI framework
-- **Liquid Glass** — `.glassEffect()` material modifier (iOS 26+)
-- **Custom Shapes** — `FolderShape`, `FolderShape2`, `FolderShape3`, `FolderShape4`
-- **Asset Catalog** — PNG and SVG stickers, photo cards, and overlays
+### Coming soon
+- **LG Clock** — Frosted glass clock face with fluid hands and specular highlight
+- **LG Map** — Glass overlay pins and panels on a live map
+- **LG Badges** — Notification badges, status pills, and count indicators in frosted glass
+- **Foundry** — Interactive Metal shader. Drag to move light across brushed aluminum, chrome, and liquid metal in real time
 
-## Requirements
+---
 
-- Xcode 26+
-- iOS 26+
-- Swift 6
+## Usage
 
-## Getting Started
+Each component lives in its own folder. Copy the `.swift` file into your project and drop it in.
 
-1. Clone the repository
-2. Open `Glasskit.xcodeproj` in Xcode
-3. Build and run on an iOS 26 simulator or device
+```swift
+import SwiftUI
+
+// Example
+GlassFolder(images: [...])
