@@ -366,11 +366,7 @@ struct ContentView: View {
             }
 
             Tab("Map", systemImage: "map.fill") {
-                NavigationStack {
-                    FeedbackView()
-                        .toolbarTitleDisplayMode(.inline)
-                        .toolbar { toolbar(title: "Map") }
-                }
+                MapExampleView()
             }
 
             Tab("Labs", systemImage: "flask.fill") {
