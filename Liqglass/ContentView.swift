@@ -309,6 +309,88 @@ struct SearchView: View {
     }
 }
 
+// MARK: - Foundry
+
+enum FoundryDestination: Hashable {
+    case liquidMetalBlob, card2, card3
+}
+
+struct FoundryCard: View {
+    let title: String
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Spacer()
+            Text(title)
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(.black.opacity(0.8))
+                .multilineTextAlignment(.leading)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .aspectRatio(1, contentMode: .fit)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(red: 0xE0/255, green: 0xE0/255, blue: 0xE0/255).opacity(0.8))
+                .fill(LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color.white.opacity(0), location: 0),
+                        .init(color: Color.white.opacity(1), location: 1)
+                    ]),
+                    startPoint: .top, endPoint: .bottom
+                ))
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.gray.opacity(0.3), Color.gray.opacity(0.15)],
+                        startPoint: .top, endPoint: .bottom
+                    ),
+                    lineWidth: 2
+                )
+        )
+        .glassEffect(.clear, in: .rect(cornerRadius: 16, style: .continuous))
+    }
+}
+
+struct FoundryView: View {
+    private let cardData: [(title: String, destination: FoundryDestination)] = [
+        ("Liquid Metal Blob – Interactive", .liquidMetalBlob),
+        ("Card 2", .card2),
+        ("Card 3", .card3)
+    ]
+
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: [
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12)
+            ], spacing: 12) {
+                ForEach(cardData, id: \.title) { card in
+                    NavigationLink(value: card.destination) {
+                        FoundryCard(title: card.title)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
+        }
+        .navigationDestination(for: FoundryDestination.self) { dest in
+            switch dest {
+            case .liquidMetalBlob:
+                LiquidBlobDetailView()
+            case .card2:
+                FeedbackView()
+                    .navigationTitle("Card 2")
+                    .toolbarTitleDisplayMode(.inline)
+            case .card3:
+                FeedbackView()
+                    .navigationTitle("Card 3")
+                    .toolbarTitleDisplayMode(.inline)
+            }
+        }
+    }
+}
+
 // MARK: - Feedback View
 
 struct FeedbackView: View {
@@ -359,14 +441,18 @@ struct ContentView: View {
 
             Tab("Foundry", systemImage: "hammer.fill") {
                 NavigationStack {
-                    FeedbackView()
+                    FoundryView()
                         .toolbarTitleDisplayMode(.inline)
                         .toolbar { toolbar(title: "Foundry") }
                 }
             }
 
             Tab("Map", systemImage: "map.fill") {
-                MapExampleView()
+                NavigationStack {
+                    FeedbackView()
+                        .toolbarTitleDisplayMode(.inline)
+                        .toolbar { toolbar(title: "Map") }
+                }
             }
 
             Tab("Labs", systemImage: "flask.fill") {
