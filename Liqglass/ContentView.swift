@@ -36,7 +36,7 @@ class FavoritesManager {
 // MARK: - Library Destination
 
 enum LibraryDestination: Hashable {
-    case folders, clock, badges
+    case folders
 }
 
 // MARK: - Design Item (for global search)
@@ -54,9 +54,6 @@ let allDesigns: [DesignItem] = {
     let folderNames = (1...14).map { "Folder Design \($0)" }
     items += folderNames.map { DesignItem(name: $0, tag: "Folder Design", destination: .folders) }
 
-    items += (1...2).map { DesignItem(name: "Clock Design \($0)", tag: "Clock Design", destination: .clock) }
-    items += (1...4).map { DesignItem(name: "Badge Design \($0)", tag: "Badge Design", destination: .badges) }
-
     return items
 }()
 
@@ -64,30 +61,11 @@ let allDesigns: [DesignItem] = {
 
 struct SharedToolbar: ToolbarContent {
     let title: String
-    var onFavoritesTap: (() -> Void)? = nil
-    var onProfileTap: (() -> Void)? = nil
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            Button { onFavoritesTap?() } label: {
-                Image(systemName: "heart")
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(.primary)
-                    .frame(width: 38, height: 38)
-            }
-        }
         ToolbarItem(placement: .principal) {
             Text(title)
                 .font(.system(size: 18, weight: .bold, design: .rounded))
-        }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button { onProfileTap?() } label: {
-                Image("profile_avatar")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 34, height: 34)
-                    .clipShape(.circle)
-            }
         }
     }
 }
@@ -188,9 +166,7 @@ struct UpdateCard: View {
 
 struct LibraryView: View {
     private let cardData: [(title: String, subtitle: String, destination: LibraryDestination)] = [
-        ("Folders",   "12 designs", .folders),
-        ("Clock",     "2 designs",  .clock),
-        ("Badges",    "4 designs",  .badges)
+        ("Folders",   "12 designs", .folders)
     ]
 
     var body: some View {
@@ -230,14 +206,6 @@ struct LibraryView: View {
                 FolderExample()
                     .navigationTitle("Glass Folders")
                     .toolbarTitleDisplayMode(.inline)
-            case .clock:
-                FeedbackView()
-                    .navigationTitle("Clock")
-                    .toolbarTitleDisplayMode(.inline)
-            case .badges:
-                FeedbackView()
-                    .navigationTitle("Badges")
-                    .toolbarTitleDisplayMode(.inline)
             }
         }
     }
@@ -275,14 +243,6 @@ struct SearchView: View {
             case .folders:
                 FolderExample()
                     .navigationTitle("Glass Folders")
-                    .toolbarTitleDisplayMode(.inline)
-            case .clock:
-                FeedbackView()
-                    .navigationTitle("Clock")
-                    .toolbarTitleDisplayMode(.inline)
-            case .badges:
-                FeedbackView()
-                    .navigationTitle("Badges")
                     .toolbarTitleDisplayMode(.inline)
             }
         }
@@ -398,24 +358,13 @@ struct GitHubRedirectView: View {
 // MARK: - Content View
 
 struct ContentView: View {
-    @State private var showFavorites = false
-    @State private var showProfile = false
-
-    private func toolbar(title: String) -> some ToolbarContent {
-        SharedToolbar(
-            title: title,
-            onFavoritesTap: { showFavorites = true },
-            onProfileTap: { showProfile = true }
-        )
-    }
-
     var body: some View {
         TabView {
             Tab("Library", systemImage: "books.vertical.fill") {
                 NavigationStack {
                     LibraryView()
                         .toolbarTitleDisplayMode(.inline)
-                        .toolbar { toolbar(title: "Library") }
+                        .toolbar { SharedToolbar(title: "Library") }
                 }
             }
 
@@ -423,23 +372,23 @@ struct ContentView: View {
                 NavigationStack {
                     FoundryView()
                         .toolbarTitleDisplayMode(.inline)
-                        .toolbar { toolbar(title: "Foundry") }
+                        .toolbar { SharedToolbar(title: "Foundry") }
                 }
             }
 
-            Tab("Map", systemImage: "map.fill") {
+            Tab("Code", systemImage: "chevron.left.forwardslash.chevron.right") {
                 NavigationStack {
                     FeedbackView()
                         .toolbarTitleDisplayMode(.inline)
-                        .toolbar { toolbar(title: "Map") }
+                        .toolbar { SharedToolbar(title: "Code") }
                 }
             }
 
-            Tab("Labs", systemImage: "flask.fill") {
+            Tab("Credits", systemImage: "info.circle.fill") {
                 NavigationStack {
                     FeedbackView()
                         .toolbarTitleDisplayMode(.inline)
-                        .toolbar { toolbar(title: "Labs") }
+                        .toolbar { SharedToolbar(title: "Credits") }
                 }
             }
 
@@ -449,30 +398,6 @@ struct ContentView: View {
                         .navigationTitle("Search")
                         .toolbarTitleDisplayMode(.inline)
                 }
-            }
-        }
-        .sheet(isPresented: $showFavorites) {
-            NavigationStack {
-                FolderExample(favoritesOnly: true)
-                    .navigationTitle("Favourites")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Done") { showFavorites = false }
-                        }
-                    }
-            }
-        }
-        .sheet(isPresented: $showProfile) {
-            NavigationStack {
-                Text("Hello World")
-                    .navigationTitle("Profile")
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Done") { showProfile = false }
-                        }
-                    }
             }
         }
     }
