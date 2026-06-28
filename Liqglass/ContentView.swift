@@ -36,7 +36,7 @@ class FavoritesManager {
 // MARK: - Library Destination
 
 enum LibraryDestination: Hashable {
-    case folders, analytics, clock, badges
+    case folders, clock, badges
 }
 
 // MARK: - Design Item (for global search)
@@ -53,17 +53,6 @@ let allDesigns: [DesignItem] = {
 
     let folderNames = (1...14).map { "Folder Design \($0)" }
     items += folderNames.map { DesignItem(name: $0, tag: "Folder Design", destination: .folders) }
-
-    let analyticsNames = [
-        "Pie Chart", "Half Donut", "Multi Ring", "Radial Chart", "Polar Area",
-        "Bar Chart", "Dumbbell Chart", "Lollipop Chart", "Floating Bar", "Range Bar",
-        "Stacked Bar", "Grouped Bar", "Line Chart", "Multi-Line Chart", "Step Line",
-        "Spline Curve", "Area Line", "Stacked Area", "Gradient Area", "Sparkline",
-        "Scatter Plot", "Bubble Chart", "Timeline", "Roadmap", "Histogram",
-        "Density Curve", "Tree Diagram", "Treemap", "Network Graph", "Sankey Diagram",
-        "Flow Chart", "Circle Packing", "Gantt Chart"
-    ]
-    items += analyticsNames.map { DesignItem(name: $0, tag: "Analytics Design", destination: .analytics) }
 
     items += (1...2).map { DesignItem(name: "Clock Design \($0)", tag: "Clock Design", destination: .clock) }
     items += (1...4).map { DesignItem(name: "Badge Design \($0)", tag: "Badge Design", destination: .badges) }
@@ -200,7 +189,6 @@ struct UpdateCard: View {
 struct LibraryView: View {
     private let cardData: [(title: String, subtitle: String, destination: LibraryDestination)] = [
         ("Folders",   "12 designs", .folders),
-        ("Analytics", "24 designs", .analytics),
         ("Clock",     "2 designs",  .clock),
         ("Badges",    "4 designs",  .badges)
     ]
@@ -241,10 +229,6 @@ struct LibraryView: View {
             case .folders:
                 FolderExample()
                     .navigationTitle("Glass Folders")
-                    .toolbarTitleDisplayMode(.inline)
-            case .analytics:
-                AnalyticsView()
-                    .navigationTitle("Analytics")
                     .toolbarTitleDisplayMode(.inline)
             case .clock:
                 FeedbackView()
@@ -291,10 +275,6 @@ struct SearchView: View {
             case .folders:
                 FolderExample()
                     .navigationTitle("Glass Folders")
-                    .toolbarTitleDisplayMode(.inline)
-            case .analytics:
-                AnalyticsView()
-                    .navigationTitle("Analytics")
                     .toolbarTitleDisplayMode(.inline)
             case .clock:
                 FeedbackView()
