@@ -45,6 +45,20 @@ static float hash21(float2 p) {
 
 
 // ----------------------------------------------------------------------------
+// Fine grain noise (colorEffect)
+// ----------------------------------------------------------------------------
+//
+// Per-pixel monochrome noise, keeping the source alpha. Apply to a white fill
+// and blend (.overlay) at low opacity to get a subtle film-grain texture.
+//
+[[ stitchable ]]
+half4 grain(float2 position, half4 color) {
+    float n = hash21(position);
+    return half4(half3(half(n)), color.a);
+}
+
+
+// ----------------------------------------------------------------------------
 // Main shader
 // ----------------------------------------------------------------------------
 //

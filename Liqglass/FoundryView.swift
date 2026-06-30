@@ -25,8 +25,10 @@ struct FoundryView: View {
     // Fixed heights make the layout deterministic, so it renders identically
     // whether FoundryView is standalone or embedded in the TabView (where the
     // tab bar would otherwise steal height from a flexible card).
-    private let cardHeight: CGFloat = 325
-    private let dialHeight: CGFloat = 250
+    private let cardHeight: CGFloat = 430
+    // The dial reserves only this much layout space; its arc draws beyond it,
+    // spilling the lower labels down behind the floating tab bar.
+    private let dialHeight: CGFloat = 130
 
     // Index currently centered (wrapped into the forecasts array).
     private var centeredIndex: Int {
@@ -56,11 +58,10 @@ struct FoundryView: View {
                 dial
                     .frame(height: dialHeight)
 
-                // Absorbs leftover space (the tab-bar area when embedded), so
-                // the card + dial stay top-aligned and identical in both cases.
+                // Pins the title + card + dial to the top of the safe area; the
+                // dial's lower arc spills past its frame behind the tab bar.
                 Spacer(minLength: 0)
             }
-            .padding(.bottom, 4)
         }
     }
 
@@ -88,7 +89,7 @@ struct FoundryView: View {
             ForEach(Array(stride(from: 3, through: 1, by: -1)), id: \.self) { i in
                 let d = Double(i)
                 RoundedRectangle(cornerRadius: 36, style: .continuous)
-                    .fill(Color.white.opacity(0.12))
+                    .fill(Color.white.opacity(0.16))
                     .padding(.horizontal, d * 14)      // each one narrower
                     .offset(y: -d * 13)                // peeks up behind the front
                     .shadow(color: .black.opacity(0.08), radius: 6, y: -3)
@@ -106,14 +107,24 @@ struct FoundryView: View {
 
     private var glassCard: some View {
         Color.clear
-            .glassEffect(.regular, in: .rect(cornerRadius: 36, style: .continuous))
+            .glassEffect(.clear, in: .rect(cornerRadius: 36, style: .continuous))
+            // Fine grain texture on top of the active card.
+            .overlay(
+                Rectangle()
+                    .fill(.white)
+                    .colorEffect(ShaderLibrary.grain())
+                    .blendMode(.overlay)
+                    .opacity(0.08)
+                    .clipShape(.rect(cornerRadius: 36, style: .continuous))
+                    .allowsHitTesting(false)
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: 36, style: .continuous)
-                    .strokeBorder(Color.white.opacity(0.45), lineWidth: 1)
+                    .strokeBorder(Color.white.opacity(0), lineWidth: 0)
             )
             // Soft white halo + neutral grounding shadow (no blue).
             .shadow(color: .white.opacity(0.5), radius: 24)
-            .shadow(color: .black.opacity(0.12), radius: 22, y: 12)
+            .shadow(color: .blue.opacity(0.12), radius: 22, y: 12)
     }
 
     // MARK: Radial dial
