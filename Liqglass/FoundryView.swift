@@ -19,6 +19,14 @@ struct FoundryView: View {
     @State private var selection: Double = 0
     @State private var dragAnchor: Double = 0
     @State private var isDragging = false
+    // Which forecast card is currently at the front of the stack.
+    @State private var frontIndex = 0
+
+    // Fixed heights make the layout deterministic, so it renders identically
+    // whether FoundryView is standalone or embedded in the TabView (where the
+    // tab bar would otherwise steal height from a flexible card).
+    private let cardHeight: CGFloat = 325
+    private let dialHeight: CGFloat = 250
 
     // Index currently centered (wrapped into the forecasts array).
     private var centeredIndex: Int {
@@ -36,14 +44,21 @@ struct FoundryView: View {
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.08), radius: 4, y: 2)
                     .padding(.top, 6)
+                    .padding(.bottom, 54)
+                    .zIndex(1)
+
+                cardStack
+                    .frame(maxWidth: .infinity)
+                    .frame(height: cardHeight)
+                    .padding(.horizontal, 26)
                     .padding(.bottom, 18)
 
-                glassCard
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.horizontal, 26)
-
                 dial
-                    .frame(height: 232)
+                    .frame(height: dialHeight)
+
+                // Absorbs leftover space (the tab-bar area when embedded), so
+                // the card + dial stay top-aligned and identical in both cases.
+                Spacer(minLength: 0)
             }
             .padding(.bottom, 4)
         }
@@ -52,59 +67,53 @@ struct FoundryView: View {
     // MARK: Background — soft blue → lavender radial wash
 
     private var background: some View {
-        ZStack {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.42, green: 0.60, blue: 0.93),
-                    Color(red: 0.74, green: 0.76, blue: 0.96),
-                    Color(red: 0.93, green: 0.95, blue: 1.0)
-                ],
-                startPoint: .top, endPoint: .bottom
-            )
-            RadialGradient(
-                colors: [Color(red: 0.60, green: 0.52, blue: 0.90).opacity(0.45), .clear],
-                center: .center, startRadius: 90, endRadius: 430
-            )
-        }
+        RadialGradient(
+            stops: [
+                .init(color: Color(red: 0.922, green: 0.961, blue: 1.0), location: 0.4),   // EBF5FF
+                .init(color: Color(red: 0.659, green: 0.678, blue: 1.0), location: 0.8),  // A8ADFF
+                .init(color: Color(red: 0.314, green: 0.592, blue: 0.875), location: 1.0)  // 5097DF
+            ],
+            center: .bottom,
+            startRadius: 0,
+            endRadius: 580
+        )
         .ignoresSafeArea()
     }
 
     // MARK: Glass card — frosted container for shader animations
 
-    private var glassCard: some View {
-        RoundedRectangle(cornerRadius: 36, style: .continuous)
-            .fill(.ultraThinMaterial)
-            // Brighter top-light wash for depth.
-            .overlay(
+    // Front glass card plus a deck of solid cards peeking out behind it.
+    private var cardStack: some View {
+        ZStack {
+            ForEach(Array(stride(from: 3, through: 1, by: -1)), id: \.self) { i in
+                let d = Double(i)
                 RoundedRectangle(cornerRadius: 36, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [.white.opacity(0.75), .white.opacity(0.10), .white.opacity(0.40)],
-                            startPoint: .top, endPoint: .bottom
-                        )
-                    )
-                    .blendMode(.plusLighter)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 36, style: .continuous)
-                    .stroke(
-                        LinearGradient(
-                            colors: [.white.opacity(0.9), .white.opacity(0.25)],
-                            startPoint: .topLeading, endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
-            )
-            .overlay(alignment: .topLeading) {
-                Text(forecasts[centeredIndex])
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .padding(20)
+                    .fill(Color.white.opacity(0.12))
+                    .padding(.horizontal, d * 14)      // each one narrower
+                    .offset(y: -d * 13)                // peeks up behind the front
+                    .shadow(color: .black.opacity(0.08), radius: 6, y: -3)
             }
-            // Soft white halo + blue grounding shadow.
-            .shadow(color: .white.opacity(0.7), radius: 26)
-            .shadow(color: Color(red: 0.40, green: 0.46, blue: 0.80).opacity(0.40),
-                    radius: 28, y: 16)
+            glassCard
+                .id(frontIndex)
+                // Stacked-card swap: the new card grows forward out of the deck,
+                // the old one recedes back into it (no top slide).
+                .transition(.asymmetric(
+                    insertion: .scale(scale: 0.90).combined(with: .opacity),
+                    removal: .scale(scale: 0.95).combined(with: .opacity)
+                ))
+        }
+    }
+
+    private var glassCard: some View {
+        Color.clear
+            .glassEffect(.regular, in: .rect(cornerRadius: 36, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 36, style: .continuous)
+                    .strokeBorder(Color.white.opacity(0.45), lineWidth: 1)
+            )
+            // Soft white halo + neutral grounding shadow (no blue).
+            .shadow(color: .white.opacity(0.5), radius: 24)
+            .shadow(color: .black.opacity(0.12), radius: 22, y: 12)
     }
 
     // MARK: Radial dial
@@ -112,37 +121,49 @@ struct FoundryView: View {
     private var dial: some View {
         GeometryReader { geo in
             let cx = geo.size.width / 2
-            let radius: Double = 196       // wide sweeping arc
-            let topPad: Double = 14        // vertical offset of the arc's crest
-            let step: Double = 0.42        // angular spacing between items (radians)
+            let radius: Double = 245           // label arc radius
+            let topPad: Double = 96            // arc sits lower for breathing room
+            let step: Double = 0.36            // angular spacing between items (radians)
             let centerInt = Int(selection.rounded())
             let centerY = radius + topPad
-            let tickR = radius + 22
+            let tickInnerR = radius + 58       // ticks ride outside the labels (no overlap)
 
             ZStack {
+                // Graduation ruler — dense ticks that scroll with the dial.
+                let base = Int((selection * 4).rounded())
+                ForEach(base - 22 ... base + 22, id: \.self) { k in
+                    let p = Double(k) / 4.0
+                    let diff = p - selection
+                    let angle = diff * step
+                    if abs(angle) <= 1.7 {
+                        let isMajor = (k % 4 == 0)
+                        let len: Double = isMajor ? 18 : 10
+                        let op = max(0.25, 1 - abs(angle) * 0.42)
+                        let r = tickInnerR + len / 2
+                        Capsule()
+                            .fill(Color(red: 0.16, green: 0.42, blue: 0.92)
+                                .opacity(isMajor ? op : op * 0.6))
+                            .frame(width: isMajor ? 2.6 : 1.6, height: len)
+                            .rotationEffect(.radians(angle))
+                            .position(x: cx + r * sin(angle),
+                                      y: centerY - r * cos(angle))
+                    }
+                }
+
+                // Labels
                 ForEach(centerInt - 3 ... centerInt + 3, id: \.self) { i in
                     let diff = Double(i) - selection
                     let angle = diff * step
                     let isActive = (i == centerInt)
-                    let fade = max(0.20, 1 - abs(diff) * 0.24)
-                    let scale = max(0.55, 1 - abs(diff) * 0.15)
+                    let fade = max(0.25, 1 - abs(diff) * 0.22)
+                    let scale = max(0.6, 1 - abs(diff) * 0.12)
 
                     let x = cx + radius * sin(angle)
                     let yLabel = centerY - radius * cos(angle)
-                    let yTick = centerY - tickR * cos(angle)
                     let label = forecasts[((i % forecasts.count) + forecasts.count) % forecasts.count]
 
-                    // Tick mark
-                    Capsule()
-                        .fill(Color(red: 0.16, green: 0.44, blue: 0.96)
-                            .opacity(isActive ? 1.0 : fade))
-                        .frame(width: isActive ? 3 : 2.5, height: isActive ? 22 : 18)
-                        .rotationEffect(.radians(angle))
-                        .position(x: cx + tickR * sin(angle), y: yTick)
-
-                    // Label
                     Text(label)
-                        .font(.system(size: isActive ? 18 : 17,
+                        .font(.system(size: 17,
                                       weight: isActive ? .bold : .medium,
                                       design: .rounded))
                         .foregroundStyle(
@@ -150,8 +171,9 @@ struct FoundryView: View {
                             ? Color(red: 0.10, green: 0.38, blue: 0.96)
                             : Color(red: 0.38, green: 0.48, blue: 0.72).opacity(fade)
                         )
-                        .scaleEffect(isActive ? 1.22 : scale)
-                        .rotationEffect(.radians(angle))
+                        .scaleEffect(isActive ? 1.0 : scale)
+                        // Text tilts with the dial; selected item sits at -90°.
+                        .rotationEffect(.radians(angle - .pi / 2))
                         .position(x: x, y: yLabel)
                 }
             }
@@ -168,8 +190,16 @@ struct FoundryView: View {
                     }
                     .onEnded { _ in
                         isDragging = false
+                        let target = selection.rounded()
                         withAnimation(.spring(response: 0.45, dampingFraction: 0.8)) {
-                            selection = selection.rounded()
+                            selection = target
+                        }
+                        let n = forecasts.count
+                        let newFront = ((Int(target) % n) + n) % n
+                        if newFront != frontIndex {
+                            withAnimation(.spring(response: 0.5, dampingFraction: 0.85)) {
+                                frontIndex = newFront
+                            }
                         }
                     }
             )
